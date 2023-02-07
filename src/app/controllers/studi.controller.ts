@@ -87,9 +87,29 @@ class StudiController {
                 result.data = datas.data;
 
             } else {
-                datas = {
-                    ujian_proses_kelas_id: null
-                }
+                result.data = "Kelas tidak terdaftar untuk paket ini!";
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    periksa_daftar = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.periksa_daftar(parseInt(req.params.ujian_proses_kelas_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "Siswa Belum daftar"
             }
             return res.send(result);
 

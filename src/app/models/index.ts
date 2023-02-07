@@ -67,7 +67,7 @@ const db = {
   ujian_banksoal: goGet_model_ujian_banksoal,
   ujian_files: goGet_model_ujian_files,
   ujian_paketsoal_kategori: goGet_model_ujian_paketsoal_kategori,
-  goGet_model_ujian_paketsoal_soal_pilihanjawaban: goGet_model_ujian_paketsoal_soal_pilihanjawaban,
+  ujian_paketsoal_soal_pilihanjawaban: goGet_model_ujian_paketsoal_soal_pilihanjawaban,
   ujian_paketsoal_soal: goGet_model_ujian_paketsoal_soal,
   ujian_paketsoal: goGet_model_ujian_paketsoal,
   ujian_proses_kelas_siswa_kategori_hasil: goGet_model_ujian_proses_kelas_siswa_kategori_hasil,
