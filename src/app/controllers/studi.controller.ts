@@ -71,6 +71,33 @@ class StudiController {
         }
     }
 
+
+    doUjianDaftar = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.doUjianDaftar(parseInt(req.params.ujian_proses_kelas_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+                paketsoal_id: datas?.paketsoal_id
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                datas = {
+                    ujian_proses_kelas_id: null
+                }
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
 }
 
 export default new StudiController();

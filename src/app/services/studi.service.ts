@@ -55,9 +55,9 @@ class StudiService {
         // console.log('====================================');
         const resProsesKelasSiswa = await ujian_proses_kelas_siswa.findOne({ where: { ujian_proses_kelas_id, siswa_id: this.meId } });
         let ujianProsesKelasSiswaId = resProsesKelasSiswa.id;
-        console.log('====================================');
-        console.log(ujianProsesKelasSiswaId);
-        console.log('====================================');
+        // console.log('====================================');
+        // console.log(ujianProsesKelasSiswaId);
+        // console.log('====================================');
         const resProsesKelasSiswaKategori = await ujian_proses_kelas_siswa_kategori.findOne({ where: { ujian_proses_kelas_siswa_id: ujianProsesKelasSiswaId, status: 'Aktif' }, order: [['updated_at', 'desc']] });
         let { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at } = resProsesKelasSiswaKategori;
         data = { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at };
@@ -82,6 +82,47 @@ class StudiService {
             let ujianProsesId = resProsesKelas.ujian_proses_id;
             const resGetUjianProses = await db.ujian_proses.findOne({ where: { id: ujianProsesId } })
             return resGetUjianProses;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+
+    doUjianDaftar = async (ujian_proses_kelas_id: number) => {
+        try {
+            const me: any = await this.fn_get_me(this.meId)
+            const periksaKelas = await this.fn_is_kelas_saya_terdaftar(me.kelas_id);
+            const getDataKelas = await ujian_proses_kelas.findOne({ where: { id: ujian_proses_kelas_id } });
+            // console.log(periksaKelas);
+            if (periksaKelas == false) {
+                return false
+            }
+            // periksa apakah siswa sudah daftar ujian
+            const periksaSiswaSudahDaftarUjian = await this.fn_is_siswa_sudah_daftar_ujian(ujian_proses_kelas_id);
+            if (periksaSiswaSudahDaftarUjian) {
+                return {
+                    success: false,
+                    data: "Data sudah ada",
+                    paketsoal_id: getDataKelas.paketsoal_id
+                }
+            }
+            // insert ujian_proses_kelas_siswa
+            const doInsertProsesSiswa = await ujian_proses_kelas_siswa.create({
+                ujian_proses_kelas_id,
+                siswa_id: this.meId,
+                status: "Aktif",
+                created_at: moment().format(),
+                updated_at: moment().format(),
+            });
+            // console.log(doInsertProsesSiswa);
+            // !jika periksa kelas ada dan proses selanjutnya true
+
+            return {
+                success: true,
+                data: doInsertProsesSiswa,
+                paketsoal_id: getDataKelas.paketsoal_id
+            }
+
         } catch (error: any) {
             console.log(error.message);
         }
@@ -123,6 +164,31 @@ class StudiService {
             console.log(error.message);
         }
     }
+
+    fn_is_siswa_sudah_daftar_ujian = async (ujian_proses_kelas_id: number) => {
+        try {
+            const response = await ujian_proses_kelas_siswa.count({ where: { ujian_proses_kelas_id, siswa_id: this.meId } });
+            if (response < 1) {
+                return false
+            }
+            return true;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
+    fn_is_kelas_saya_terdaftar = async (kelas_id: number) => {
+        try {
+            let result = false;
+            const response = await ujian_proses_kelas.count({ where: { kelas_id, status: 'Aktif' } });
+            if (response > 0) {
+                result = true;
+            }
+            return result;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
     // * FUNGSI-BIASA-END
 
 }

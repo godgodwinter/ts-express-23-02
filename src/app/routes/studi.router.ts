@@ -10,7 +10,7 @@ class StudiRouter extends BaseRoutes {
         this.router.get("/ujian", [authJwt.verifyToken], studiController.getDataUjian)
         this.router.get("/ujian/:ujian_proses_kelas_id", [authJwt.verifyToken], studiController.getDataUjianEdit)
         this.router.get("/periksa/ujianaktif", [authJwt.verifyToken], studiController.getDataUjian)
-        this.router.post("/ujian/:ujian_proses_kelas_id/ujian_daftar", [authJwt.verifyToken], studiController.getDataUjian)
+        this.router.post("/ujian/:ujian_proses_kelas_id/ujian_daftar", [authJwt.verifyToken], studiController.doUjianDaftar)
         this.router.get("/ujian/:ujian_proses_kelas_id/periksa_daftar", [authJwt.verifyToken], studiController.getDataUjian)
         this.router.get("/ujian/proses_kelas/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_id/kategori_soal", [authJwt.verifyToken], studiController.getDataUjian)
         this.router.get("/ujian/:ujian_paketsoal_id/kategori_soal_detail/:kategori_id", [authJwt.verifyToken], studiController.getDataUjian)
