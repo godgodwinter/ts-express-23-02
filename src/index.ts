@@ -5,11 +5,11 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 import { config as dotenv } from "dotenv";
-// import { db_config } from "./app/config/db.config";
+import db from "./app/models"
 // router
-import homeRouter from "./app/routes/home.router";
-
-
+import HomeRoutes from "./app/routes/home.router";
+import AuthRoutes from "./app/routes/auth.router";
+import { v4 as uuidv4 } from 'uuid';
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
@@ -37,22 +37,26 @@ class App {
 
 
     protected routes(): void {
+        //* ROUTER-BARU
         const apiVersion = "v1"
         this.app.route("/").get((req: Request, res: Response) => {
             res.send('be TS dev');
         })
 
-        this.app.use(`/api/${apiVersion}/home`, homeRouter);
+        this.app.use(`/api/${apiVersion}/home`, HomeRoutes);
+
+        //*  ROUTER-
+        this.app.use(`/api/`, AuthRoutes);
+
     }
 }
 
 const app = new App().app;
-import db from "./app/models"
 db.sequelize.authenticate()
     .then(() => {
         console.log('Connection has been established successfully.');
     })
-    .catch((err:any) => {
+    .catch((err: any) => {
         console.error('Unable to connect to the database:', err);
     });
 
