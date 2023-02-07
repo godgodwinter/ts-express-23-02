@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 
 import db from "../models";
 import { Request, Response } from 'express';
@@ -61,17 +62,22 @@ class StudiService {
         // console.log(ujianProsesKelasSiswaId);
         // console.log('====================================');
         const resProsesKelasSiswaKategori = await ujian_proses_kelas_siswa_kategori.findOne({ where: { ujian_proses_kelas_siswa_id: ujianProsesKelasSiswaId, status: 'Aktif' }, order: [['updated_at', 'desc']] });
-        let { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at } = resProsesKelasSiswaKategori;
-        data = { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at };
-        // console.log(moment().format("YYYY-MMMM-DD"));
-        let getSisaWaktu = await this.fn_get_sisa_waktu(tgl_selesai);
-        data.sisa_waktu = getSisaWaktu?.detik;
-        data.sisa_waktu_dalam_menit = getSisaWaktu?.menit;
-        data.ujian_proses_kelas_id = ujian_proses_kelas_id;
-        data.ujian_proses_kelas_siswa = resProsesKelasSiswa;
-        data.getSisaWaktu = getSisaWaktu;
-        if (data.sisa_waktu < 0) {
-            return null
+        console.log('====================================');
+        console.log(resProsesKelasSiswaKategori);
+        console.log('====================================');
+        if (resProsesKelasSiswaKategori) {
+            let { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at } = resProsesKelasSiswaKategori;
+            data = { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at };
+            // console.log(moment().format("YYYY-MMMM-DD"));
+            let getSisaWaktu = await this.fn_get_sisa_waktu(tgl_selesai);
+            data.sisa_waktu = getSisaWaktu?.detik;
+            data.sisa_waktu_dalam_menit = getSisaWaktu?.menit;
+            data.ujian_proses_kelas_id = ujian_proses_kelas_id;
+            data.ujian_proses_kelas_siswa = resProsesKelasSiswa;
+            data.getSisaWaktu = getSisaWaktu;
+            if (data.sisa_waktu < 0) {
+                return null
+            }
         }
         return data;
     }
@@ -391,21 +397,37 @@ class StudiService {
             const get_ujian_paketsoal_kategori = await db.ujian_paketsoal_kategori.findOne({ where: { id: ujian_paketsoal_kategori_id } })
             let random_soal = get_ujian_paketsoal_kategori.random_soal == 'Aktif' ? true : false;
             let random_pilihanjawaban = get_ujian_paketsoal_kategori.random_pilihanjawaban == 'Aktif' ? true : false;
-            let getSoal = await db.ujian_paketsoal_soal.findAll({
-                where: {
-                    ujian_paketsoal_kategori_id, deleted_at: null
-                },
-                order: [['nomer_urut', 'ASC']]
-            })
-            console.log(getSoal);
-            let result_getSoal = random_soal ? this.fn_random_array(getSoal) : getSoal;
-            console.log(result_getSoal);
+            let getSoal = null;
+            if (random_soal) {
+                getSoal = await db.ujian_paketsoal_soal.findAll({
+                    where: {
+                        ujian_paketsoal_kategori_id, deleted_at: null
+                    },
+                    order: [Sequelize.literal('RAND()')]
+                })
+            } else {
+                getSoal = await db.ujian_paketsoal_soal.findAll({
+                    where: {
+                        ujian_paketsoal_kategori_id, deleted_at: null
+                    },
+                    order: [['nomer_urut', 'ASC']]
+                })
+            }
+            // console.log(getSoal);
+            // let result_getSoal = random_soal ? this.fn_random_array(getSoal) : getSoal;
+            // console.log(this.fn_random_array(getSoal), "aaaa");
 
 
             let dataSoal = [];
             for (const soal of getSoal) {
-                let pilihan_jawaban = await ujian_paketsoal_soal_pilihanjawaban.findAll({ where: { ujian_paketsoal_soal_id: soal.id } })
-                let result_pilihan_jawaban = random_pilihanjawaban ? this.fn_random_array(pilihan_jawaban) : pilihan_jawaban;
+                let pilihan_jawaban = null;
+                if (random_pilihanjawaban) {
+                    pilihan_jawaban = await ujian_paketsoal_soal_pilihanjawaban.findAll({ where: { ujian_paketsoal_soal_id: soal.id }, order: [Sequelize.literal('RAND()')] })
+                } else {
+                    pilihan_jawaban = await ujian_paketsoal_soal_pilihanjawaban.findAll({ where: { ujian_paketsoal_soal_id: soal.id } })
+                }
+                // let result_pilihan_jawaban = random_pilihanjawaban ? this.fn_random_array(pilihan_jawaban) : pilihan_jawaban;
+                let result_pilihan_jawaban = pilihan_jawaban;
                 let getJawabanKu = await db.ujian_proses_kelas_siswa_kategori_hasil.findOne({ where: { ujian_paketsoal_soal_id: soal.id, ujian_proses_kelas_siswa_kategori_id } })
                 soal.setDataValue("jawaban_ku", getJawabanKu ? getJawabanKu.kode_jawaban : "-")
                 let periksa_file_audio = await db.ujian_files.findOne({ where: { kode_soal: soal.kode_soal } })
@@ -417,11 +439,11 @@ class StudiService {
                 soal.setDataValue("pilihan_jawaban", result_pilihan_jawaban)
                 dataSoal.push(soal)
             }
-            data = dataSoal
+            data = data
             // elseseses
             return {
                 success: true,
-                data: result_getSoal,
+                data: getSoal,
             }
         } catch (error: any) {
             console.log(error.message);
@@ -590,7 +612,8 @@ class StudiService {
             console.log(error.message);
         }
     }
-    fn_random_array = async (arr: []) => {
+    fn_random_array = async (arr: any): Promise<any> => {
+
         let newArr = arr.slice()
         for (let i = newArr.length - 1; i > 0; i--) {
             const rand = Math.floor(Math.random() * (i + 1));

@@ -27,7 +27,7 @@ class StudiController {
             const service: StudiService = new StudiService(req);
             let datas: any = await service.periksaUjianAktif();
 
-            let result: IResponse = {
+            let result = {
                 success: false,
                 data: datas,
                 message: "Tidak ada ujian aktif"
@@ -36,7 +36,7 @@ class StudiController {
                 result.success = true;
                 result.message = "Ujian aktif ditemukan"
             } else {
-                datas = {
+                result.data = {
                     ujian_proses_kelas_id: null
                 }
             }
@@ -110,6 +110,145 @@ class StudiController {
 
             } else {
                 result.data = "Siswa Belum daftar"
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    getKategoriSoal = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.getKategoriSoal(parseInt(req.params.ujian_proses_kelas_id), parseInt(req.params.ujian_paketsoal_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "-"
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    getKategoriSoalDetail = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.getKategoriSoalDetail(parseInt(req.params.ujian_paketsoal_id), parseInt(req.params.kategori_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "-"
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    doMulaiUjian = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.doMulaiUjian(parseInt(req.params.ujian_proses_kelas_id), parseInt(req.params.ujian_paketsoal_kategori_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "-"
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    getSoal = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.getSoal(parseInt(req.params.ujian_proses_kelas_id), parseInt(req.params.ujian_paketsoal_kategori_id), parseInt(req.params.ujian_proses_kelas_siswa_kategori_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "-"
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    doInsertJawaban = async (req: Request, res: Response): Promise<Response> => {
+        try {
+
+            let dataForm = {
+                ujian_paketsoal_soal_id: req.body.ujian_paketsoal_soal_id,
+                kode_soal: req.body.kode_soal,
+                ujian_paketsoal_soal_pilihanjawaban_id: req.body.ujian_paketsoal_soal_pilihanjawaban_id,
+                kode_jawaban: req.body.kode_jawaban,
+            }
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.doInsertJawaban(parseInt(req.params.ujian_proses_kelas_siswa_kategori_id), dataForm);
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "Siswa Belum daftar"
+            }
+            return res.send(result);
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    doFinish = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: StudiService = new StudiService(req);
+            let datas: any = await service.doFinish(parseInt(req.params.ujian_proses_kelas_siswa_kategori_id));
+
+            let result: any = {
+                success: false,
+                data: datas,
+            }
+            if (datas) {
+                result.success = datas.success;
+                result.data = datas.data;
+
+            } else {
+                result.data = "-"
             }
             return res.send(result);
 

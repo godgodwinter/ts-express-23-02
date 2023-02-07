@@ -9,15 +9,15 @@ class StudiRouter extends BaseRoutes {
         // AUTH SISWA
         this.router.get("/ujian", [authJwt.verifyToken], studiController.getDataUjian)
         this.router.get("/ujian/:ujian_proses_kelas_id", [authJwt.verifyToken], studiController.getDataUjianEdit)
-        this.router.get("/periksa/ujianaktif", [authJwt.verifyToken], studiController.getDataUjian)
+        this.router.get("/periksa/ujianaktif", [authJwt.verifyToken], studiController.periksaUjianAktif)
         this.router.post("/ujian/:ujian_proses_kelas_id/ujian_daftar", [authJwt.verifyToken], studiController.doUjianDaftar)
         this.router.get("/ujian/:ujian_proses_kelas_id/periksa_daftar", [authJwt.verifyToken], studiController.periksa_daftar)
-        this.router.get("/ujian/proses_kelas/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_id/kategori_soal", [authJwt.verifyToken], studiController.getDataUjian)
-        this.router.get("/ujian/:ujian_paketsoal_id/kategori_soal_detail/:kategori_id", [authJwt.verifyToken], studiController.getDataUjian)
-        this.router.post("/dataujian/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_kategori_id/mulai_ujian", [authJwt.verifyToken], studiController.getDataUjian)
-        this.router.post("/dataujian/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_kategori_id/getsoal/:ujian_proses_kelas_siswa_kategori_id", [authJwt.verifyToken], studiController.getDataUjian)
-        this.router.post("/dataujian/proses/kategori/:ujian_proses_kelas_siswa_kategori_id/insertjawaban", [authJwt.verifyToken], studiController.getDataUjian)
-        this.router.post("/dataujian/proses/finish/:ujian_proses_kelas_siswa_kategori_id", [authJwt.verifyToken], studiController.getDataUjian)
+        this.router.get("/ujian/proses_kelas/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_id/kategori_soal", [authJwt.verifyToken], studiController.getKategoriSoal)
+        this.router.get("/ujian/:ujian_paketsoal_id/kategori_soal_detail/:kategori_id", [authJwt.verifyToken], studiController.getKategoriSoalDetail)
+        this.router.post("/dataujian/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_kategori_id/mulai_ujian", [authJwt.verifyToken], studiController.doMulaiUjian)
+        this.router.post("/dataujian/:ujian_proses_kelas_id/paketsoal/:ujian_paketsoal_kategori_id/getsoal/:ujian_proses_kelas_siswa_kategori_id", [authJwt.verifyToken], studiController.getSoal)
+        this.router.post("/dataujian/proses/kategori/:ujian_proses_kelas_siswa_kategori_id/insertjawaban", [authJwt.verifyToken], studiController.doInsertJawaban)
+        this.router.post("/dataujian/proses/finish/:ujian_proses_kelas_siswa_kategori_id", [authJwt.verifyToken], studiController.doFinish)
     }
 }
 
