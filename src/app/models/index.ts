@@ -101,16 +101,16 @@ db.sekolah.belongsTo(db.paket, {
 
 // !UJIAN-STUDI-RELASI
 
-db.ujian_proses_kelas.belongsTo(db.ujian_proses_kelas, {
+db.ujian_proses_kelas.belongsTo(db.ujian_proses, {
   foreignKey: {
-    name: 'ujian_proses_kelas_id'
+    name: 'ujian_proses_id'
   },
 });
-db.ujian_proses_kelas.belongsTo(db.ujian_paketsoal, {
-  foreignKey: {
-    name: 'ujian_paketsoal_id'
-  },
-});
+// db.ujian_proses_kelas.belongsTo(db.ujian_paketsoal, {
+//   foreignKey: {
+//     name: 'ujian_paketsoal_id'
+//   },
+// });
 db.ujian_proses_kelas_siswa_kategori.belongsTo(db.ujian_proses_kelas_siswa, {
   foreignKey: {
     name: 'ujian_proses_kelas_siswa_id'

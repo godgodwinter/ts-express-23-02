@@ -47,7 +47,7 @@ class App {
         this.app.use(`/api/${apiVersion}/home`, HomeRoutes);
 
         //*  ROUTER-
-        this.app.use(`/api/siswa/data/`, AuthRoutes);
+        this.app.use(`/api/siswa/`, AuthRoutes);
         this.app.use(`/api/siswa/data/`, StudiRouter);
 
     }
