@@ -10,6 +10,7 @@ import db from "./app/models"
 import HomeRoutes from "./app/routes/home.router";
 import AuthRoutes from "./app/routes/auth.router";
 import { v4 as uuidv4 } from 'uuid';
+import StudiRouter from "./app/routes/studi.router";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
@@ -46,7 +47,8 @@ class App {
         this.app.use(`/api/${apiVersion}/home`, HomeRoutes);
 
         //*  ROUTER-
-        this.app.use(`/api/`, AuthRoutes);
+        this.app.use(`/api/siswa/data/`, AuthRoutes);
+        this.app.use(`/api/siswa/data/`, StudiRouter);
 
     }
 }
