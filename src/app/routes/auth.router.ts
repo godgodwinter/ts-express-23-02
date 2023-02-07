@@ -1,5 +1,3 @@
-
-import { Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import authJwt from '../middleware/auth.jwt';
 import BaseRoutes from './base.router';

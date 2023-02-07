@@ -1,0 +1,54 @@
+const ujian_paketsoal_soal_pilihanjawaban = (sequelize: any, Sequelize: any): any => {
+    const ujian_paketsoal_soal_pilihanjawaban = sequelize.define("ujian_paketsoal_soal_pilihanjawaban", {
+        // data
+        kode_jawaban: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        jawaban: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        skor: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
+        kode_soal: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        // settings
+
+        // relasi
+        ujian_paketsoal_soal_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+
+        // timestamp
+        created_at: {
+            field: 'created_at',
+            type: Sequelize.DATE,
+        },
+        updated_at: {
+            field: 'updated_at',
+            type: Sequelize.DATE,
+        },
+    }, {
+
+        name: {
+            singular: 'ujian_paketsoal_soal_pilihanjawaban',
+            plural: 'ujian_paketsoal_soal_pilihanjawaban',
+        },
+        freezeTableName: true, // Model tableName will be the same as the model name
+        timestamps: false,
+        tableName: 'ujian_paketsoal_soal_pilihanjawaban',
+        underscored: true,
+        modelName: 'ujian_paketsoal_soal_pilihanjawaban'
+
+    });
+
+    return ujian_paketsoal_soal_pilihanjawaban;
+};
+
+export default ujian_paketsoal_soal_pilihanjawaban;
