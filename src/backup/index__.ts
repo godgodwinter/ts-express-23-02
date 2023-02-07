@@ -5,10 +5,6 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 import { config as dotenv } from "dotenv";
-// import { db_config } from "./app/config/db.config";
-// router
-import homeRouter from "./app/routes/home.router";
-
 
 
 dotenv();
@@ -32,30 +28,23 @@ class App {
         this.app.use(compression());
         this.app.use(helmet());
         this.app.use(cors());
-        express.urlencoded({ extended: true, limit: "5m" });
     }
 
-
     protected routes(): void {
-        const apiVersion = "v1"
         this.app.route("/").get((req: Request, res: Response) => {
-            res.send('be TS dev');
+            res.send('HOME,,Ini Express dengan TS');
         })
 
-        this.app.use(`/api/${apiVersion}/home`, homeRouter);
+        // this.app.use("/api/v1/users", UserRoutes);
+        // this.app.use("/api/v1/auth", AuthRoutes);
+        // this.app.use("/api/v1/todos", TodoRoutes);
+        // this.app.route("/users").post((req: Request, res: Response) => {
+        //     res.send(req.body);
+        // })
     }
 }
 
 const app = new App().app;
-import db from "./app/models"
-db.sequelize.authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch((err:any) => {
-        console.error('Unable to connect to the database:', err);
-    });
-
 app.listen(port, () => {
     console.log(`Aplikasi ini berjalan di port ${port}`);
     console.log(process.env.APP_PORT);
