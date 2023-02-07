@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import db from "../models";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import sekolahService from '../services/sekolah.service';
 const { siswa } = db;
 class AuthController {
     siswaLogin = async (req: Request, res: Response): Promise<Response> => {
@@ -36,9 +37,9 @@ class AuthController {
 
             // req.token = token;
             req.app.locals.token = token;
-            console.log('====================================');
-            console.log(token, req.app.locals.token);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(token, req.app.locals.token);
+            // console.log('====================================');
 
             return res.status(200).send({
                 token,
@@ -48,6 +49,95 @@ class AuthController {
                 id: resSiswa.id,
                 username: resSiswa.username,
                 nama: resSiswa.nama
+            });
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
+
+    siswaMe = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            let identitas = await siswa.findOne({
+                where: {
+                    id: req.app.locals.siswaId,
+                },
+            });
+
+
+            const expiredTimer = 86400 * 7; // 24 hours
+            const newToken = jwt.sign({ id: req.app.locals.siswaId }, secret, {
+                expiresIn: expiredTimer,
+            });
+
+            let sekolah = null;
+            let paket = null;
+            let stats = null;
+            let data = {
+                token: null,
+                newToken
+            };
+
+            return res.status(200).send({
+                identitas,
+                sekolah,
+                paket,
+                stats,
+                data
+
+            });
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
+
+    siswaMeUjian = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            let me = await siswa.findOne({
+                where: {
+                    id: req.app.locals.siswaId,
+                },
+                include: [db.kelas, db.sekolah]
+            });
+
+            const expiredTimer = 86400 * 7; // 24 hours
+            const newToken = jwt.sign({ id: req.app.locals.siswaId }, secret, {
+                expiresIn: expiredTimer,
+            });
+            let sekolah = me?.sekolah;
+            let kelas = me?.kelas;
+            let stats = null;
+            let data = {
+                token: null,
+                newToken
+            };
+            let profile = me
+            // delete profile.kelas;
+            // delete profile.sekolah;
+            // console.log(profile);
+
+            const service: sekolahService = new sekolahService(req);
+            const paket = await service.getPaket(sekolah?.paket_id);
+            // console.log('====================================');
+            // console.log(paket);
+            // console.log('====================================');
+            let identitas = {
+                sekolah,
+                kelas,
+                profile,
+                paket,
+            }
+
+
+            let kelas_id = me?.kelas_id;
+            let ujian: [] = [];
+
+            return res.status(200).send({
+                identitas,
+                kelas_id,
+                ujian
+
             });
         } catch (error: any) {
             return res.status(500).send({ message: error.message });

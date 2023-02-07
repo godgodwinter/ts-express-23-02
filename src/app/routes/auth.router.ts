@@ -9,9 +9,9 @@ class AuthRoutes extends BaseRoutes {
     public routes(): void {
         // AUTH SISWA
         this.router.post("/siswa/auth/login", AuthController.siswaLogin)
-        this.router.post("/siswa/auth/me",[authJwt.verifyToken], AuthController.siswaLogin)
-        this.router.post("/siswa/auth/me_ujian",[authJwt.verifyToken], AuthController.siswaLogin)
-}
+        this.router.post("/siswa/auth/me", [authJwt.verifyToken], AuthController.siswaMe)
+        this.router.post("/siswa/auth/me_ujian", [authJwt.verifyToken], AuthController.siswaMeUjian)
+    }
 }
 
 
