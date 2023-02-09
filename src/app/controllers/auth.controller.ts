@@ -1,3 +1,4 @@
+import { encode_base64 } from './../helpers/babengGeneral';
 import { secret } from './../config/auth.config';
 import { Request, Response } from 'express';
 import db from "../models";
@@ -31,7 +32,7 @@ class AuthController {
             }
 
             const expiredTimer = 86400 * 7; // 24 hours
-            const token = jwt.sign({ id: resSiswa.id }, secret, {
+            const token = jwt.sign({ id: resSiswa.id, nama: resSiswa.nama, role: encode_base64('siswa') }, secret, {
                 expiresIn: expiredTimer,
             });
 

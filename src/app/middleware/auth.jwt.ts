@@ -1,10 +1,12 @@
+import { IDecoded, Role } from './../interface/auth.interface';
+import { decode_base64 } from './../helpers/babengGeneral';
 import jwt from "jsonwebtoken"
 import { secret } from "../config/auth.config"
 import db from "../models"
 const { siswa } = db;
 import { Response, Request, NextFunction } from "express";
 
-const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     let token: string | undefined = req.headers['authorization']
     let bearerToken: any = null;
     // console.log(token);
@@ -20,7 +22,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     // console.log('====================================');
     // console.log(secret);
     // console.log('====================================');
-    jwt.verify(bearerToken, secret, (err: any, decoded: any) => {
+    jwt.verify(bearerToken, secret, (err: any, decoded: IDecoded | any): any => {
         // console.log('====================================');
         // console.log(err);
         // console.log('====================================');
@@ -30,17 +32,59 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
             });
         }
         // console.log('====================================');
-        // console.log(decoded);
+        // console.log(decoded, decode_base64(decoded?.role));
         // console.log('====================================');
         req.app.locals.siswaId = decoded.id;
         req.app.locals.meId = decoded.id;
+        req.app.locals.role = decode_base64(decoded?.role);
         // console.log(req.app.locals);
 
         next();
     });
 };
 
+export const menuSiswa = (req: Request, res: Response, next: NextFunction) => {
+    const yourRole = req.app.locals?.role;
+    console.log(yourRole)
+    if (yourRole === 'siswa') {
+        next();
+    } else {
+        return res.status(401).send({
+            message: "Unauthorized",
+        });
+    }
+}
+
+export const menuAdminOwner = (req: Request, res: Response, next: NextFunction) => {
+    const yourRole = req.app.locals?.role;
+    console.log(yourRole)
+    if (yourRole === 'admin' || yourRole === 'owner') {
+        next();
+    } else {
+        return res.status(401).send({
+            message: "Unauthorized",
+        });
+    }
+}
+
+
+export const menuSekolah = (req: Request, res: Response, next: NextFunction) => {
+    const yourRole = req.app.locals?.role;
+    console.log(yourRole)
+    if (yourRole === 'sekolah') {
+        next();
+    } else {
+        return res.status(401).send({
+            message: "Unauthorized",
+        });
+    }
+}
+
+
 const authJwt = {
-    verifyToken
+    verifyToken,
+    menuAdminOwner,
+    menuSiswa,
+    menuSekolah
 }
 export default authJwt
