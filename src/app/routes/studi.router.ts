@@ -1,4 +1,4 @@
-import AuthController from '../controllers/auth.controller';
+import AuthController from '../controllers/auth/auth.controller';
 import studiController from '../controllers/studi.controller';
 import { menuSiswa, verifyToken } from '../middleware/auth.jwt';
 import BaseRoutes from './base.router';

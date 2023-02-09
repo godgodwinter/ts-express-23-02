@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { menuSiswa, verifyToken, menuAdminOwner } from './../../middleware/auth.jwt';
-import AuthController from '../../controllers/auth.controller';
+import AuthController from '../../controllers/auth/auth.controller';
 import BaseRoutes from '../base.router';
 
 class AdminMasteringRouter extends BaseRoutes {

@@ -18,6 +18,7 @@ import ujian_proses_kelas_siswa from "./studi/ujian_proses_kelas_siswa.model";
 import ujian_proses_kelas from "./studi/ujian_proses_kelas.model";
 import ujian_proses from "./studi/ujian_proses.model";
 import admin from "./admin.model";
+import owner from "./owner.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -43,6 +44,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 
 // get Master Data
 const goGet_model_admin = admin(sequelize, Sequelize);
+const goGet_model_owner = owner(sequelize, Sequelize);
 const goGet_model_siswa = siswa(sequelize, Sequelize);
 const goGet_model_kelas = kelas(sequelize, Sequelize);
 const goGet_model_sekolah = sekolah(sequelize, Sequelize);
@@ -64,6 +66,7 @@ const db = {
   //MASTERING
   Sequelize, sequelize,
   admin: goGet_model_admin,
+  owner: goGet_model_owner,
   siswa: goGet_model_siswa,
   kelas: goGet_model_kelas, sekolah: goGet_model_sekolah,
   paket: goGet_model_paket,
