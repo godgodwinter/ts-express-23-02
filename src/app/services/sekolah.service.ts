@@ -23,6 +23,15 @@ class sekolahService {
         this.params = req.params;
     }
 
+    getSekolahAll = async () => {
+        try {
+            const response = await sekolah.findAll();
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
     getPaket = async (sekolah_id: number) => {
         try {
             const response = await paket.findOne({ where: { id: sekolah_id } });
