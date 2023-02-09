@@ -34,6 +34,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
         // console.log('====================================');
         // console.log(decoded, decode_base64(decoded?.role));
         // console.log('====================================');
+        req.app.locals.id = decoded.id;
         req.app.locals.siswaId = decoded.id;
         req.app.locals.meId = decoded.id;
         req.app.locals.role = decode_base64(decoded?.role);

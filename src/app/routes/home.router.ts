@@ -7,12 +7,15 @@ class HomeRoutes extends BaseRoutes {
 
     public routes(): void {
         this.router.get("/home", (req: Request, res: Response) => {
-            res.send('this is Home TS dev');
+            res.send({
+                success: true,
+                message: 'this is Home TS dev'
+            });
         })
 
-        
+
         this.router.get("/users", userController.index)
-}
+    }
 }
 
 

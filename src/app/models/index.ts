@@ -17,6 +17,7 @@ import ujian_proses_kelas_siswa_kategori from "./studi/ujian_proses_kelas_siswa_
 import ujian_proses_kelas_siswa from "./studi/ujian_proses_kelas_siswa.model";
 import ujian_proses_kelas from "./studi/ujian_proses_kelas.model";
 import ujian_proses from "./studi/ujian_proses.model";
+import admin from "./admin.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -41,6 +42,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 // siswa};
 
 // get Master Data
+const goGet_model_admin = admin(sequelize, Sequelize);
 const goGet_model_siswa = siswa(sequelize, Sequelize);
 const goGet_model_kelas = kelas(sequelize, Sequelize);
 const goGet_model_sekolah = sekolah(sequelize, Sequelize);
@@ -60,7 +62,9 @@ const goGet_model_ujian_proses = ujian_proses(sequelize, Sequelize);
 
 const db = {
   //MASTERING
-  Sequelize, sequelize, siswa: goGet_model_siswa,
+  Sequelize, sequelize,
+  admin: goGet_model_admin,
+  siswa: goGet_model_siswa,
   kelas: goGet_model_kelas, sekolah: goGet_model_sekolah,
   paket: goGet_model_paket,
   // ujian_studi
