@@ -14,6 +14,7 @@ import StudiRouter from "./app/routes/studi.router";
 import AdminMasteringSekolahRouter from "./app/routes/admin/admin.mastering.sekolah.router";
 import adminMasteringPaketRouter from "./app/routes/admin/admin.mastering.paket.router";
 import guestRouter from "./app/routes/tanpalogin/guest.router";
+import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
@@ -58,6 +59,8 @@ class App {
         this.app.use(`/api/siswa/data/`, StudiRouter);
         this.app.use(`/api/`, AdminMasteringSekolahRouter);
         this.app.use(`/api/`, adminMasteringPaketRouter);
+        // menuujian
+        this.app.use(`/api/`, studiProsesRouter);
 
         //TANPALOGIN
         this.app.use(`/api/`, guestRouter);

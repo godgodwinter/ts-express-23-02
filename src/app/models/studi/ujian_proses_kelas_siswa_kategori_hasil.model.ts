@@ -34,6 +34,11 @@ const ujian_proses_kelas_siswa_kategori_hasil = (sequelize: any, Sequelize: any)
         },
 
         // timestamp
+        deleted_at: {
+            field: 'deleted_at',
+            type: Sequelize.DATE,
+            allowNull: true
+        },
         created_at: {
             field: 'created_at',
             type: Sequelize.DATE,

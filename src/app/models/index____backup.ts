@@ -39,29 +39,55 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     idle: dbConfig.pool.idle
   }
 });
+// const db = {
+//   Sequelize,
+// sequelize,
+// siswa};
+
+// get Master Data
+const goGet_model_admin = admin(sequelize, Sequelize);
+const goGet_model_owner = owner(sequelize, Sequelize);
+const goGet_model_siswa = siswa(sequelize, Sequelize);
+const goGet_model_kelas = kelas(sequelize, Sequelize);
+const goGet_model_sekolah = sekolah(sequelize, Sequelize);
+const goGet_model_paket = paket(sequelize, Sequelize);
+const goGet_model_katabijak = katabijak(sequelize, Sequelize);
+const goGet_model_katabijakdetail = katabijakdetail(sequelize, Sequelize);
+//get Ujian studi
+const goGet_model_ujian_banksoal = ujian_banksoal(sequelize, Sequelize);
+const goGet_model_ujian_files = ujian_files(sequelize, Sequelize);
+const goGet_model_ujian_paketsoal_kategori = ujian_paketsoal_kategori(sequelize, Sequelize);
+const goGet_model_ujian_paketsoal_soal_pilihanjawaban = ujian_paketsoal_soal_pilihanjawaban(sequelize, Sequelize);
+const goGet_model_ujian_paketsoal_soal = ujian_paketsoal_soal(sequelize, Sequelize);
+const goGet_model_ujian_paketsoal = ujian_paketsoal(sequelize, Sequelize);
+const goGet_model_ujian_proses_kelas_siswa_kategori_hasil = ujian_proses_kelas_siswa_kategori_hasil(sequelize, Sequelize);
+const goGet_model_ujian_proses_kelas_siswa_kategori = ujian_proses_kelas_siswa_kategori(sequelize, Sequelize);
+const goGet_model_ujian_proses_kelas_siswa = ujian_proses_kelas_siswa(sequelize, Sequelize);
+const goGet_model_ujian_proses_kelas = ujian_proses_kelas(sequelize, Sequelize);
+const goGet_model_ujian_proses = ujian_proses(sequelize, Sequelize);
+
 const db = {
   //MASTERING
   Sequelize, sequelize,
-  admin: admin(sequelize, Sequelize),
-  owner: owner(sequelize, Sequelize),
-  siswa: siswa(sequelize, Sequelize),
-  kelas: kelas(sequelize, Sequelize),
-  sekolah: sekolah(sequelize, Sequelize),
-  paket: paket(sequelize, Sequelize),
-  katabijak: katabijak(sequelize, Sequelize),
-  katabijakdetail: katabijakdetail(sequelize, Sequelize),
+  admin: goGet_model_admin,
+  owner: goGet_model_owner,
+  siswa: goGet_model_siswa,
+  kelas: goGet_model_kelas, sekolah: goGet_model_sekolah,
+  paket: goGet_model_paket,
+  katabijak: goGet_model_katabijak,
+  katabijakdetail: goGet_model_katabijakdetail,
   // ujian_studi
-  ujian_banksoal: ujian_banksoal(sequelize, Sequelize),
-  ujian_files: ujian_files(sequelize, Sequelize),
-  ujian_paketsoal_kategori: ujian_paketsoal_kategori(sequelize, Sequelize),
-  ujian_paketsoal_soal_pilihanjawaban: ujian_paketsoal_soal_pilihanjawaban(sequelize, Sequelize),
-  ujian_paketsoal_soal: ujian_paketsoal_soal(sequelize, Sequelize),
-  ujian_paketsoal: ujian_paketsoal(sequelize, Sequelize),
-  ujian_proses_kelas_siswa_kategori_hasil: ujian_proses_kelas_siswa_kategori_hasil(sequelize, Sequelize),
-  ujian_proses_kelas_siswa_kategori: ujian_proses_kelas_siswa_kategori(sequelize, Sequelize),
-  ujian_proses_kelas_siswa: ujian_proses_kelas_siswa(sequelize, Sequelize),
-  ujian_proses_kelas: ujian_proses_kelas(sequelize, Sequelize),
-  ujian_proses: ujian_proses(sequelize, Sequelize),
+  ujian_banksoal: goGet_model_ujian_banksoal,
+  ujian_files: goGet_model_ujian_files,
+  ujian_paketsoal_kategori: goGet_model_ujian_paketsoal_kategori,
+  ujian_paketsoal_soal_pilihanjawaban: goGet_model_ujian_paketsoal_soal_pilihanjawaban,
+  ujian_paketsoal_soal: goGet_model_ujian_paketsoal_soal,
+  ujian_paketsoal: goGet_model_ujian_paketsoal,
+  ujian_proses_kelas_siswa_kategori_hasil: goGet_model_ujian_proses_kelas_siswa_kategori_hasil,
+  ujian_proses_kelas_siswa_kategori: goGet_model_ujian_proses_kelas_siswa_kategori,
+  ujian_proses_kelas_siswa: goGet_model_ujian_proses_kelas_siswa,
+  ujian_proses_kelas: goGet_model_ujian_proses_kelas,
+  ujian_proses: goGet_model_ujian_proses,
 
 };
 
@@ -115,36 +141,6 @@ db.ujian_proses_kelas.belongsTo(db.ujian_proses, {
 db.ujian_proses_kelas_siswa_kategori.belongsTo(db.ujian_proses_kelas_siswa, {
   foreignKey: {
     name: 'ujian_proses_kelas_siswa_id'
-  },
-});
-db.ujian_proses.belongsTo(db.sekolah, {
-  foreignKey: {
-    name: 'sekolah_id'
-  },
-});
-db.ujian_proses_kelas.belongsTo(db.ujian_paketsoal, {
-  foreignKey: {
-    name: 'paketsoal_id'
-  },
-});
-db.ujian_proses_kelas.belongsTo(db.kelas, {
-  foreignKey: {
-    name: 'kelas_id'
-  },
-});
-db.ujian_proses_kelas_siswa.belongsTo(db.ujian_proses_kelas, {
-  foreignKey: {
-    name: 'ujian_proses_kelas_id'
-  },
-});
-db.ujian_proses_kelas_siswa.belongsTo(db.siswa, {
-  foreignKey: {
-    name: 'siswa_id'
-  },
-});
-db.ujian_proses_kelas_siswa_kategori.belongsTo(db.ujian_paketsoal_kategori, {
-  foreignKey: {
-    name: 'ujian_paketsoal_kategori_id'
   },
 });
 // !UJIAN-STUDI-RELASI-END
