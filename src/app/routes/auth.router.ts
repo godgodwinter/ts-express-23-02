@@ -19,6 +19,7 @@ class AuthRoutes extends BaseRoutes {
 
         // AUTH OWNER
         this.router.post("/owner/auth/login", authOwnerController.ownerLogin)
+        this.router.post("/owner/auth/me", [verifyToken, menuAdminOwner], authOwnerController.Me)
 
     }
 }

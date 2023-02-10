@@ -1,15 +1,11 @@
-const sekolah = (sequelize: any, Sequelize: any): any => {
-    const sekolah = sequelize.define("sekolah", {
-        nama: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        status: {
+const katabijakdetail = (sequelize: any, Sequelize: any): any => {
+    const katabijakdetail = sequelize.define("katabijakdetail", {
+        penjelasan: {
             type: Sequelize.STRING,
             allowNull: true
         },
         // relasi
-        paket_id: {
+        katabijak_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
@@ -24,18 +20,18 @@ const sekolah = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'sekolah',
-            plural: 'sekolah',
+            singular: 'katabijakdetail',
+            plural: 'katabijakdetail',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'sekolah',
+        tableName: 'katabijakdetail',
         underscored: true,
-        modelName: 'sekolah'
+        modelName: 'katabijakdetail'
 
     });
 
-    return sekolah;
+    return katabijakdetail;
 };
 
-export default sekolah;
+export default katabijakdetail;

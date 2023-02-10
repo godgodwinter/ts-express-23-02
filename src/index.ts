@@ -11,7 +11,9 @@ import HomeRoutes from "./app/routes/home.router";
 import AuthRoutes from "./app/routes/auth.router";
 import { v4 as uuidv4 } from 'uuid';
 import StudiRouter from "./app/routes/studi.router";
-import AdminMasteringRouter from "./app/routes/admin/admin.mastering.router";
+import AdminMasteringSekolahRouter from "./app/routes/admin/admin.mastering.sekolah.router";
+import adminMasteringPaketRouter from "./app/routes/admin/admin.mastering.paket.router";
+import guestRouter from "./app/routes/tanpalogin/guest.router";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
@@ -52,8 +54,13 @@ class App {
 
         //*  ROUTER-
         this.app.use(`/api/`, AuthRoutes);
+        //ADMIN OWNER
         this.app.use(`/api/siswa/data/`, StudiRouter);
-        this.app.use(`/api/`, AdminMasteringRouter);
+        this.app.use(`/api/`, AdminMasteringSekolahRouter);
+        this.app.use(`/api/`, adminMasteringPaketRouter);
+
+        //TANPALOGIN
+        this.app.use(`/api/`, guestRouter);
 
     }
 }

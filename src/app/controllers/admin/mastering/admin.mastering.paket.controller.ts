@@ -1,15 +1,11 @@
 import { Request, Response } from 'express';
-import SekolahService from '../../../services/sekolah.service';
-interface IResponse {
-    success: boolean,
-    data: Promise<Response> | any[],
-    message: null | string
-}
-class AdminMasteringSekolahController {
-    getSekolahAll = async (req: Request, res: Response): Promise<Response> => {
+import paketService from '../../../services/paket.service';
+class AdminMasteringPaketController {
+
+    getAll = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const service: SekolahService = new SekolahService(req);
-            const datas = await service.getSekolahAll();
+            const service: paketService = new paketService(req);
+            const datas = await service.getAll();
 
             return res.send({
                 data: datas,
@@ -22,7 +18,7 @@ class AdminMasteringSekolahController {
     }
     Edit = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const service: SekolahService = new SekolahService(req);
+            const service: paketService = new paketService(req);
             const datas = await service.Edit();
 
             return res.send({
@@ -37,4 +33,4 @@ class AdminMasteringSekolahController {
 
 }
 
-export default new AdminMasteringSekolahController();
+export default new AdminMasteringPaketController();

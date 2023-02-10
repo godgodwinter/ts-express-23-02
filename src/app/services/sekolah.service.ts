@@ -25,13 +25,52 @@ class sekolahService {
 
     getSekolahAll = async () => {
         try {
-            const response = await sekolah.findAll();
+            const paketDefault = await this.getPaketDefault();
+            const response = await sekolah.findAll({
+                include: [
+                    {
+                        model: db.paket,
+                    }
+                ]
+            });
+            for (let i: number = 0; i < response.length; i++) {
+                response[i].setDataValue("paket_nama", response[i].paket ? response[i]?.paket?.nama : paketDefault.nama)
+            }
+
             return response;
         } catch (error: any) {
             console.log(error.message);
         }
     }
 
+    Edit = async () => {
+        try {
+            const paketDefault = await this.getPaketDefault();
+            const response = await sekolah.findOne(
+                { where: { id: this.params.sekolah_id } },
+                {
+                    include: [
+                        {
+                            model: db.paket,
+                        }
+                    ]
+                });
+            response.setDataValue("paket_nama", response.paket ? response?.paket?.nama : paketDefault.nama)
+
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    getPaketDefault = async () => {
+        try {
+            const response = await paket.findOne();
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
     getPaket = async (sekolah_id: number) => {
         try {
             const response = await paket.findOne({ where: { id: sekolah_id } });

@@ -32,7 +32,7 @@ class AuthOwnerController {
             }
 
             const expiredTimer = 86400 * 7; // 24 hours
-            const token = jwt.sign({ id: response.id, nama: response.name, role: encode_base64('owner') }, secret, {
+            const token = jwt.sign({ id: response.id, nama: response.nama, role: encode_base64('owner') }, secret, {
                 expiresIn: expiredTimer,
             });
 
@@ -50,6 +50,40 @@ class AuthOwnerController {
                 id: response.id,
                 username: response.username,
                 nama: response.nama
+            });
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
+
+    Me = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            let identitas = await owner.findOne({
+                where: {
+                    id: req.app.locals.id,
+                },
+            });
+
+
+            const expiredTimer = 86400 * 7; // 24 hours
+            const newToken = jwt.sign({ id: req.app.locals.id, nama: req.app.locals.nama, role: encode_base64('owner') }, secret, {
+                expiresIn: expiredTimer,
+            });
+
+            let sekolah = null;
+            let paket = null;
+            let stats = null;
+            let data = {
+                token: req.app.locals.tokenOld,
+                newToken
+            };
+
+            return res.status(200).send({
+                identitas,
+                stats,
+                data
+
             });
         } catch (error: any) {
             return res.status(500).send({ message: error.message });

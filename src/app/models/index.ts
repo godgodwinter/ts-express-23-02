@@ -19,6 +19,8 @@ import ujian_proses_kelas from "./studi/ujian_proses_kelas.model";
 import ujian_proses from "./studi/ujian_proses.model";
 import admin from "./admin.model";
 import owner from "./owner.model";
+import katabijak from "./katabijak.model";
+import katabijakdetail from "./katabijakdetail.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -49,6 +51,8 @@ const goGet_model_siswa = siswa(sequelize, Sequelize);
 const goGet_model_kelas = kelas(sequelize, Sequelize);
 const goGet_model_sekolah = sekolah(sequelize, Sequelize);
 const goGet_model_paket = paket(sequelize, Sequelize);
+const goGet_model_katabijak = katabijak(sequelize, Sequelize);
+const goGet_model_katabijakdetail = katabijakdetail(sequelize, Sequelize);
 //get Ujian studi
 const goGet_model_ujian_banksoal = ujian_banksoal(sequelize, Sequelize);
 const goGet_model_ujian_files = ujian_files(sequelize, Sequelize);
@@ -70,6 +74,8 @@ const db = {
   siswa: goGet_model_siswa,
   kelas: goGet_model_kelas, sekolah: goGet_model_sekolah,
   paket: goGet_model_paket,
+  katabijak: goGet_model_katabijak,
+  katabijakdetail: goGet_model_katabijakdetail,
   // ujian_studi
   ujian_banksoal: goGet_model_ujian_banksoal,
   ujian_files: goGet_model_ujian_files,
@@ -101,6 +107,20 @@ db.sekolah.belongsTo(db.paket, {
     name: 'paket_id'
   },
 });
+
+// db.katabijak.belongsTo(db.katabijakdetail, {
+//   foreignKey: {
+//     name: 'katabijakdetail_id'
+//   },
+// });
+
+
+db.katabijakdetail.belongsTo(db.katabijak, {
+  foreignKey: {
+    name: 'katabijak_id'
+  },
+});
+
 
 // !MASTERING-RELASI-END
 
