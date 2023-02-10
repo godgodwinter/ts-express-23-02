@@ -11,8 +11,13 @@ class StudiProsesRouter extends BaseRoutes {
         this.router.get("/admin/menuujian/proseskelas/:ujian_proses_id/kelas/:ujian_proses_kelas_id/siswa/:ujian_proses_kelas_siswa_id", [verifyToken, menuAdminOwner], AdminStudiProsesController.getAllKategoriPerSiswa)
 
         this.router.post("/admin/menuujian/proesssiswa/:ujian_proses_kelas_siswa_kategori_id/reset_waktu", [verifyToken, menuAdminOwner], AdminStudiProsesController.doResetWaktu)
-        this.router.post("/admin/menuujian/proesssiswa/:ujian_proses_kelas_siswa_kategori_id/reset_all", [verifyToken, menuAdminOwner], AdminStudiProsesController.doResetAll)
         this.router.post("/admin/menuujian/proesssiswa/:ujian_proses_kelas_siswa_kategori_id/reset_salah", [verifyToken, menuAdminOwner], AdminStudiProsesController.doResetSalah)
+        // this.router.post("/admin/menuujian/proesssiswa/:ujian_proses_kelas_siswa_kategori_id/reset_all", [verifyToken, menuAdminOwner], AdminStudiProsesController.doResetAll) // !BELUM
+
+        // GENERATE HASIL UJIAN STUDI
+        // this.router.get("/admin/hasil_ujian_lintas/kelas/:kelas_id", [verifyToken, menuAdminOwner], AdminStudiProsesController.doGenerateHasilUjianKelas)
+        this.router.get("/admin/hasil_ujian_lintas/siswa/:siswa_id", [verifyToken, menuAdminOwner], AdminStudiProsesController.doGenerateHasilUjianSiswa)
+
 
 
     }

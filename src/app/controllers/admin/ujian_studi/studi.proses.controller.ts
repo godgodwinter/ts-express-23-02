@@ -101,6 +101,20 @@ class AdminStudiProsesController {
             return res.status(500).send({ message: error.message });
         }
     }
+    doGenerateHasilUjianSiswa = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: adminStudiProsesService = new adminStudiProsesService(req);
+            const datas = await service.doGenerateHasilUjianSiswa();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
 }
 
 export default new AdminStudiProsesController();

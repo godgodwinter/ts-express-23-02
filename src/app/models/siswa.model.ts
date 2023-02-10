@@ -1,4 +1,4 @@
-const siswa = (sequelize:any, Sequelize:any) :any=>  {
+const siswa = (sequelize: any, Sequelize: any): any => {
     const Siswa = sequelize.define("siswa", {
         nama: {
             type: Sequelize.STRING,
@@ -13,6 +13,10 @@ const siswa = (sequelize:any, Sequelize:any) :any=>  {
             allowNull: true
         },
         password: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        passworddefault: {
             type: Sequelize.STRING,
             allowNull: true
         },

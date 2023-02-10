@@ -47,10 +47,11 @@ class adminStudiProsesService {
     }
     studi_proses_getAllSiswaPerKelas = async () => {
         try {
-            const response = await ujian_proses_kelas_siswa.findAll({ where: { ujian_proses_kelas_id: this.params.ujian_proses_kelas_id }, include: [db.ujian_proses_kelas, db.siswa] });
+            const response = await ujian_proses_kelas_siswa.findAll({ where: { ujian_proses_kelas_id: this.params.ujian_proses_kelas_id }, include: [db.ujian_proses_kelas, { model: db.siswa, attributes: ['id', 'nama', 'username', 'passworddefault'] }] });
             for (let i: number = 0; i < response.length; i++) {
                 response[i].setDataValue("nama", response[i]?.siswa?.nama)
-                response[i].setDataValue("siswa_id", response[i]?.siswa?.id)
+                response[i].setDataValue("username", response[i]?.siswa?.username)
+                response[i].setDataValue("passworddefault", response[i]?.siswa?.passworddefault)
             }
             return response;
         } catch (error: any) {
@@ -145,8 +146,98 @@ class adminStudiProsesService {
             console.log(error.message);
         }
     }
+    doGenerateHasilUjianSiswa = async (siswa_id: number = parseInt(this.params.siswa_id)) => {
+        try {
+            const getSiswa = await db.siswa.findOne({ where: { id: siswa_id, deleted_at: null } });
+            let dataForm = {
+                siswa_id,
+                ujian_banksoal_aspek_id: null,
+                ujian_banksoal_aspek_nama: null,
+                ujian_banksoal_aspek_urutan: null,
+                ujian_paketsoal_kategori_id: null,
+                ujian_paketsoal_kategori_nama: null,
+                urutan: null,
+                max_skor: null,
+                nilaiAkhir: null,
+                nilaiku: null,
+                nilaiAkhir_ket_singkatan: null,
+                nilaiAkhir_ket: null,
+                ujian_paketsoal_kategori_prefix_aspek: null,
+            }
+            // periksa selesai
+            const is_sudah_selesai = await this.fn_is_sudah_selesai(siswa_id, getSiswa.kelas_id)
+            // !jika selesai
+            console.log(is_sudah_selesai, dataForm);
+            if (is_sudah_selesai === 'Selesai') {
+                const get_data_hasil_ujian_studi = await this.fn_get_data_hasil_ujian_studi(siswa_id, getSiswa)
+                if (get_data_hasil_ujian_studi === false) {
+                    return "Gagal Generate"
+                }
+                return " Generate Berhasil";
+            }
 
+            //fnGetDataCetakHasilLintasPersiswa
+            // isi data Form
+            // simpan ke tabel hasil cetak
+            return "Gagal generate";
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
 
+    // * FUNGSI
+    fn_is_sudah_selesai = async (siswa_id: number, kelas_id: number): Promise<string> => {
+        try {
+            let result: string = "Data tidak ditemukan"
+            const getUjian_proses_kelas_siswa = await db.ujian_proses_kelas_siswa.findOne({ where: { siswa_id } });
+            if (getUjian_proses_kelas_siswa === null) {
+                return result;
+            }
+            const ujian_proses_kelas_siswa_id = getUjian_proses_kelas_siswa.id
+            const getPaketId = await db.ujian_proses_kelas.findOne({ where: { kelas_id }, order: [['id', 'desc']] })
+            const ujian_paketsoal_id = getPaketId?.paketsoal_id
+
+            const get_ujian_paketsoal_kategori = await db.ujian_paketsoal_kategori.findAll({ where: { ujian_paketsoal_id } })
+            const jmlKategori = get_ujian_paketsoal_kategori.length;
+            let jmlSelesai = 0
+            for (let i = 0; i < get_ujian_paketsoal_kategori.length; i++) {
+                let periksaUjianKategori = await db.ujian_proses_kelas_siswa_kategori.findOne({ where: { ujian_proses_kelas_siswa_id: ujian_proses_kelas_siswa_id, ujian_paketsoal_kategori_id: get_ujian_paketsoal_kategori[i].id } })
+                if (periksaUjianKategori) {
+                    jmlSelesai++
+                }
+            }
+            if (jmlSelesai != jmlKategori) {
+                return "Belum diselesaikan"
+            } else {
+                return "Selesai"
+            }
+        } catch (error: any) {
+            console.log(error.message);
+            throw (error)
+        }
+    };
+    fn_get_data_hasil_ujian_studi = async (siswa_id: number, siswa: any): Promise<any | boolean> => {
+        try {
+            let result = false
+            const getujian_proses_kelas_siswa = await db.ujian_proses_kelas_siswa.findOne({ where: { siswa_id } })
+            if (getujian_proses_kelas_siswa === null) {
+                return false
+            }
+
+            // const getPaketId = await db.ujian_proses_kelas.findOne({ where: { kelas_id: siswa.kelas_id }, order: [['id', 'desc']] })
+            // const ujian_paketsoal_id = getPaketId?.paketsoal_id
+
+            // const getUjianKategori = await db.ujian_paketsoal_kategori.findAll({ where: { ujian_paketsoal_id } })
+
+            let tempAspekTipeSemua = [];
+            // const getAspek = db.ujian_banksoal_aspek.findAll();
+            return result;
+        } catch (error: any) {
+            console.log(error.message);
+            throw (error)
+        }
+    };
+    // * FUNGSI
 }
 
 export default adminStudiProsesService;
