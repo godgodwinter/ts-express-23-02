@@ -181,12 +181,12 @@ class StudiService {
                     let jumlah_soal = 0;
                     let status = 'Belum';
                     let tipe = 'Pilihan ganda';
-
-                    const getStatsPerKategori = await db.ujian_paketsoal_soal.count({
-                        where: {
-                            ujian_paketsoal_kategori_id: tempData.id, deleted_at: null
-                        }
-                    })
+                    //!di hilangkan dlu sementara fixed 30
+                    // const getStatsPerKategori = await db.ujian_paketsoal_soal.count({
+                    //     where: {
+                    //         ujian_paketsoal_kategori_id: tempData.id, deleted_at: null
+                    //     }
+                    // })
                     // console.log(tempData.id, getStatsPerKategori);
                     let getStatus = await db.ujian_proses_kelas_siswa_kategori.findOne({
                         where: {
@@ -219,9 +219,11 @@ class StudiService {
                             }
                         }
                     }
-                    tempData.setDataValue("jumlah_soal", getStatsPerKategori)
+                    tempData.setDataValue("jumlah_soal", 30)
+                    tempData.setDataValue("jml_soal", 30)
+                    // tempData.setDataValue("jumlah_soal", getStatsPerKategori)
+                    // tempData.setDataValue("jml_soal", getStatsPerKategori)
                     tempData.setDataValue("status", getStatus ? status : 'Belum')
-                    tempData.setDataValue("jml_soal", getStatsPerKategori)
                     tempData.setDataValue("tipe", tipe)
                     // data.push(element);
                 }

@@ -16,7 +16,7 @@ class StudiProsesRouter extends BaseRoutes {
 
         // GENERATE HASIL UJIAN STUDI
         // this.router.get("/admin/hasil_ujian_lintas/kelas/:kelas_id", [verifyToken, menuAdminOwner], AdminStudiProsesController.doGenerateHasilUjianKelas)
-        this.router.get("/admin/hasil_ujian_lintas/siswa/:siswa_id", [verifyToken, menuAdminOwner], AdminStudiProsesController.doGenerateHasilUjianSiswa)
+        // this.router.get("/admin/hasil_ujian_lintas/siswa/:siswa_id", [verifyToken, menuAdminOwner], AdminStudiProsesController.doGenerateHasilUjianSiswa)
 
 
 
