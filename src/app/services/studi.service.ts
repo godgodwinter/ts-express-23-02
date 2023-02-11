@@ -86,7 +86,7 @@ class StudiService {
             }
             return data;
         }
-        return "Belum pernah daftar ujian!"
+        return null
     }
 
     getDataUjianEdit = async (ujian_proses_kelas_id: number) => {
