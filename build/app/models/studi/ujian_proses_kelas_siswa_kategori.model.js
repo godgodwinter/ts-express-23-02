@@ -1,0 +1,64 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const ujian_proses_kelas_siswa_kategori = (sequelize, Sequelize) => {
+    const ujian_proses_kelas_siswa_kategori = sequelize.define("ujian_proses_kelas_siswa_kategori", {
+        // data
+        hasil_per_kategori: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        tgl_mulai: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        tgl_selesai: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        waktu: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        // settings
+        status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Aktif"
+        },
+        // relasi
+        ujian_proses_kelas_siswa_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        ujian_paketsoal_kategori_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        // timestamp
+        deleted_at: {
+            field: 'deleted_at',
+            type: Sequelize.DATE,
+            allowNull: true
+        },
+        created_at: {
+            field: 'created_at',
+            type: Sequelize.DATE,
+        },
+        updated_at: {
+            field: 'updated_at',
+            type: Sequelize.DATE,
+        },
+    }, {
+        name: {
+            singular: 'ujian_proses_kelas_siswa_kategori',
+            plural: 'ujian_proses_kelas_siswa_kategori',
+        },
+        freezeTableName: true,
+        timestamps: false,
+        tableName: 'ujian_proses_kelas_siswa_kategori',
+        underscored: true,
+        modelName: 'ujian_proses_kelas_siswa_kategori'
+    });
+    return ujian_proses_kelas_siswa_kategori;
+};
+exports.default = ujian_proses_kelas_siswa_kategori;
