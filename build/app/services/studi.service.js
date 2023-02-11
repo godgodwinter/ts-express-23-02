@@ -70,7 +70,7 @@ class StudiService {
                 }
                 return data;
             }
-            return "Belum pernah daftar ujian!";
+            return null;
         };
         this.getDataUjianEdit = async (ujian_proses_kelas_id) => {
             try {
