@@ -7,6 +7,7 @@ import kelas from "./kelas.model";
 import sekolah from "./sekolah.model";
 import paket from "./paket.model";
 import ujian_banksoal from "./studi/ujian_banksoal.model";
+import ujian_banksoal_aspek from "./studi/ujian_banksoal_aspek.model";
 import ujian_files from "./studi/ujian_files.model";
 import ujian_paketsoal_kategori from "./studi/ujian_paketsoal_kategori.model";
 import ujian_paketsoal_soal_pilihanjawaban from "./studi/ujian_paketsoal_soal_pilihanjawaban.model";
@@ -21,6 +22,7 @@ import admin from "./admin.model";
 import owner from "./owner.model";
 import katabijak from "./katabijak.model";
 import katabijakdetail from "./katabijakdetail.model";
+import ujian_kategori from "./studi/ujian_kategori.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -52,6 +54,8 @@ const db = {
   katabijakdetail: katabijakdetail(sequelize, Sequelize),
   // ujian_studi
   ujian_banksoal: ujian_banksoal(sequelize, Sequelize),
+  ujian_kategori: ujian_kategori(sequelize, Sequelize),
+  ujian_banksoal_aspek: ujian_banksoal_aspek(sequelize, Sequelize),
   ujian_files: ujian_files(sequelize, Sequelize),
   ujian_paketsoal_kategori: ujian_paketsoal_kategori(sequelize, Sequelize),
   ujian_paketsoal_soal_pilihanjawaban: ujian_paketsoal_soal_pilihanjawaban(sequelize, Sequelize),
@@ -145,6 +149,16 @@ db.ujian_proses_kelas_siswa.belongsTo(db.siswa, {
 db.ujian_proses_kelas_siswa_kategori.belongsTo(db.ujian_paketsoal_kategori, {
   foreignKey: {
     name: 'ujian_paketsoal_kategori_id'
+  },
+});
+db.ujian_paketsoal_soal_pilihanjawaban.belongsTo(db.ujian_paketsoal_soal, {
+  foreignKey: {
+    name: 'ujian_paketsoal_soal_id'
+  },
+});
+db.ujian_paketsoal_kategori.belongsTo(db.ujian_kategori, {
+  foreignKey: {
+    name: 'ujian_kategori_id'
   },
 });
 // !UJIAN-STUDI-RELASI-END

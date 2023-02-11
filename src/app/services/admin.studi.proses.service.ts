@@ -1,7 +1,9 @@
 
 import db from "../models";
+import { Op } from 'sequelize';
 import { Request } from 'express';
 import { fn_get_sisa_waktu } from "../helpers/babengUjian";
+
 const moment = require('moment');
 const localization = require('moment/locale/id')
 moment.updateLocale("id", localization);
@@ -11,6 +13,7 @@ const {
     ujian_proses_kelas_siswa,
     ujian_proses_kelas_siswa_kategori,
     ujian_proses_kelas_siswa_kategori_hasil,
+    ujian_kategori
 } = db;
 class adminStudiProsesService {
 
@@ -224,20 +227,172 @@ class adminStudiProsesService {
                 return false
             }
 
-            // const getPaketId = await db.ujian_proses_kelas.findOne({ where: { kelas_id: siswa.kelas_id }, order: [['id', 'desc']] })
-            // const ujian_paketsoal_id = getPaketId?.paketsoal_id
+            const getPaketId = await db.ujian_proses_kelas.findOne({ where: { kelas_id: siswa.kelas_id }, order: [['id', 'desc']] })
+            const ujian_paketsoal_id = getPaketId?.paketsoal_id
 
-            // const getUjianKategori = await db.ujian_paketsoal_kategori.findAll({ where: { ujian_paketsoal_id } })
+            const getUjianKategori = await db.ujian_paketsoal_kategori.findAll({ where: { ujian_paketsoal_id } })
 
             let tempAspekTipeSemua = [];
-            // const getAspek = db.ujian_banksoal_aspek.findAll();
+
+            const getAspek = await db.ujian_banksoal_aspek.findAll();
+
+            //!1. masukkan kategori sesuai aspek kecuali prefix==banksoal_all
+            for (let i = 0; i < getAspek.length; i++) {
+                let temp = []
+                for (let j = 0; j < getUjianKategori.length; j++) {
+                    let periksaKategori = await db.ujian_proses_kelas_siswa_kategori.findOne({
+                        where: {
+                            ujian_proses_kelas_siswa_id: getujian_proses_kelas_siswa.id, ujian_paketsoal_kategori_id: getUjianKategori[j].id,
+                            //  status: { [Op.ne]: null } 
+                        }
+                    })
+                    // console.log('====================================');
+                    // console.log(periksaKategori, getujian_proses_kelas_siswa.id);
+                    // console.log('====================================');
+                    if (periksaKategori) {
+                        if (periksaKategori.status != null) {
+
+                        }
+                        let getNilaiku = await db.ujian_proses_kelas_siswa_kategori_hasil.sum('skor', { where: { ujian_proses_kelas_siswa_kategori_id: periksaKategori.id } })
+                        let dataku = periksaKategori;
+                        dataku.setDataValue("nilaiku", getNilaiku)
+                        let getMaxSkor = await this.fn_get_max_skor(getUjianKategori[j].id)
+                        // console.log('====================================');
+                        // console.log(getMaxSkor);
+                        // console.log('====================================');
+                        dataku.setDataValue("max_skor", getMaxSkor)
+                        let getNilaiAkhir = getMaxSkor ? ((getNilaiku / getMaxSkor) * 100) : 0;
+                        dataku.setDataValue("nilaiAkhir", getNilaiAkhir)
+                        dataku.setDataValue("nilaiAkhir_ket", await this.fn_studi_get_ket(getNilaiAkhir))
+                        dataku.setDataValue("nilaiAkhir_ket_singkatan", await this.fn_studi_get_ket_singkatan(getNilaiAkhir))
+                        let get_ujian_paketsoal_kategori = await db.ujian_paketsoal_kategori.findOne({
+                            where: { id: periksaKategori.ujian_paketsoal_kategori_id },
+                            include: [{ model: ujian_kategori }]
+                        })
+                        dataku.setDataValue("kategori_nama", get_ujian_paketsoal_kategori?.ujian_kategori?.nama)
+                        dataku.setDataValue("prefix", get_ujian_paketsoal_kategori?.ujian_kategori?.prefix)
+                        // let getAspekDetail = periksaKategori.ujian_paketsoal_kategori ? periksaKategori.ujian_paketsoal_kategori.kategri
+                        // let prefix= periksaKategori.ujian_paketsoal_kategori
+                        console.log('====================================');
+                        console.log(get_ujian_paketsoal_kategori?.ujian_kategori?.prefix);
+                        console.log('====================================');
+
+                        // console.log('====================================');
+                        // console.log(getNilaiAkhir, getNilaiku, getMaxSkor);
+                        // console.log('====================================');
+
+                        // console.log("dataku", dataku)
+                        // console.log('====================================');
+                        // console.log(getNilaiku, periksaKategori.id);
+                        // console.log('====================================');
+
+                    }
+                }
+            }
+            // console.log(getAspek)
             return result;
         } catch (error: any) {
             console.log(error.message);
             throw (error)
         }
     };
+
+
+    fn_get_max_skor = async (ujian_paketsoal_kategori_id: number): Promise<number> => {
+        try {
+            console.log('====================================');
+            console.log(ujian_paketsoal_kategori_id, "ini kategori");
+            console.log('====================================');
+            let getSoal = await db.ujian_paketsoal_soal.findAll({ where: { ujian_paketsoal_kategori_id: ujian_paketsoal_kategori_id } })
+            let maxSkor: number = 0;
+            for (let i = 0; i < getSoal.length; i++) {
+                let getMaxSkor = await db.ujian_paketsoal_soal_pilihanjawaban.findOne({
+                    include: {
+                        model: db.ujian_paketsoal_soal, attributes: ['id'],
+                        where: { id: getSoal[i].id, deleted_at: null }
+                    }
+                    , order: [['skor', 'desc']]
+                })
+                // console.log(getMaxSkor.skor)
+                if (getMaxSkor) {
+                    maxSkor += getMaxSkor.skor;
+                }
+
+            }
+            return maxSkor
+        } catch (error: any) {
+            console.log(error.message);
+            throw (error)
+        }
+    };
     // * FUNGSI
+    // * FUNGSI-UMUM
+
+    fn_studi_get_ket = async (nilai: number): Promise<string> => {
+        try {
+            if (nilai >= 88) {
+                return "Sangat Tinggi Sekali";
+            }
+            if (88 > nilai && nilai >= 78) {
+                return "Tinggi Sekali"
+            }
+            if (78 > nilai && nilai >= 68) {
+                return "Tinggi"
+            }
+            if (68 > nilai && nilai >= 61) {
+                return "Cukup Tinggi"
+            }
+            if (61 > nilai && nilai >= 44) {
+                return "Cukup"
+            }
+            if (44 > nilai && nilai >= 34) {
+                return "Agak Rendah"
+            }
+            if (34 > nilai && nilai >= 28) {
+                return "Rendah"
+            }
+            if (28 > nilai && nilai >= 18) {
+                return "Rendah Sekali"
+            }
+            return "Sangat Rendah Sekali"
+        } catch (error: any) {
+            console.log(error.message);
+            throw (error)
+        }
+    };
+    fn_studi_get_ket_singkatan = async (nilai: number): Promise<string> => {
+        try {
+            if (nilai >= 88) {
+                return "STS";
+            }
+            if (88 > nilai && nilai >= 78) {
+                return "TS"
+            }
+            if (78 > nilai && nilai >= 68) {
+                return "T"
+            }
+            if (68 > nilai && nilai >= 61) {
+                return "CT"
+            }
+            if (61 > nilai && nilai >= 44) {
+                return "C"
+            }
+            if (44 > nilai && nilai >= 34) {
+                return "AR"
+            }
+            if (34 > nilai && nilai >= 28) {
+                return "R"
+            }
+            if (28 > nilai && nilai >= 18) {
+                return "RS"
+            }
+            return "SRS"
+        } catch (error: any) {
+            console.log(error.message);
+            throw (error)
+        }
+    };
+    // * FUNGSI-UMUM-END
 }
 
 export default adminStudiProsesService;
