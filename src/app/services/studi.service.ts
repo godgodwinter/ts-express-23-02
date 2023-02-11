@@ -54,32 +54,39 @@ class StudiService {
         const resProsesKelas = await ujian_proses_kelas.findOne({ where: { kelas_id: me?.kelas?.id }, include: [db.ujian_proses] });
         let ujian_proses_kelas_id: number = resProsesKelas.id;
         // console.log('====================================');
-        // console.log(ujian_proses_kelas_id);
+        // console.log('aasd', ujian_proses_kelas_id);
         // console.log('====================================');
         const resProsesKelasSiswa = await ujian_proses_kelas_siswa.findOne({ where: { ujian_proses_kelas_id, siswa_id: this.meId } });
-        let ujianProsesKelasSiswaId = resProsesKelasSiswa.id;
-        // console.log('====================================');
-        // console.log(ujianProsesKelasSiswaId);
-        // console.log('====================================');
-        const resProsesKelasSiswaKategori = await ujian_proses_kelas_siswa_kategori.findOne({ where: { ujian_proses_kelas_siswa_id: ujianProsesKelasSiswaId, status: 'Aktif' }, order: [['updated_at', 'desc']] });
         console.log('====================================');
-        console.log(resProsesKelasSiswaKategori);
+        console.log('aa', resProsesKelasSiswa, ujian_proses_kelas_id, this.meId);
         console.log('====================================');
-        if (resProsesKelasSiswaKategori) {
-            let { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at } = resProsesKelasSiswaKategori;
-            data = { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at };
-            // console.log(moment().format("YYYY-MMMM-DD"));
-            let getSisaWaktu = await this.fn_get_sisa_waktu(tgl_selesai);
-            data.sisa_waktu = getSisaWaktu?.detik;
-            data.sisa_waktu_dalam_menit = getSisaWaktu?.menit;
-            data.ujian_proses_kelas_id = ujian_proses_kelas_id;
-            data.ujian_proses_kelas_siswa = resProsesKelasSiswa;
-            data.getSisaWaktu = getSisaWaktu;
-            if (data.sisa_waktu < 0) {
-                return null
+        // !jika belum pernah daftar paket skrip tidak dijalankan
+        if (resProsesKelasSiswa) {
+            let ujianProsesKelasSiswaId = resProsesKelasSiswa.id;
+            // console.log('====================================');
+            // console.log('tes', ujianProsesKelasSiswaId);
+            // console.log('====================================');
+            const resProsesKelasSiswaKategori = await ujian_proses_kelas_siswa_kategori.findOne({ where: { ujian_proses_kelas_siswa_id: ujianProsesKelasSiswaId, status: 'Aktif' }, order: [['updated_at', 'desc']] });
+            // console.log('====================================');
+            // console.log(resProsesKelasSiswaKategori);
+            // console.log('====================================');
+            if (resProsesKelasSiswaKategori) {
+                let { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at } = resProsesKelasSiswaKategori;
+                data = { id, ujian_proses_kelas_siswa_id, status, hasil_per_kategori, tgl_mulai, tgl_selesai, waktu, ujian_paketsoal_kategori_id, created_at, updated_at };
+                // console.log(moment().format("YYYY-MMMM-DD"));
+                let getSisaWaktu = await this.fn_get_sisa_waktu(tgl_selesai);
+                data.sisa_waktu = getSisaWaktu?.detik;
+                data.sisa_waktu_dalam_menit = getSisaWaktu?.menit;
+                data.ujian_proses_kelas_id = ujian_proses_kelas_id;
+                data.ujian_proses_kelas_siswa = resProsesKelasSiswa;
+                data.getSisaWaktu = getSisaWaktu;
+                if (data.sisa_waktu < 0) {
+                    return null
+                }
             }
+            return data;
         }
-        return data;
+        return "Belum pernah daftar ujian!"
     }
 
     getDataUjianEdit = async (ujian_proses_kelas_id: number) => {
