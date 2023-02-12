@@ -10,7 +10,7 @@ const compression_1 = __importDefault(require("compression"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = require("dotenv");
-const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+// import rateLimit from "express-rate-limit"
 const models_1 = __importDefault(require("./app/models"));
 // router
 const home_router_1 = __importDefault(require("./app/routes/home.router"));
@@ -20,16 +20,17 @@ const admin_mastering_sekolah_router_1 = __importDefault(require("./app/routes/a
 const admin_mastering_paket_router_1 = __importDefault(require("./app/routes/admin/admin.mastering.paket.router"));
 const guest_router_1 = __importDefault(require("./app/routes/tanpalogin/guest.router"));
 const studi_proses_router_1 = __importDefault(require("./app/routes/admin/studi/studi.proses.router"));
+const babengLimiter_1 = require("./app/helpers/babengLimiter");
 (0, dotenv_1.config)();
 const port = process.env.APP_PORT || 8000;
-const limiter = (0, express_rate_limit_1.default)({
-    windowMs: 1 * 60 * 1000,
-    max: 30,
-    // delayMs: 0, // disable delaying - full speed until the max limit is reached
-    message: "Too many requests maid from this IP, please try again after an hour",
-    standardHeaders: true,
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
+// const limiter = rateLimit({
+//     windowMs: 1 * 60 * 1000, // 1 minutes
+//     max: 30, // Limit each IP to 70 requests per `window` (here, per 15 minutes)
+//     // delayMs: 0, // disable delaying - full speed until the max limit is reached
+//     message: "Too many requests maid from this IP, please try again after an hour",
+//     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// })
 // const limiter = rateLimit({
 //     windowMs: 15 * 60 * 1000, // 15 minutes
 //     max: 1, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -52,29 +53,29 @@ class App {
         this.app.use((0, compression_1.default)());
         this.app.use((0, helmet_1.default)());
         this.app.use((0, cors_1.default)());
-        this.app.use(limiter);
+        // this.app.use(limiter);
         express_1.default.urlencoded({ extended: true, limit: "5m" });
     }
     routes() {
         //* ROUTER-BARU
         const apiVersion = "v1";
-        this.app.route("/").get((req, res) => {
+        this.app.route("/").get((0, babengLimiter_1.babengLimiter)(), (req, res) => {
             res.send({
                 success: true,
                 message: 'just TS'
             });
         });
-        this.app.use(`/api/${apiVersion}/home`, home_router_1.default);
+        this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiter)(30, 1), home_router_1.default);
         //*  ROUTER-
-        this.app.use(`/api/`, auth_router_1.default);
+        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(), auth_router_1.default); //* user login/authentikasi
         //ADMIN OWNER
-        this.app.use(`/api/siswa/data/`, studi_router_1.default);
-        this.app.use(`/api/`, admin_mastering_sekolah_router_1.default);
-        this.app.use(`/api/`, admin_mastering_paket_router_1.default);
+        this.app.use(`/api/siswa/data/`, (0, babengLimiter_1.babengLimiterUjian)(), studi_router_1.default); //* untuk ujian studi
+        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), admin_mastering_sekolah_router_1.default);
+        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), admin_mastering_paket_router_1.default);
         // menuujian
-        this.app.use(`/api/`, studi_proses_router_1.default);
+        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), studi_proses_router_1.default);
         //TANPALOGIN
-        this.app.use(`/api/`, guest_router_1.default);
+        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), guest_router_1.default);
     }
 }
 const app = new App().app;

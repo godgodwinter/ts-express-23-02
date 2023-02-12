@@ -73,12 +73,12 @@ class App {
             });
         })
 
-        this.app.use(`/api/${apiVersion}/home`, babengLimiter(2, 1), HomeRoutes);
+        this.app.use(`/api/${apiVersion}/home`, babengLimiter(30, 1), HomeRoutes);
 
         //*  ROUTER-
-        this.app.use(`/api/`, babengLimiterUjian(), AuthRoutes);
+        this.app.use(`/api/`, babengLimiterUjian(), AuthRoutes); //* user login/authentikasi
         //ADMIN OWNER
-        this.app.use(`/api/siswa/data/`, babengLimiterUjian(), StudiRouter);
+        this.app.use(`/api/siswa/data/`, babengLimiterUjian(), StudiRouter); //* untuk ujian studi
         this.app.use(`/api/`, babengLimiter(), AdminMasteringSekolahRouter);
         this.app.use(`/api/`, babengLimiter(), adminMasteringPaketRouter);
         // menuujian

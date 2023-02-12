@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const studi_controller_1 = __importDefault(require("../controllers/studi.controller"));
+// import { babengLimiterUjian, babengLimiter } from '../helpers/babengLimiter';
 const auth_jwt_1 = require("../middleware/auth.jwt");
 const base_router_1 = __importDefault(require("./base.router"));
 class StudiRouter extends base_router_1.default {
