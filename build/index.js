@@ -41,7 +41,7 @@ const port = process.env.APP_PORT || 8000;
 // import UserRoutes from "./routers/UserRouter";
 // import AuthRoutes from "./routers/AuthRoutes";
 // import TodoRoutes from "./routers/TodoRoutes";
-const rateLimit = 6000;
+const rateLimit = 1000;
 class App {
     constructor() {
         this.app = (0, express_1.default)();
