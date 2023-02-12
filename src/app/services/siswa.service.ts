@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 // const Siswa = db.siswa;
 
 // const DB: any = db;
-const { siswa,kelas } = db;
+const { siswa, kelas } = db;
 // export const getSiswa = async (req:Request, res:Response) => {
 //         try {
 //             const response = await Siswa.findAll({ offset: 0, limit: 10, include: kelas });
@@ -31,7 +31,7 @@ class siswaService {
         // console.log('====================================');
         // console.log(DB.siswa.findAll(),this.body);
         // console.log('====================================');
-        const datas = await siswa.findAll({ offset: 0, limit: 10, include: kelas });
+        const datas = await siswa.scope('withoutPass').findAll({ offset: 0, limit: 10, include: kelas });
 
         return datas;
     }

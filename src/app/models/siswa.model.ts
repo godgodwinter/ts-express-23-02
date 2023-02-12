@@ -53,6 +53,9 @@ const siswa = (sequelize: any, Sequelize: any): any => {
         scopes: {
             withPassword: {
                 attributes: {},
+            },
+            withoutPass: {
+                attributes: { exclude: ['password', 'passworddefault'] },
             }
         }
     });

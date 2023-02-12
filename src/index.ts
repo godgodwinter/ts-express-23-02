@@ -5,6 +5,8 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 import { config as dotenv } from "dotenv";
+import rateLimit from "express-rate-limit"
+
 import db from "./app/models"
 // router
 import HomeRoutes from "./app/routes/home.router";
@@ -18,6 +20,20 @@ import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
+const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minutes
+    max: 30, // Limit each IP to 70 requests per `window` (here, per 15 minutes)
+    // delayMs: 0, // disable delaying - full speed until the max limit is reached
+    message: "Too many requests maid from this IP, please try again after an hour",
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+// const limiter = rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 minutes
+//     max: 1, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+//     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// })
 // ROUTERS
 // import UserRoutes from "./routers/UserRouter";
 // import AuthRoutes from "./routers/AuthRoutes";
@@ -37,6 +53,7 @@ class App {
         this.app.use(compression());
         this.app.use(helmet());
         this.app.use(cors());
+        this.app.use(limiter);
         express.urlencoded({ extended: true, limit: "5m" });
     }
 

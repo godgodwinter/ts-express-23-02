@@ -16,9 +16,9 @@ import siswaService from '../services/siswa.service';
 //         name: "Joko"
 //     },
 // ]
-class UserController  {
-    index= async(req: Request, res: Response): Promise<Response> =>{
-     
+class UserController {
+    index = async (req: Request, res: Response): Promise<Response> => {
+
         const service: siswaService = new siswaService(req);
         const datas = await service.getAll();
 
