@@ -14,7 +14,7 @@ const babengLimiter = (max = 30, minutes = 1) => (0, express_rate_limit_1.defaul
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 exports.babengLimiter = babengLimiter;
-const babengLimiterUjian = (max = 6000, minutes = 1) => (0, express_rate_limit_1.default)({
+const babengLimiterUjian = (max = 20, minutes = 1) => (0, express_rate_limit_1.default)({
     windowMs: minutes * 60 * 1000,
     max: max,
     // delayMs: 0, // disable delaying - full speed until the max limit is reached
