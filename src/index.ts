@@ -43,6 +43,7 @@ const port: any = process.env.APP_PORT || 8000;
 // import UserRoutes from "./routers/UserRouter";
 // import AuthRoutes from "./routers/AuthRoutes";
 // import TodoRoutes from "./routers/TodoRoutes";
+const rateLimit: number = 10000;
 
 class App {
     public app: Application
@@ -72,19 +73,19 @@ class App {
                 message: 'just TS'
             });
         })
-        this.app.route("/ts/req").get(babengLimiterUjian(), (req: Request, res: Response) => {
+        this.app.route("/ts/req").get(babengLimiterUjian(rateLimit, 1), (req: Request, res: Response) => {
             res.send({
                 success: true,
-                message: 'just TS With Request'
+                message: `just TS With Request ${rateLimit}/m`
             });
         })
 
         this.app.use(`/api/${apiVersion}/home`, babengLimiter(), HomeRoutes);
 
         //*  ROUTER-
-        this.app.use(`/api/`, babengLimiterUjian(), AuthRoutes); //* user login/authentikasi
+        this.app.use(`/api/`, babengLimiterUjian(rateLimit, 1), AuthRoutes); //* user login/authentikasi
         //ADMIN OWNER
-        this.app.use(`/api/siswa/data/`, babengLimiterUjian(), StudiRouter); //* untuk ujian studi
+        this.app.use(`/api/siswa/data/`, babengLimiterUjian(rateLimit, 1), StudiRouter); //* untuk ujian studi
         this.app.use(`/api/`, babengLimiter(), AdminMasteringSekolahRouter);
         this.app.use(`/api/`, babengLimiter(), adminMasteringPaketRouter);
         // menuujian

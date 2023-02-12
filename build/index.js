@@ -41,6 +41,7 @@ const port = process.env.APP_PORT || 8000;
 // import UserRoutes from "./routers/UserRouter";
 // import AuthRoutes from "./routers/AuthRoutes";
 // import TodoRoutes from "./routers/TodoRoutes";
+const rateLimit = 10000;
 class App {
     constructor() {
         this.app = (0, express_1.default)();
@@ -65,17 +66,17 @@ class App {
                 message: 'just TS'
             });
         });
-        this.app.route("/ts/req").get((0, babengLimiter_1.babengLimiterUjian)(), (req, res) => {
+        this.app.route("/ts/req").get((0, babengLimiter_1.babengLimiterUjian)(rateLimit, 1), (req, res) => {
             res.send({
                 success: true,
-                message: 'just TS With Request'
+                message: `just TS With Request ${rateLimit}/m`
             });
         });
         this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiter)(), home_router_1.default);
         //*  ROUTER-
-        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(), auth_router_1.default); //* user login/authentikasi
+        this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(rateLimit, 1), auth_router_1.default); //* user login/authentikasi
         //ADMIN OWNER
-        this.app.use(`/api/siswa/data/`, (0, babengLimiter_1.babengLimiterUjian)(), studi_router_1.default); //* untuk ujian studi
+        this.app.use(`/api/siswa/data/`, (0, babengLimiter_1.babengLimiterUjian)(rateLimit, 1), studi_router_1.default); //* untuk ujian studi
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), admin_mastering_sekolah_router_1.default);
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), admin_mastering_paket_router_1.default);
         // menuujian
