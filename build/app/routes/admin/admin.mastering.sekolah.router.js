@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// import { Request, Response } from 'express';
 const auth_jwt_1 = require("../../middleware/auth.jwt");
+// import AuthController from '../../controllers/auth/auth.controller';
 const base_router_1 = __importDefault(require("../base.router"));
 const admin_mastering_sekolah_controller_1 = __importDefault(require("../../controllers/admin/mastering/admin.mastering.sekolah.controller"));
 class AdminMasteringSekolahRouter extends base_router_1.default {

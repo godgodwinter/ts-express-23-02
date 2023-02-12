@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_controller_1 = __importDefault(require("../controllers/user.controller"));
 const base_router_1 = __importDefault(require("./base.router"));
+// import { babengLimiter } from '../helpers/babengLimiter';
 // import rateLimit from "express-rate-limit"
 // const limiter = rateLimit({
 //     windowMs: 1 * 60 * 1000, // 1 minutes

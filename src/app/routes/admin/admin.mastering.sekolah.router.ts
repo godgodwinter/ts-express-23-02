@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { menuSiswa, verifyToken, menuAdminOwner } from '../../middleware/auth.jwt';
-import AuthController from '../../controllers/auth/auth.controller';
+// import { Request, Response } from 'express';
+import { verifyToken, menuAdminOwner } from '../../middleware/auth.jwt';
+// import AuthController from '../../controllers/auth/auth.controller';
 import BaseRoutes from '../base.router';
 import adminMasteringSekolahController from '../../controllers/admin/mastering/admin.mastering.sekolah.controller';
 
