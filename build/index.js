@@ -65,7 +65,7 @@ class App {
                 message: 'just TS'
             });
         });
-        this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiter)(30, 1), home_router_1.default);
+        this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiterUjian)(), home_router_1.default);
         //*  ROUTER-
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(), auth_router_1.default); //* user login/authentikasi
         //ADMIN OWNER

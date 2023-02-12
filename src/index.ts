@@ -73,7 +73,7 @@ class App {
             });
         })
 
-        this.app.use(`/api/${apiVersion}/home`, babengLimiter(30, 1), HomeRoutes);
+        this.app.use(`/api/${apiVersion}/home`, babengLimiterUjian(), HomeRoutes);
 
         //*  ROUTER-
         this.app.use(`/api/`, babengLimiterUjian(), AuthRoutes); //* user login/authentikasi
