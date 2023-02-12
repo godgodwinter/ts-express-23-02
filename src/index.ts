@@ -43,7 +43,7 @@ const port: any = process.env.APP_PORT || 8000;
 // import UserRoutes from "./routers/UserRouter";
 // import AuthRoutes from "./routers/AuthRoutes";
 // import TodoRoutes from "./routers/TodoRoutes";
-const rateLimit: number = 10000;
+const rateLimit: number = 6000;
 
 class App {
     public app: Application
