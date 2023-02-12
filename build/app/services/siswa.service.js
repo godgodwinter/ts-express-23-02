@@ -21,7 +21,7 @@ class siswaService {
             // console.log('====================================');
             // console.log(DB.siswa.findAll(),this.body);
             // console.log('====================================');
-            const datas = await siswa.findAll({ offset: 0, limit: 10, include: kelas });
+            const datas = await siswa.scope('withoutPass').findAll({ offset: 0, limit: 10, include: kelas });
             return datas;
         };
         this.credential = req.app.locals.credential;

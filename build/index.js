@@ -10,6 +10,7 @@ const compression_1 = __importDefault(require("compression"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = require("dotenv");
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const models_1 = __importDefault(require("./app/models"));
 // router
 const home_router_1 = __importDefault(require("./app/routes/home.router"));
@@ -21,6 +22,20 @@ const guest_router_1 = __importDefault(require("./app/routes/tanpalogin/guest.ro
 const studi_proses_router_1 = __importDefault(require("./app/routes/admin/studi/studi.proses.router"));
 (0, dotenv_1.config)();
 const port = process.env.APP_PORT || 8000;
+const limiter = (0, express_rate_limit_1.default)({
+    windowMs: 1 * 60 * 1000,
+    max: 30,
+    // delayMs: 0, // disable delaying - full speed until the max limit is reached
+    message: "Too many requests maid from this IP, please try again after an hour",
+    standardHeaders: true,
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+// const limiter = rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 minutes
+//     max: 1, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+//     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// })
 // ROUTERS
 // import UserRoutes from "./routers/UserRouter";
 // import AuthRoutes from "./routers/AuthRoutes";
@@ -37,6 +52,7 @@ class App {
         this.app.use((0, compression_1.default)());
         this.app.use((0, helmet_1.default)());
         this.app.use((0, cors_1.default)());
+        this.app.use(limiter);
         express_1.default.urlencoded({ extended: true, limit: "5m" });
     }
     routes() {
