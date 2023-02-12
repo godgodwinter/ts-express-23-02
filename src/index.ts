@@ -5,7 +5,7 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 import { config as dotenv } from "dotenv";
-import rateLimit from "express-rate-limit"
+// import rateLimit from "express-rate-limit"
 
 import db from "./app/models"
 // router
@@ -17,17 +17,22 @@ import AdminMasteringSekolahRouter from "./app/routes/admin/admin.mastering.seko
 import adminMasteringPaketRouter from "./app/routes/admin/admin.mastering.paket.router";
 import guestRouter from "./app/routes/tanpalogin/guest.router";
 import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
+import { babengLimiter, babengLimiterUjian } from "./app/helpers/babengLimiter";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
-const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minutes
-    max: 30, // Limit each IP to 70 requests per `window` (here, per 15 minutes)
-    // delayMs: 0, // disable delaying - full speed until the max limit is reached
-    message: "Too many requests maid from this IP, please try again after an hour",
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-})
+
+
+// const limiter = rateLimit({
+//     windowMs: 1 * 60 * 1000, // 1 minutes
+//     max: 30, // Limit each IP to 70 requests per `window` (here, per 15 minutes)
+//     // delayMs: 0, // disable delaying - full speed until the max limit is reached
+//     message: "Too many requests maid from this IP, please try again after an hour",
+//     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// })
+
+
 // const limiter = rateLimit({
 //     windowMs: 15 * 60 * 1000, // 15 minutes
 //     max: 1, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -53,7 +58,7 @@ class App {
         this.app.use(compression());
         this.app.use(helmet());
         this.app.use(cors());
-        this.app.use(limiter);
+        // this.app.use(limiter);
         express.urlencoded({ extended: true, limit: "5m" });
     }
 
@@ -61,26 +66,26 @@ class App {
     protected routes(): void {
         //* ROUTER-BARU
         const apiVersion = "v1"
-        this.app.route("/").get((req: Request, res: Response) => {
+        this.app.route("/").get(babengLimiter(), (req: Request, res: Response) => {
             res.send({
                 success: true,
                 message: 'just TS'
             });
         })
 
-        this.app.use(`/api/${apiVersion}/home`, HomeRoutes);
+        this.app.use(`/api/${apiVersion}/home`, babengLimiter(2, 1), HomeRoutes);
 
         //*  ROUTER-
-        this.app.use(`/api/`, AuthRoutes);
+        this.app.use(`/api/`, babengLimiterUjian(), AuthRoutes);
         //ADMIN OWNER
-        this.app.use(`/api/siswa/data/`, StudiRouter);
-        this.app.use(`/api/`, AdminMasteringSekolahRouter);
-        this.app.use(`/api/`, adminMasteringPaketRouter);
+        this.app.use(`/api/siswa/data/`, babengLimiterUjian(), StudiRouter);
+        this.app.use(`/api/`, babengLimiter(), AdminMasteringSekolahRouter);
+        this.app.use(`/api/`, babengLimiter(), adminMasteringPaketRouter);
         // menuujian
-        this.app.use(`/api/`, studiProsesRouter);
+        this.app.use(`/api/`, babengLimiter(), studiProsesRouter);
 
         //TANPALOGIN
-        this.app.use(`/api/`, guestRouter);
+        this.app.use(`/api/`, babengLimiter(), guestRouter);
 
     }
 }
