@@ -65,6 +65,12 @@ class App {
                 message: 'just TS'
             });
         });
+        this.app.route("/ts/req").get((0, babengLimiter_1.babengLimiterUjian)(), (req, res) => {
+            res.send({
+                success: true,
+                message: 'just TS With Request'
+            });
+        });
         this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiter)(), home_router_1.default);
         //*  ROUTER-
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(), auth_router_1.default); //* user login/authentikasi

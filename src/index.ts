@@ -72,6 +72,12 @@ class App {
                 message: 'just TS'
             });
         })
+        this.app.route("/ts/req").get(babengLimiterUjian(), (req: Request, res: Response) => {
+            res.send({
+                success: true,
+                message: 'just TS With Request'
+            });
+        })
 
         this.app.use(`/api/${apiVersion}/home`, babengLimiter(), HomeRoutes);
 
