@@ -1,5 +1,5 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+const studi_v2_paketsoal_aspek = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_paketsoal_aspek = sequelize.define("studi_v2_paketsoal_aspek", {
         // data
         nama: {
             type: Sequelize.STRING,
@@ -25,6 +25,15 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.BIGINT,
             allowNull: true
         },
+        // RELASI
+        studi_v2_paketsoal_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        studi_v2_banksoal_aspek_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
         // timestamp
         deleted_at: {
             field: 'deleted_at',
@@ -42,18 +51,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_paketsoal_aspek',
+            plural: 'studi_v2_paketsoal_aspek',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_paketsoal_aspek',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_paketsoal_aspek'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_paketsoal_aspek;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_paketsoal_aspek;

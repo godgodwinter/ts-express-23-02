@@ -1,34 +1,12 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
-        // data
-        nama: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        kode: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        desc: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        status: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        tipe: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        urutan: {
+const studi_v2_paketsoal_aspek_penilaian = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_paketsoal_aspek_penilaian = sequelize.define("studi_v2_paketsoal_aspek_penilaian", {
+        // RELASI
+        studi_v2_paketsoal_aspek_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
-        // timestamp
-        deleted_at: {
-            field: 'deleted_at',
-            type: Sequelize.DATE,
+        studi_v2_paketsoal_aspek_detail_id: {
+            type: Sequelize.BIGINT,
             allowNull: true
         },
         created_at: {
@@ -42,18 +20,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_paketsoal_aspek_penilaian',
+            plural: 'studi_v2_paketsoal_aspek_penilaian',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_paketsoal_aspek_penilaian',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_paketsoal_aspek_penilaian'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_paketsoal_aspek_penilaian;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_paketsoal_aspek_penilaian;

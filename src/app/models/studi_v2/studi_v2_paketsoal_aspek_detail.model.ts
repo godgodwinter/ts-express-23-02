@@ -1,11 +1,19 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+const studi_v2_paketsoal_aspek_detail = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_paketsoal_aspek_detail = sequelize.define("studi_v2_paketsoal_aspek_detail", {
         // data
         nama: {
             type: Sequelize.STRING,
             allowNull: false
         },
+        nama_baru: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         kode: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        prefix: {
             type: Sequelize.STRING,
             allowNull: true
         },
@@ -13,18 +21,66 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
-        status: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        tipe: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
         urutan: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
+
+
+        waktu: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        
+        instruksi: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        instruksi_status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Nonaktif"
+        },
+        lembar_prasoal: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        lembar_prasoal_status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Nonaktif"
+        },
+        instruksi_pengerjaan: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        instruksi_pengerjaan_status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Nonaktif"
+        },
+        random_soal: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Aktif"
+        },
+        random_pilihanjawaban: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Aktif"
+        },
+
+        
+        // RELASI
+        // studi_v2_paketsoal_aspek_id: {
+        //     type: Sequelize.BIGINT,
+        //     allowNull: true
+        // },
+        studi_v2_banksoal_aspek_detail_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+
         // timestamp
         deleted_at: {
             field: 'deleted_at',
@@ -42,18 +98,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_paketsoal_aspek_detail',
+            plural: 'studi_v2_paketsoal_aspek_detail',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_paketsoal_aspek_detail',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_paketsoal_aspek_detail'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_paketsoal_aspek_detail;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_paketsoal_aspek_detail;

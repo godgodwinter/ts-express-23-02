@@ -1,28 +1,25 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+const studi_v2_paketsoal_pilihanjawaban = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_paketsoal_pilihanjawaban = sequelize.define("studi_v2_paketsoal_pilihanjawaban", {
         // data
-        nama: {
+        kode_jawaban: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        kode: {
+        jawaban: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        desc: {
-            type: Sequelize.STRING,
+        skor: {
+            type: Sequelize.INTEGER,
             allowNull: true
         },
-        status: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        tipe: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        urutan: {
+        //relasi
+        studi_v2_paketsoal_soal_id: {
             type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        kode_soal: {
+            type: Sequelize.STRING,
             allowNull: true
         },
         // timestamp
@@ -42,18 +39,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_paketsoal_pilihanjawaban',
+            plural: 'studi_v2_paketsoal_pilihanjawaban',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_paketsoal_pilihanjawaban',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_paketsoal_pilihanjawaban'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_paketsoal_pilihanjawaban;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_paketsoal_pilihanjawaban;
