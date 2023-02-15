@@ -1,27 +1,20 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+const studi_v2_proses = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_proses = sequelize.define("studi_v2_proses", {
         // data
-        nama: {
+        status: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        kode: {
+        tgl_ujian: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        desc: {
-            type: Sequelize.STRING,
+        // relasi
+        siswa_id: {
+            type: Sequelize.BIGINT,
             allowNull: true
         },
-        status: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        tipe: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        urutan: {
+        studi_v2_paketsoal_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
@@ -42,18 +35,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_proses',
+            plural: 'studi_v2_proses',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_proses',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_proses'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_proses;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_proses;

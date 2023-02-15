@@ -1,27 +1,16 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = sequelize.define("studi_v2_proses_aspek_detail_soal_pilihan_jawaban", {
         // data
-        nama: {
+        kode_jawaban: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        kode: {
-            type: Sequelize.STRING,
+        // RELASI
+        studi_v2_proses_aspek_detail_soal_id: {
+            type: Sequelize.BIGINT,
             allowNull: true
         },
-        desc: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        status: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        tipe: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        urutan: {
+        studi_v2_paketsoal_pilihanjawaban_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
@@ -42,18 +31,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban',
+            plural: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_proses_aspek_detail_soal_pilihan_jawaban;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_proses_aspek_detail_soal_pilihan_jawaban;
