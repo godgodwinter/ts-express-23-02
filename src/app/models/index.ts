@@ -1,4 +1,4 @@
-import { dbConfig } from "../config/db.config";
+import { dbConfig,dbConfig_studi_v2 } from "../config/db.config";
 import { Sequelize } from "sequelize";
 // import fs from "fs"
 // db
@@ -23,6 +23,7 @@ import owner from "./owner.model";
 import katabijak from "./katabijak.model";
 import katabijakdetail from "./katabijakdetail.model";
 import ujian_kategori from "./studi/ujian_kategori.model";
+import studi_v2_banksoal_aspek from "./studi_v2/studi_v2_banksoal_aspek.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -41,7 +42,8 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     idle: dbConfig.pool.idle
   }
 });
-const db = {
+
+export const db = {
   //MASTERING
   Sequelize, sequelize,
   admin: admin(sequelize, Sequelize),
@@ -68,6 +70,29 @@ const db = {
   ujian_proses: ujian_proses(sequelize, Sequelize),
 
 };
+
+
+const sequelize_studi_v2 = new Sequelize(dbConfig_studi_v2.DB, dbConfig_studi_v2.USER, dbConfig_studi_v2.PASSWORD, {
+  host: dbConfig_studi_v2.HOST,
+  dialect: 'mysql',
+  pool: {
+    max: dbConfig_studi_v2.pool.max,
+    min: dbConfig_studi_v2.pool.min,
+    acquire: dbConfig_studi_v2.pool.acquire,
+    idle: dbConfig_studi_v2.pool.idle
+  }
+});
+
+export const db_studi_v2 = {
+  //MASTERING
+  Sequelize, sequelize_studi_v2,
+  studi_v2_banksoal_aspek: studi_v2_banksoal_aspek(sequelize_studi_v2, Sequelize),
+
+};
+
+
+
+
 
 // !MASTERING-RELASI
 db.siswa.belongsTo(db.kelas, {
