@@ -1,15 +1,27 @@
-const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
-    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+const studi_v2_hasil_aspek_detail = (sequelize: any, Sequelize: any): any => {
+    const studi_v2_hasil_aspek_detail = sequelize.define("studi_v2_hasil_aspek_detail", {
         // data
-        nama: {
-            type: Sequelize.STRING,
+        urutan: {
+            type: Sequelize.INTEGER,
             allowNull: false
         },
-        kode: {
+        aspek_detail_nama: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        desc: {
+        nilaiAkhir: {
+            type: Sequelize.FLOAT,
+            allowNull: true
+        },
+        nilaiAkhir_revisi: {
+            type: Sequelize.FLOAT,
+            allowNull: true
+        },
+        nilaiAkhir_ket_singkatan_revisi: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        nilaiAkhir_ket_revisi: {
             type: Sequelize.STRING,
             allowNull: true
         },
@@ -17,11 +29,12 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
-        tipe: {
-            type: Sequelize.STRING,
+        // relasi
+        studi_v2_hasil_id: {
+            type: Sequelize.BIGINT,
             allowNull: true
         },
-        urutan: {
+        studi_v2_paketsoal_aspek_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
@@ -42,18 +55,18 @@ const studi_v2_banksoal_aspek = (sequelize: any, Sequelize: any): any => {
     }, {
 
         name: {
-            singular: 'studi_v2_banksoal_aspek',
-            plural: 'studi_v2_banksoal_aspek',
+            singular: 'studi_v2_hasil_aspek_detail',
+            plural: 'studi_v2_hasil_aspek_detail',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        tableName: 'studi_v2_banksoal_aspek',
+        tableName: 'studi_v2_hasil_aspek_detail',
         underscored: true,
-        modelName: 'studi_v2_banksoal_aspek'
+        modelName: 'studi_v2_hasil_aspek_detail'
 
     });
 
-    return studi_v2_banksoal_aspek;
+    return studi_v2_hasil_aspek_detail;
 };
 
-export default studi_v2_banksoal_aspek;
+export default studi_v2_hasil_aspek_detail;
