@@ -9,6 +9,10 @@ const studi_v2_hasil_aspek_penilaian = (sequelize: any, Sequelize: any): any => 
             type: Sequelize.BIGINT,
             allowNull: true
         },
+        studi_v2_hasil_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
         status: {
             type: Sequelize.STRING,
             allowNull: true

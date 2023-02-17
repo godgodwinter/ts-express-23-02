@@ -81,8 +81,10 @@ class App {
         })
 
         this.app.use(`/api/${apiVersion}/home`, babengLimiter(), HomeRoutes);
+        //* ROUTER-BARU
+        //* ROUTER-BARU-END
 
-        //*  ROUTER-
+        //*  OLD-ROUTER-
         this.app.use(`/api/`, babengLimiterUjian(rateLimit, 1), AuthRoutes); //* user login/authentikasi
         //ADMIN OWNER
         this.app.use(`/api/siswa/data/`, babengLimiterUjian(rateLimit, 1), StudiRouter); //* untuk ujian studi
@@ -91,7 +93,7 @@ class App {
         // menuujian
         this.app.use(`/api/`, babengLimiter(), studiProsesRouter);
 
-        //TANPALOGIN
+        //*TANPALOGIN
         this.app.use(`/api/`, babengLimiter(), guestRouter);
 
     }

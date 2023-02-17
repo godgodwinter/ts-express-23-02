@@ -27,6 +27,7 @@ class sekolahService {
         try {
             const paketDefault = await this.getPaketDefault();
             const response = await sekolah.findAll({
+                where:{deleted_at:null},
                 include: [
                     {
                         model: db.paket,
