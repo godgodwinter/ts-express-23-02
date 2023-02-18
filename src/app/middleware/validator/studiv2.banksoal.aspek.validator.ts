@@ -10,8 +10,6 @@ export const validate = [
                 errors: errors.array()
             });
         }
-
-
         return next();
     }
 ]

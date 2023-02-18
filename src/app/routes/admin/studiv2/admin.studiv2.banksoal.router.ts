@@ -10,6 +10,13 @@ class AdminUjianstudiBanksoalRouter extends BaseRoutes {
         this.router.get("/banksoal/aspek/:aspek_id", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspekEdit)
         this.router.post("/banksoal/aspek", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspekStore)
         this.router.put("/banksoal/aspek/:aspek_id", [verifyToken, menuAdminOwner],validate, studiv2BanksoalController.aspekUpdate)
+        this.router.delete("/banksoal/aspek/:aspek_id", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspekDelete)
+        
+        this.router.get("/banksoal/aspek_detail", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspek_detailGetAll)
+        this.router.get("/banksoal/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspek_detailEdit)
+        this.router.post("/banksoal/aspek_detail", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspek_detailStore)
+        this.router.put("/banksoal/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner],validate, studiv2BanksoalController.aspek_detailUpdate)
+        this.router.delete("/banksoal/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2BanksoalController.aspek_detailDelete)
     }
 }
 

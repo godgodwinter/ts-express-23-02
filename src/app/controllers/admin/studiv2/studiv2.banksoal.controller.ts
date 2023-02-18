@@ -63,6 +63,92 @@ class Studiv2Banksoal {
             return res.status(500).send({ message: error.message });
         }
     }
+    aspekDelete = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.aspekDelete();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
+    // !   ASPEK DETAIL
+    aspek_detailGetAll = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.aspek_detailGetAll();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailEdit = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.aspek_detailEdit();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailStore = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.aspek_detailStore();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailUpdate = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.aspek_detailUpdate();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailDelete = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.aspek_detailDelete();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
 
 }
 
