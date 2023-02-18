@@ -26,7 +26,7 @@ import ujian_kategori from "./studi/ujian_kategori.model";
 import studi_v2_banksoal_aspek from "./studi_v2/studi_v2_banksoal_aspek.model";
 import studi_v2_banksoal_aspek_detail from "./studi_v2/studi_v2_banksoal_aspek_detail.model";
 import studi_v2_banksoal_soal from "./studi_v2/studi_v2_banksoal_soal.model";
-import studi_v2_banksoal_pilihanjawaban from "./studi_v2/studi_v2_banksoal_pilihanjawaban.model";
+import studi_v2_banksoal_soal_pilihanjawaban from "./studi_v2/studi_v2_banksoal_soal_pilihanjawaban.model";
 import studi_v2_paketsoal from "./studi_v2/studi_v2_paketsoal.model";
 import studi_v2_paketsoal_aspek from "./studi_v2/studi_v2_paketsoal_aspek.model";
 import studi_v2_paketsoal_aspek_detail from "./studi_v2/studi_v2_paketsoal_aspek_detail.model";
@@ -85,42 +85,6 @@ export const db = {
   ujian_proses_kelas_siswa: ujian_proses_kelas_siswa(sequelize, Sequelize),
   ujian_proses_kelas: ujian_proses_kelas(sequelize, Sequelize),
   ujian_proses: ujian_proses(sequelize, Sequelize),
-
-};
-
-
-const sequelize_studi_v2 = new Sequelize(dbConfig_studi_v2.DB, dbConfig_studi_v2.USER, dbConfig_studi_v2.PASSWORD, {
-  host: dbConfig_studi_v2.HOST,
-  dialect: 'mysql',
-  pool: {
-    max: dbConfig_studi_v2.pool.max,
-    min: dbConfig_studi_v2.pool.min,
-    acquire: dbConfig_studi_v2.pool.acquire,
-    idle: dbConfig_studi_v2.pool.idle
-  }
-});
-
-export const db_studi_v2 = {
-  //MASTERING
-  Sequelize, sequelize_studi_v2,
-  studi_v2_banksoal_aspek: studi_v2_banksoal_aspek(sequelize_studi_v2, Sequelize),
-  studi_v2_banksoal_aspek_detail: studi_v2_banksoal_aspek_detail(sequelize_studi_v2, Sequelize),
-  studi_v2_banksoal_soal: studi_v2_banksoal_soal(sequelize_studi_v2, Sequelize),
-  studi_v2_banksoal_pilihanjawaban: studi_v2_banksoal_pilihanjawaban(sequelize_studi_v2, Sequelize),
-  studi_v2_paketsoal: studi_v2_paketsoal(sequelize_studi_v2, Sequelize),
-  studi_v2_paketsoal_aspek: studi_v2_paketsoal_aspek(sequelize_studi_v2, Sequelize),
-  studi_v2_paketsoal_aspek_detail: studi_v2_paketsoal_aspek_detail(sequelize_studi_v2, Sequelize),
-  studi_v2_paketsoal_aspek_penilaian: studi_v2_paketsoal_aspek_penilaian(sequelize_studi_v2, Sequelize),
-  studi_v2_paketsoal_soal: studi_v2_paketsoal_soal(sequelize_studi_v2, Sequelize),
-  studi_v2_paketsoal_pilihanjawaban: studi_v2_paketsoal_pilihanjawaban(sequelize_studi_v2, Sequelize),
-  studi_v2_proses: studi_v2_proses(sequelize_studi_v2, Sequelize),
-  studi_v2_proses_aspek_detail: studi_v2_proses_aspek_detail(sequelize_studi_v2, Sequelize),
-  studi_v2_proses_aspek_detail_soal: studi_v2_proses_aspek_detail_soal(sequelize_studi_v2, Sequelize),
-  studi_v2_proses_aspek_detail_soal_pilihan_jawaban: studi_v2_proses_aspek_detail_soal_pilihan_jawaban(sequelize_studi_v2, Sequelize),
-  studi_v2_hasil: studi_v2_hasil(sequelize_studi_v2, Sequelize),
-  studi_v2_hasil_aspek: studi_v2_hasil_aspek(sequelize_studi_v2, Sequelize),
-  studi_v2_hasil_aspek_detail: studi_v2_hasil_aspek_detail(sequelize_studi_v2, Sequelize),
-  studi_v2_hasil_aspek_penilaian: studi_v2_hasil_aspek_penilaian(sequelize_studi_v2, Sequelize),
 
 };
 
@@ -221,5 +185,52 @@ db.ujian_paketsoal_kategori.belongsTo(db.ujian_kategori, {
   },
 });
 // !UJIAN-STUDI-RELASI-END
+
+
+
+export const sequelize_studi_v2 = new Sequelize(dbConfig_studi_v2.DB, dbConfig_studi_v2.USER, dbConfig_studi_v2.PASSWORD, {
+  host: dbConfig_studi_v2.HOST,
+  dialect: 'mysql',
+  pool: {
+    max: dbConfig_studi_v2.pool.max,
+    min: dbConfig_studi_v2.pool.min,
+    acquire: dbConfig_studi_v2.pool.acquire,
+    idle: dbConfig_studi_v2.pool.idle
+  }
+});
+
+export const db_studi_v2 = {
+  //MASTERING
+  Sequelize, sequelize_studi_v2,
+  studi_v2_banksoal_aspek: studi_v2_banksoal_aspek(sequelize_studi_v2, Sequelize),
+  studi_v2_banksoal_aspek_detail: studi_v2_banksoal_aspek_detail(sequelize_studi_v2, Sequelize),
+  studi_v2_banksoal_soal: studi_v2_banksoal_soal(sequelize_studi_v2, Sequelize),
+  studi_v2_banksoal_soal_pilihanjawaban: studi_v2_banksoal_soal_pilihanjawaban(sequelize_studi_v2, Sequelize),
+  studi_v2_paketsoal: studi_v2_paketsoal(sequelize_studi_v2, Sequelize),
+  studi_v2_paketsoal_aspek: studi_v2_paketsoal_aspek(sequelize_studi_v2, Sequelize),
+  studi_v2_paketsoal_aspek_detail: studi_v2_paketsoal_aspek_detail(sequelize_studi_v2, Sequelize),
+  studi_v2_paketsoal_aspek_penilaian: studi_v2_paketsoal_aspek_penilaian(sequelize_studi_v2, Sequelize),
+  studi_v2_paketsoal_soal: studi_v2_paketsoal_soal(sequelize_studi_v2, Sequelize),
+  studi_v2_paketsoal_pilihanjawaban: studi_v2_paketsoal_pilihanjawaban(sequelize_studi_v2, Sequelize),
+  studi_v2_proses: studi_v2_proses(sequelize_studi_v2, Sequelize),
+  studi_v2_proses_aspek_detail: studi_v2_proses_aspek_detail(sequelize_studi_v2, Sequelize),
+  studi_v2_proses_aspek_detail_soal: studi_v2_proses_aspek_detail_soal(sequelize_studi_v2, Sequelize),
+  studi_v2_proses_aspek_detail_soal_pilihan_jawaban: studi_v2_proses_aspek_detail_soal_pilihan_jawaban(sequelize_studi_v2, Sequelize),
+  studi_v2_hasil: studi_v2_hasil(sequelize_studi_v2, Sequelize),
+  studi_v2_hasil_aspek: studi_v2_hasil_aspek(sequelize_studi_v2, Sequelize),
+  studi_v2_hasil_aspek_detail: studi_v2_hasil_aspek_detail(sequelize_studi_v2, Sequelize),
+  studi_v2_hasil_aspek_penilaian: studi_v2_hasil_aspek_penilaian(sequelize_studi_v2, Sequelize),
+
+};
+
+
+// !STUDIV2-RELASI
+// db_studi_v2.studi_v2_banksoal_aspek_detail.belongsTo(db_studi_v2.studi_v2_banksoal_aspek, {
+//   foreignKey: {
+//     name: 'studi_v2_banksoal_aspek_id'
+//   },
+// });
+
+// !STUDIV2-RELASI-END
 export default db
 
