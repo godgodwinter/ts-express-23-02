@@ -1,4 +1,4 @@
-import { dbConfig,dbConfig_studi_v2 } from "../config/db.config";
+import { dbConfig, dbConfig_studi_v2 } from "../config/db.config";
 import { Sequelize } from "sequelize";
 // import fs from "fs"
 // db
@@ -225,11 +225,16 @@ export const db_studi_v2 = {
 
 
 // !STUDIV2-RELASI
-// db_studi_v2.studi_v2_banksoal_aspek_detail.belongsTo(db_studi_v2.studi_v2_banksoal_aspek, {
-//   foreignKey: {
-//     name: 'studi_v2_banksoal_aspek_id'
-//   },
-// });
+db_studi_v2.studi_v2_banksoal_soal_pilihanjawaban.belongsTo(db_studi_v2.studi_v2_banksoal_soal, {
+  foreignKey: {
+    name: 'studi_v2_banksoal_soal_id'
+  },
+});
+db_studi_v2.studi_v2_banksoal_soal.hasMany(db_studi_v2.studi_v2_banksoal_soal_pilihanjawaban, {
+  foreignKey: {
+    name: 'studi_v2_banksoal_soal_id'
+  },
+});
 
 // !STUDIV2-RELASI-END
 export default db
