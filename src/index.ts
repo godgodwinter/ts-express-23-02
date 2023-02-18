@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import StudiRouter from "./app/routes/studi.router";
 import AdminMasteringSekolahRouter from "./app/routes/admin/admin.mastering.sekolah.router";
 import adminMasteringPaketRouter from "./app/routes/admin/admin.mastering.paket.router";
+import AdminUjianstudiBanksoalRouter from "./app/routes/admin/studiv2/admin.studiv2.banksoal.router"
 import guestRouter from "./app/routes/tanpalogin/guest.router";
 import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 import { babengLimiter, babengLimiterUjian } from "./app/helpers/babengLimiter";
@@ -66,7 +67,7 @@ class App {
 
     protected routes(): void {
         //* ROUTER-BARU
-        const apiVersion = "v1"
+        const apiVersion = process.env.API_VERSION||"v1"
         this.app.route("/").get(babengLimiter(), (req: Request, res: Response) => {
             res.send({
                 success: true,
@@ -82,6 +83,7 @@ class App {
 
         this.app.use(`/api/${apiVersion}/home`, babengLimiter(), HomeRoutes);
         //* ROUTER-BARU
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(), AdminUjianstudiBanksoalRouter);
         //* ROUTER-BARU-END
 
         //*  OLD-ROUTER-
