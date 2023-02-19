@@ -151,6 +151,95 @@ class studiv2PaketsoalService {
     }
     // !ASPEK-END
 
+
+    // !ASPEK_DETAIL
+    aspek_detailGetAll = async () => {
+        try {
+            const response = await studi_v2_paketsoal_aspek_detail.findAll({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id } });
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    aspek_detailStore = async () => {
+        try {
+            const dataSave = await studi_v2_paketsoal_aspek_detail.create({
+                nama: this.body.nama,
+                kode: this.body.kode || uuidv4(),
+                desc: this.body.desc,
+                urutan: this.body.urutan,
+                waktu: this.body.waktu,
+                instruksi: this.body.instruksi,
+                instruksi_status: this.body.instruksi_status,
+                lembar_prasoal: this.body.lembar_prasoal,
+                lembar_prasoal_status: this.body.lembar_prasoal_status,
+                instruksi_pengerjaan: this.body.instruksi_pengerjaan,
+                instruksi_pengerjaan_status: this.body.instruksi_pengerjaan_status,
+                random_soal: this.body.random_soal,
+                random_pilihanjawaban: this.body.random_pilihanjawaban,
+                studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id,
+                studi_v2_paketsoal_id: this.params.paketsoal_id,
+                created_at: moment().format(),
+                updated_at: moment().format(),
+            });
+
+            return dataSave
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    aspek_detailEdit = async () => {
+        try {
+            const response = await studi_v2_paketsoal_aspek_detail.findOne(
+                { where: { id: this.params.aspek_detail_id } },
+            );
+
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    aspek_detailUpdate = async () => {
+        try {
+            const dataUpdate = await studi_v2_paketsoal_aspek_detail.findOne({ where: { id: this.params.aspek_detail_id, deleted_at: null } });
+            dataUpdate.set({
+                nama: this.body.nama,
+                kode: this.body.kode || uuidv4(),
+                desc: this.body.desc,
+                urutan: this.body.urutan,
+                waktu: this.body.waktu,
+                instruksi: this.body.instruksi,
+                instruksi_status: this.body.instruksi_status,
+                lembar_prasoal: this.body.lembar_prasoal,
+                lembar_prasoal_status: this.body.lembar_prasoal_status,
+                instruksi_pengerjaan: this.body.instruksi_pengerjaan,
+                instruksi_pengerjaan_status: this.body.instruksi_pengerjaan_status,
+                random_soal: this.body.random_soal,
+                random_pilihanjawaban: this.body.random_pilihanjawaban,
+                studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id,
+                studi_v2_paketsoal_id: this.params.paketsoal_id,
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await dataUpdate.save();
+            return dataUpdate
+            // return "Data berhasil disimpan"
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    aspek_detailDelete = async () => {
+        try {
+            const dataDeleted = await studi_v2_paketsoal_aspek_detail.destroy({ where: { id: this.params.aspek_detail_id, deleted_at: null } });
+            return dataDeleted
+            // return "Data berhasil disimpan"
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    // !ASPEK_DETAIL-END
+
 }
 
 export default studiv2PaketsoalService;

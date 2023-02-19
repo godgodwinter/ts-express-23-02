@@ -180,6 +180,94 @@ class Studiv2PaketsoalController {
     }
     // ! ASPEK-END
 
+
+    // ! ASPEK_DETAIL
+    aspek_detailGetAll = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.aspek_detailGetAll();
+            // setTimeout(()=>{},5000)
+
+            // ! DONT DELETE : EXAMPLE DELAY TESTING
+            // const fn_delay_response = (arg:any)=>{
+            //     console.log(`arg was => ${arg}`);
+            //     // return res.status(500).send({ message: "error.message" });
+            //     return res.send({
+            //         data: datas,
+            //         message: "Success"
+            //     });
+            //   }
+
+            //   setTimeout(fn_delay_response, 3000, 'argumen example');
+            // ! DONT DELETE : EXAMPLE DELAY TESTING
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailEdit = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.aspek_detailEdit();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailStore = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.aspek_detailStore();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailUpdate = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.aspek_detailUpdate();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    aspek_detailDelete = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.aspek_detailDelete();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    // ! ASPEK_DETAIL-END
+
 }
 
 export default new Studiv2PaketsoalController();

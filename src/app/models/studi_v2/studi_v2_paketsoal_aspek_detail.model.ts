@@ -31,7 +31,7 @@ const studi_v2_paketsoal_aspek_detail = (sequelize: any, Sequelize: any): any =>
             type: Sequelize.STRING,
             allowNull: true
         },
-        
+
         instruksi: {
             type: Sequelize.TEXT,
             allowNull: true
@@ -70,12 +70,16 @@ const studi_v2_paketsoal_aspek_detail = (sequelize: any, Sequelize: any): any =>
             defaultValue: "Aktif"
         },
 
-        
+
         // RELASI
         // studi_v2_paketsoal_aspek_id: {
         //     type: Sequelize.BIGINT,
         //     allowNull: true
         // },
+        studi_v2_paketsoal_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
         studi_v2_banksoal_aspek_detail_id: {
             type: Sequelize.BIGINT,
             allowNull: true

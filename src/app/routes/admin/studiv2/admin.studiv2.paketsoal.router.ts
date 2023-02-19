@@ -23,6 +23,11 @@ class AdminUjianstudiPaketsoalRouter extends BaseRoutes {
         // ! PAKETSOAL-ASPEK-END
 
         // ! PAKETSOAL-ASPEK_DETAIL
+        this.router.get("/paketsoal/:paketsoal_id/aspek_detail", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailGetAll)
+        this.router.get("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailEdit)
+        this.router.post("/paketsoal/:paketsoal_id/aspek_detail", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailStore)
+        this.router.put("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailUpdate)
+        this.router.delete("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailDelete)
         // ! PAKETSOAL-ASPEK_DETAIL-END
 
         // ! PAKETSOAL-ASPEK-PENILAIAN
