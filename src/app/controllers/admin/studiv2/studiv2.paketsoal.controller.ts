@@ -6,10 +6,10 @@ interface IResponse {
     message: null | string
 }
 class Studiv2PaketsoalController {
-    aspekGetAll = async (req: Request, res: Response): Promise<Response | undefined> => {
+    paketsoalGetAll = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
-            const datas = await service.aspekGetAll();
+            const datas = await service.paketsoalGetAll();
             // setTimeout(()=>{},5000)
 
             // ! DONT DELETE : EXAMPLE DELAY TESTING
@@ -24,6 +24,62 @@ class Studiv2PaketsoalController {
 
             //   setTimeout(fn_delay_response, 3000, 'argumen example');
             // ! DONT DELETE : EXAMPLE DELAY TESTING
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    paketsoalEdit = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.paketsoalEdit();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    paketsoalStore = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.paketsoalStore();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    paketsoalUpdate = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.paketsoalUpdate();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    paketsoalDelete = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.paketsoalDelete();
 
             return res.send({
                 data: datas,
