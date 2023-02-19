@@ -239,6 +239,62 @@ class studiv2PaketsoalService {
         }
     }
     // !ASPEK_DETAIL-END
+    // !PENILAIAN
+    penilaianGet = async () => {
+        try {
+            const response = await studi_v2_paketsoal_aspek.findAll({
+                where: { studi_v2_paketsoal_id: this.params.paketsoal_id, deleted_at: null }
+                // include: [{ model: db_studi_v2.studi_v2_banksoal_soal, attributes: ['id', 'pertanyaan'], where: { deleted_at: null } }]
+            });
+            for (const [index, item] of response.entries()) {
+                let getPenilaian = await studi_v2_paketsoal_aspek_penilaian.findAll({ where: { studi_v2_paketsoal_aspek_id: item.id, deleted_at: null } })
+                response[index].setDataValue("penilaian", getPenilaian)
+            }
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    penilaianGetPerAspek = async () => {
+        try {
+            const response = await studi_v2_paketsoal_aspek.findOne({
+                where: { id: this.params.aspek_id, deleted_at: null }
+                // include: [{ model: db_studi_v2.studi_v2_banksoal_soal, attributes: ['id', 'pertanyaan'], where: { deleted_at: null } }]
+            });
+            let getPenilaian = await studi_v2_paketsoal_aspek_penilaian.findAll({ where: { studi_v2_paketsoal_aspek_id: this.params.aspek_id, deleted_at: null } })
+            response.setDataValue("penilaian", getPenilaian)
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    penilaianStore = async () => {
+        try {
+            const dataSave = await studi_v2_paketsoal_aspek_penilaian.create({
+                studi_v2_paketsoal_aspek_id: this.body.studi_v2_paketsoal_aspek_id,
+                studi_v2_paketsoal_aspek_detail_id: this.body.studi_v2_paketsoal_aspek_detail_id,
+                status: this.body.status,
+                studi_v2_paketsoal_id: this.params.paketsoal_id,
+                created_at: moment().format(),
+                updated_at: moment().format(),
+            });
+
+            return dataSave
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    penilaianDelete = async () => {
+        try {
+            const dataDeleted = await studi_v2_paketsoal_aspek_penilaian.destroy({ where: { id: this.params.penilaian_id, deleted_at: null } });
+            return dataDeleted
+            // return "Data berhasil disimpan"
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    // !PENILAIAN-END
 
 }
 

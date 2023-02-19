@@ -268,6 +268,66 @@ class Studiv2PaketsoalController {
     }
     // ! ASPEK_DETAIL-END
 
+    // ! PENILAIAN
+    penilaianGet = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianGet();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    penilaianGetPerAspek = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianGetPerAspek();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    penilaianStore = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianStore();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
+    penilaianDelete = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianDelete();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    // ! PENILAIAN-END
+
 }
 
 export default new Studiv2PaketsoalController();

@@ -31,6 +31,10 @@ class AdminUjianstudiPaketsoalRouter extends BaseRoutes {
         // ! PAKETSOAL-ASPEK_DETAIL-END
 
         // ! PAKETSOAL-ASPEK-PENILAIAN
+        this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGet)
+        this.router.post("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianStore)
+        this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGetPerAspek)
+        this.router.delete("/paketsoal/:paketsoal_id/aspek/penilaian/get/:penilaian_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianDelete)
         // ! PAKETSOAL-ASPEK-PENILAIAN-END
 
     }
