@@ -96,16 +96,30 @@ class studiv2PaketsoalService {
     }
     aspekStore = async () => {
         try {
-            const dataSave = await studi_v2_paketsoal_aspek.create({
-                nama: this.body.nama,
-                urutan: this.body.urutan,
-                studi_v2_paketsoal_id: this.params.paketsoal_id,
-                studi_v2_banksoal_aspek_id: this.body.studi_v2_banksoal_aspek_id,
-                created_at: moment().format(),
-                updated_at: moment().format(),
-            });
+            const dataUpdate = await studi_v2_paketsoal_aspek.findOne({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id, studi_v2_banksoal_aspek_id: this.body.studi_v2_banksoal_aspek_id, deleted_at: null } });
+            if (dataUpdate) {
+                dataUpdate.set({
+                    nama: this.body.nama,
+                    urutan: this.body.urutan,
+                    studi_v2_paketsoal_id: this.params.paketsoal_id,
+                    studi_v2_banksoal_aspek_id: this.body.studi_v2_banksoal_aspek_id,
+                    updated_at: moment().format(),
+                });
+                // As above, the database still has "formUpdate" and "green"
+                await dataUpdate.save();
+                return dataUpdate
+            } else {
+                const dataSave = await studi_v2_paketsoal_aspek.create({
+                    nama: this.body.nama,
+                    urutan: this.body.urutan,
+                    studi_v2_paketsoal_id: this.params.paketsoal_id,
+                    studi_v2_banksoal_aspek_id: this.body.studi_v2_banksoal_aspek_id,
+                    created_at: moment().format(),
+                    updated_at: moment().format(),
+                });
+                return dataSave
+            }
 
-            return dataSave
         } catch (error: any) {
             console.log(error.message);
         }
@@ -163,27 +177,50 @@ class studiv2PaketsoalService {
     }
     aspek_detailStore = async () => {
         try {
-            const dataSave = await studi_v2_paketsoal_aspek_detail.create({
-                nama: this.body.nama,
-                kode: this.body.kode || uuidv4(),
-                desc: this.body.desc,
-                urutan: this.body.urutan,
-                waktu: this.body.waktu,
-                instruksi: this.body.instruksi,
-                instruksi_status: this.body.instruksi_status,
-                lembar_prasoal: this.body.lembar_prasoal,
-                lembar_prasoal_status: this.body.lembar_prasoal_status,
-                instruksi_pengerjaan: this.body.instruksi_pengerjaan,
-                instruksi_pengerjaan_status: this.body.instruksi_pengerjaan_status,
-                random_soal: this.body.random_soal,
-                random_pilihanjawaban: this.body.random_pilihanjawaban,
-                studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id,
-                studi_v2_paketsoal_id: this.params.paketsoal_id,
-                created_at: moment().format(),
-                updated_at: moment().format(),
-            });
+            const dataUpdate = await studi_v2_paketsoal_aspek_detail.findOne({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id, studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id, deleted_at: null } });
+            if (dataUpdate) {
+                dataUpdate.set({
+                    nama: this.body.nama,
+                    kode: this.body.kode || uuidv4(),
+                    desc: this.body.desc,
+                    urutan: this.body.urutan,
+                    waktu: this.body.waktu,
+                    instruksi: this.body.instruksi,
+                    instruksi_status: this.body.instruksi_status,
+                    lembar_prasoal: this.body.lembar_prasoal,
+                    lembar_prasoal_status: this.body.lembar_prasoal_status,
+                    instruksi_pengerjaan: this.body.instruksi_pengerjaan,
+                    instruksi_pengerjaan_status: this.body.instruksi_pengerjaan_status,
+                    random_soal: this.body.random_soal,
+                    random_pilihanjawaban: this.body.random_pilihanjawaban,
+                    updated_at: moment().format(),
+                });
+                // As above, the database still has "formUpdate" and "green"
+                await dataUpdate.save();
+                return dataUpdate
+            } else {
+                const dataSave = await studi_v2_paketsoal_aspek_detail.create({
+                    nama: this.body.nama,
+                    kode: this.body.kode || uuidv4(),
+                    desc: this.body.desc,
+                    urutan: this.body.urutan,
+                    waktu: this.body.waktu,
+                    instruksi: this.body.instruksi,
+                    instruksi_status: this.body.instruksi_status,
+                    lembar_prasoal: this.body.lembar_prasoal,
+                    lembar_prasoal_status: this.body.lembar_prasoal_status,
+                    instruksi_pengerjaan: this.body.instruksi_pengerjaan,
+                    instruksi_pengerjaan_status: this.body.instruksi_pengerjaan_status,
+                    random_soal: this.body.random_soal,
+                    random_pilihanjawaban: this.body.random_pilihanjawaban,
+                    studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id,
+                    studi_v2_paketsoal_id: this.params.paketsoal_id,
+                    created_at: moment().format(),
+                    updated_at: moment().format(),
+                });
 
-            return dataSave
+                return dataSave
+            }
         } catch (error: any) {
             console.log(error.message);
         }
