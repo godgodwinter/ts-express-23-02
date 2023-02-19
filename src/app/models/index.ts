@@ -235,6 +235,11 @@ db_studi_v2.studi_v2_banksoal_soal.hasMany(db_studi_v2.studi_v2_banksoal_soal_pi
     name: 'studi_v2_banksoal_soal_id'
   },
 });
+db_studi_v2.studi_v2_banksoal_aspek_detail.hasMany(db_studi_v2.studi_v2_banksoal_soal, {
+  foreignKey: {
+    name: 'studi_v2_banksoal_aspek_detail_id'
+  },
+});
 
 // !STUDIV2-RELASI-END
 export default db

@@ -84,7 +84,13 @@ class studiv2BanksoalService {
     //!ASPEKDETAIL //MAPEL
     aspek_detailGetAll = async () => {
         try {
-            const response = await studi_v2_banksoal_aspek_detail.findAll();
+            const response = await studi_v2_banksoal_aspek_detail.findAll({
+                // include: [{ model: db_studi_v2.studi_v2_banksoal_soal, attributes: ['id', 'pertanyaan'], where: { deleted_at: null } }]
+            });
+            for (const [index, item] of response.entries()) {
+                let soal_jml = await studi_v2_banksoal_soal.count({ where: { studi_v2_banksoal_aspek_detail_id: item.id, deleted_at: null } });
+                response[index].setDataValue("soal_jml", soal_jml)
+            }
             return response;
         } catch (error: any) {
             console.log(error.message);

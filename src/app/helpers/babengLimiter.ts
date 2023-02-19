@@ -1,7 +1,7 @@
 
 import rateLimit from "express-rate-limit"
 
-export const babengLimiter = (max: number = 300, minutes: number = 1) => rateLimit({
+export const babengLimiter = (max: number = 30, minutes: number = 1) => rateLimit({
     windowMs: minutes * 60 * 1000, // 1 minutes
     max: max, // Limit each IP to 70 requests per `window` (here, per 15 minutes)
     // delayMs: 0, // disable delaying - full speed until the max limit is reached
