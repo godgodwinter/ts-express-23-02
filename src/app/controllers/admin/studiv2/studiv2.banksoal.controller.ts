@@ -7,7 +7,7 @@ interface IResponse {
     message: null | string
 }
 class Studiv2Banksoal {
-    aspekGetAll = async (req: Request, res: Response): Promise<Response|undefined> => {
+    aspekGetAll = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const service: studiv2BanksoalService = new studiv2BanksoalService(req);
             const datas = await service.aspekGetAll();
@@ -22,11 +22,11 @@ class Studiv2Banksoal {
             //         message: "Success"
             //     });
             //   }
-              
+
             //   setTimeout(fn_delay_response, 3000, 'argumen example');
             // ! DONT DELETE : EXAMPLE DELAY TESTING
 
-              return res.send({
+            return res.send({
                 data: datas,
                 message: "Success"
             });
@@ -165,7 +165,7 @@ class Studiv2Banksoal {
     }
     // !   ASPEK DETAIL-END
 
-    
+
     // !   SOAL
     soalGetAll = async (req: Request, res: Response): Promise<Response> => {
         try {
@@ -241,6 +241,24 @@ class Studiv2Banksoal {
         }
     }
     // !   SOAL-END
+
+    // !IMPORT SOAL
+
+    importSoalPeriksa = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2BanksoalService = new studiv2BanksoalService(req);
+            const datas = await service.importSoalPeriksa();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    // !IMPORT SOAL-END
 
 }
 

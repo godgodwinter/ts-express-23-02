@@ -24,6 +24,10 @@ class AdminUjianstudiBanksoalRouter extends BaseRoutes {
         this.router.post("/banksoal/aspek_detail/:aspek_detail_id/soal", [verifyToken, menuAdminOwner], studiv2BanksoalController.soalStore)
         this.router.put("/banksoal/aspek_detail/:aspek_detail_id/soal/:soal_id", [verifyToken, menuAdminOwner], studiv2BanksoalController.soalUpdate)
         this.router.delete("/banksoal/aspek_detail/:aspek_detail_id/soal/:soal_id", [verifyToken, menuAdminOwner], studiv2BanksoalController.soalDelete)
+
+        // !import
+        this.router.get("/banksoal/aspek_detail/:aspek_detail_id/import/periksa/:kode_soal", [verifyToken, menuAdminOwner], studiv2BanksoalController.importSoalPeriksa)
+
     }
 }
 

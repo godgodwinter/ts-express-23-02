@@ -167,7 +167,7 @@ class studiv2BanksoalService {
     //!SOAL
     soalGetAll = async () => {
         try {
-            const response = await studi_v2_banksoal_soal.findAll();
+            const response = await studi_v2_banksoal_soal.findAll({ where: { studi_v2_banksoal_aspek_detail_id: this.params.aspek_detail_id, deleted_at: null } });
             return response;
         } catch (error: any) {
             console.log(error.message);
@@ -197,6 +197,7 @@ class studiv2BanksoalService {
             const t = await sequelize_studi_v2.transaction();
             try {
                 const dataSave = await studi_v2_banksoal_soal.create({
+                    studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id,
                     pertanyaan: this.body.pertanyaan,
                     kode: this.body.kode || null,
                     kode_soal: this.body.kode_soal || uuidv4(),
@@ -292,6 +293,7 @@ class studiv2BanksoalService {
                         await get_pilihanjawaban.save();
                     } else {
                         const dataSavePilihanJawaban = await studi_v2_banksoal_soal_pilihanjawaban.create({
+                            studi_v2_banksoal_aspek_detail_id: this.body.studi_v2_banksoal_aspek_detail_id,
                             kode_jawaban: this.body.kode_jawaban || uuidv4(),
                             jawaban: item.jawaban,
                             skor: item.skor,
@@ -341,6 +343,17 @@ class studiv2BanksoalService {
     }
     //!SOAL-END
 
+    importSoalPeriksa = async () => {
+        try {
+            const response = await studi_v2_banksoal_soal.findOne(
+                { where: { kode_soal: this.params.kode_soal } },
+            );
+
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
 }
 
 export default studiv2BanksoalService;
