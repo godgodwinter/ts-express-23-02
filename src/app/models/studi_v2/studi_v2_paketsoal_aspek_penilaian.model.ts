@@ -13,6 +13,10 @@ const studi_v2_paketsoal_aspek_penilaian = (sequelize: any, Sequelize: any): any
             type: Sequelize.BIGINT,
             allowNull: true
         },
+        status: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         created_at: {
             field: 'created_at',
             type: Sequelize.DATE,

@@ -240,6 +240,16 @@ db_studi_v2.studi_v2_banksoal_aspek_detail.hasMany(db_studi_v2.studi_v2_banksoal
     name: 'studi_v2_banksoal_aspek_detail_id'
   },
 });
+db_studi_v2.studi_v2_paketsoal_aspek_penilaian.belongsTo(db_studi_v2.studi_v2_paketsoal_aspek, {
+  foreignKey: {
+    name: 'studi_v2_paketsoal_aspek_id'
+  },
+});
+db_studi_v2.studi_v2_paketsoal_aspek_penilaian.belongsTo(db_studi_v2.studi_v2_paketsoal_aspek_detail, {
+  foreignKey: {
+    name: 'studi_v2_paketsoal_aspek_detail_id'
+  },
+});
 
 // !STUDIV2-RELASI-END
 export default db

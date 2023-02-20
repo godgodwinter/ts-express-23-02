@@ -76,8 +76,26 @@ class studiv2PaketsoalService {
 
     paketsoalDelete = async () => {
         try {
-            const dataDeleted = await studi_v2_paketsoal.destroy({ where: { id: this.params.paketsoal_id, deleted_at: null } });
-            return dataDeleted
+            const t = await sequelize_studi_v2.transaction();
+            try {
+                const getAspek_id = await studi_v2_paketsoal_aspek.findAll({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id, deleted_at: null } });
+                if (getAspek_id) {
+                    for (const [index, item] of getAspek_id.entries()) {
+                        const dataDeletedPenilaian = await studi_v2_paketsoal_aspek_penilaian.destroy({ where: { studi_v2_paketsoal_aspek_id: getAspek_id[index].id, deleted_at: null } }, { transaction: t });
+                    }
+                }
+                const dataDeletedAspekDetail = await studi_v2_paketsoal_aspek_detail.destroy({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id, deleted_at: null } }, { transaction: t });
+                const dataDeletedAspek = await studi_v2_paketsoal_aspek.destroy({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id, deleted_at: null } }, { transaction: t });
+                const dataDeleted = await studi_v2_paketsoal.destroy({ where: { id: this.params.paketsoal_id, deleted_at: null } }, { transaction: t });
+                await t.commit();
+            } catch (error) {
+
+                // If the execution reaches this line, an error was thrown.
+                // We rollback the transaction.
+                await t.rollback();
+
+            }
+            return "Data berhasil dihapus"
             // return "Data berhasil disimpan"
         } catch (error: any) {
             console.log(error.message);
@@ -88,7 +106,14 @@ class studiv2PaketsoalService {
     // !ASPEK
     aspekGetAll = async () => {
         try {
-            const response = await studi_v2_paketsoal_aspek.findAll({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id } });
+            const response = await studi_v2_paketsoal_aspek.findAll({
+                where: { studi_v2_paketsoal_id: this.params.paketsoal_id },
+                // include: [{ model: db_studi_v2.studi_v2_paketsoal_aspek_penilaian, attributes: ['id', 'pertanyaan'], where: { deleted_at: null } }]
+            });
+            for (const [index, item] of response.entries()) {
+                let getPenilaian = await db_studi_v2.studi_v2_paketsoal_aspek_penilaian.count({ where: { studi_v2_paketsoal_aspek_id: item.id, deleted_at: null } })
+                response[index].setDataValue("mapel_jml", getPenilaian)
+            }
             return response;
         } catch (error: any) {
             console.log(error.message);
@@ -101,6 +126,7 @@ class studiv2PaketsoalService {
                 dataUpdate.set({
                     nama: this.body.nama,
                     urutan: this.body.urutan,
+                    tipe: this.body.tipe || 'Sendiri',
                     studi_v2_paketsoal_id: this.params.paketsoal_id,
                     studi_v2_banksoal_aspek_id: this.body.studi_v2_banksoal_aspek_id,
                     updated_at: moment().format(),
@@ -114,6 +140,7 @@ class studiv2PaketsoalService {
                     urutan: this.body.urutan,
                     studi_v2_paketsoal_id: this.params.paketsoal_id,
                     studi_v2_banksoal_aspek_id: this.body.studi_v2_banksoal_aspek_id,
+                    tipe: this.body.tipe || 'Sendiri',
                     created_at: moment().format(),
                     updated_at: moment().format(),
                 });
@@ -156,6 +183,7 @@ class studiv2PaketsoalService {
 
     aspekDelete = async () => {
         try {
+            const dataDeletedPenilaian = await studi_v2_paketsoal_aspek.destroy({ where: { studi_v2_paketsoal_aspek_id: this.params.aspek_id, deleted_at: null } });
             const dataDeleted = await studi_v2_paketsoal_aspek.destroy({ where: { id: this.params.aspek_id, deleted_at: null } });
             return dataDeleted
             // return "Data berhasil disimpan"
@@ -298,8 +326,20 @@ class studiv2PaketsoalService {
                 where: { id: this.params.aspek_id, deleted_at: null }
                 // include: [{ model: db_studi_v2.studi_v2_banksoal_soal, attributes: ['id', 'pertanyaan'], where: { deleted_at: null } }]
             });
-            let getPenilaian = await studi_v2_paketsoal_aspek_penilaian.findAll({ where: { studi_v2_paketsoal_aspek_id: this.params.aspek_id, deleted_at: null } })
-            response.setDataValue("penilaian", getPenilaian)
+            if (response) {
+                let getPenilaian = await studi_v2_paketsoal_aspek_penilaian.findAll({
+                    where: { studi_v2_paketsoal_aspek_id: this.params.aspek_id, deleted_at: null },
+                    include: [
+                        { model: db_studi_v2.studi_v2_paketsoal_aspek, attributes: ['id', 'nama'], where: { deleted_at: null } },
+                        { model: db_studi_v2.studi_v2_paketsoal_aspek_detail, attributes: ['id', 'nama'], where: { deleted_at: null } }]
+                })
+                for (const [index, item] of getPenilaian.entries()) {
+                    getPenilaian[index].setDataValue("aspek_nama", item.studi_v2_paketsoal_aspek?.nama)
+                    getPenilaian[index].setDataValue("aspek_detail_nama", item.studi_v2_paketsoal_aspek_detail?.nama)
+                    // getPenilaian[index].setDataValue("status", item.status)
+                }
+                response.setDataValue("penilaian", getPenilaian)
+            }
             return response;
         } catch (error: any) {
             console.log(error.message);
@@ -308,16 +348,27 @@ class studiv2PaketsoalService {
 
     penilaianStore = async () => {
         try {
-            const dataSave = await studi_v2_paketsoal_aspek_penilaian.create({
-                studi_v2_paketsoal_aspek_id: this.body.studi_v2_paketsoal_aspek_id,
-                studi_v2_paketsoal_aspek_detail_id: this.body.studi_v2_paketsoal_aspek_detail_id,
-                status: this.body.status,
-                studi_v2_paketsoal_id: this.params.paketsoal_id,
-                created_at: moment().format(),
-                updated_at: moment().format(),
-            });
+            const dataUpdate = await studi_v2_paketsoal_aspek_penilaian.findOne({ where: { studi_v2_paketsoal_id: this.params.paketsoal_id, studi_v2_paketsoal_aspek_id: this.body.studi_v2_paketsoal_aspek_id, studi_v2_paketsoal_aspek_detail_id: this.body.studi_v2_paketsoal_aspek_detail_id, deleted_at: null } });
+            if (dataUpdate) {
+                dataUpdate.set({
+                    status: this.body.status,
+                    updated_at: moment().format(),
+                });
+                // As above, the database still has "formUpdate" and "green"
+                await dataUpdate.save();
+                return dataUpdate
+            } else {
+                const dataSave = await studi_v2_paketsoal_aspek_penilaian.create({
+                    studi_v2_paketsoal_aspek_id: this.body.studi_v2_paketsoal_aspek_id,
+                    studi_v2_paketsoal_aspek_detail_id: this.body.studi_v2_paketsoal_aspek_detail_id,
+                    status: this.body.status,
+                    studi_v2_paketsoal_id: this.params.paketsoal_id,
+                    created_at: moment().format(),
+                    updated_at: moment().format(),
+                });
 
-            return dataSave
+                return dataSave
+            }
         } catch (error: any) {
             console.log(error.message);
         }
