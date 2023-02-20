@@ -46,7 +46,7 @@ const studi_v2_paketsoal_soal = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
-        studi_v2_banksoal_aspek_detail_id: {
+        studi_v2_banksoal_soal_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },

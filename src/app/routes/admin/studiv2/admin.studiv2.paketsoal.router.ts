@@ -22,6 +22,16 @@ class AdminUjianstudiPaketsoalRouter extends BaseRoutes {
         this.router.delete("/paketsoal/:paketsoal_id/aspek/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspekDelete)
         // ! PAKETSOAL-ASPEK-END
 
+
+        // ! PAKETSOAL-ASPEK-PENILAIAN
+        this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGet)
+        this.router.post("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianStore)
+        this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGetPerAspek)
+        this.router.delete("/paketsoal/:paketsoal_id/aspek/penilaian/get/:penilaian_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianDelete)
+        // ! PAKETSOAL-ASPEK-PENILAIAN-END
+
+
+
         // ! PAKETSOAL-ASPEK_DETAIL
         this.router.get("/paketsoal/:paketsoal_id/aspek_detail", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailGetAll)
         this.router.get("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailEdit)
@@ -30,12 +40,13 @@ class AdminUjianstudiPaketsoalRouter extends BaseRoutes {
         this.router.delete("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspek_detailDelete)
         // ! PAKETSOAL-ASPEK_DETAIL-END
 
-        // ! PAKETSOAL-ASPEK-PENILAIAN
-        this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGet)
-        this.router.post("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianStore)
-        this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGetPerAspek)
-        this.router.delete("/paketsoal/:paketsoal_id/aspek/penilaian/get/:penilaian_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianDelete)
-        // ! PAKETSOAL-ASPEK-PENILAIAN-END
+
+        // ! PAKETSOAL-ASPEK_DETAIL-SOAL
+        this.router.get("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id/soal", [verifyToken, menuAdminOwner], studiv2PaketsoalController.soalGetAll)
+        this.router.post("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id/soal", [verifyToken, menuAdminOwner], studiv2PaketsoalController.soalStore)
+        this.router.delete("/paketsoal/:paketsoal_id/aspek_detail/:aspek_detail_id/soal/:soal_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.soalDelete)
+        // ! PAKETSOAL-ASPEK_DETAIL-SOAL-END
+
 
     }
 }

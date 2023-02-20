@@ -14,6 +14,10 @@ const studi_v2_paketsoal_pilihanjawaban = (sequelize: any, Sequelize: any): any 
             allowNull: true
         },
         //relasi
+        studi_v2_banksoal_soal_pilihanjawaban_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
         studi_v2_paketsoal_soal_id: {
             type: Sequelize.BIGINT,
             allowNull: true

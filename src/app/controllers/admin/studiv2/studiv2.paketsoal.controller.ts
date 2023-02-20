@@ -181,6 +181,67 @@ class Studiv2PaketsoalController {
     // ! ASPEK-END
 
 
+    // ! PENILAIAN
+    penilaianGet = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianGet();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    penilaianGetPerAspek = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianGetPerAspek();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    penilaianStore = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianStore();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
+    penilaianDelete = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.penilaianDelete();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    // ! PENILAIAN-END
+
+
     // ! ASPEK_DETAIL
     aspek_detailGetAll = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
@@ -268,11 +329,12 @@ class Studiv2PaketsoalController {
     }
     // ! ASPEK_DETAIL-END
 
-    // ! PENILAIAN
-    penilaianGet = async (req: Request, res: Response): Promise<Response> => {
+
+    // ! ASPEK_DETAIL-SOAL
+    soalGetAll = async (req: Request, res: Response): Promise<Response> => {
         try {
             const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
-            const datas = await service.penilaianGet();
+            const datas = await service.soalGetAll();
 
             return res.send({
                 data: datas,
@@ -283,10 +345,10 @@ class Studiv2PaketsoalController {
             return res.status(500).send({ message: error.message });
         }
     }
-    penilaianGetPerAspek = async (req: Request, res: Response): Promise<Response> => {
+    soalStore = async (req: Request, res: Response): Promise<Response> => {
         try {
             const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
-            const datas = await service.penilaianGetPerAspek();
+            const datas = await service.soalStore();
 
             return res.send({
                 data: datas,
@@ -297,10 +359,10 @@ class Studiv2PaketsoalController {
             return res.status(500).send({ message: error.message });
         }
     }
-    penilaianStore = async (req: Request, res: Response): Promise<Response> => {
+    soalDelete = async (req: Request, res: Response): Promise<Response> => {
         try {
             const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
-            const datas = await service.penilaianStore();
+            const datas = await service.soalDelete();
 
             return res.send({
                 data: datas,
@@ -311,22 +373,8 @@ class Studiv2PaketsoalController {
             return res.status(500).send({ message: error.message });
         }
     }
+    // ! ASPEK_DETAIL-SOAL-END
 
-    penilaianDelete = async (req: Request, res: Response): Promise<Response> => {
-        try {
-            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
-            const datas = await service.penilaianDelete();
-
-            return res.send({
-                data: datas,
-                message: "Success"
-            });
-
-        } catch (error: any) {
-            return res.status(500).send({ message: error.message });
-        }
-    }
-    // ! PENILAIAN-END
 
 }
 
