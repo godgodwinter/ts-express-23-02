@@ -1,7 +1,12 @@
-const kelas = (sequelize:any, Sequelize:any) :any=>  {
+const kelas = (sequelize: any, Sequelize: any): any => {
     const kelas = sequelize.define("kelas", {
         nama: {
             type: Sequelize.STRING,
+            allowNull: true
+        },
+        deleted_at: {
+            field: 'deleted_at',
+            type: Sequelize.DATE,
             allowNull: true
         },
         created_at: {
