@@ -186,7 +186,7 @@ class studiv2PaketsoalService {
 
     aspekDelete = async () => {
         try {
-            const dataDeletedPenilaian = await studi_v2_paketsoal_aspek.destroy({ where: { studi_v2_paketsoal_aspek_id: this.params.aspek_id, deleted_at: null } });
+            const dataDeletedPenilaian = await studi_v2_paketsoal_aspek_penilaian.destroy({ where: { studi_v2_paketsoal_aspek_id: this.params.aspek_id, deleted_at: null } });
             const dataDeleted = await studi_v2_paketsoal_aspek.destroy({ where: { id: this.params.aspek_id, deleted_at: null } });
             return dataDeleted
             // return "Data berhasil disimpan"
