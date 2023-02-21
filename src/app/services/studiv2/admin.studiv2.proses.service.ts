@@ -236,9 +236,11 @@ class studiv2ProsesService {
             let dataBerhasilDisimpan = 0;
             for (const [index, siswa] of response.entries()) {
                 const proses = await studi_v2_proses.findOne({ where: { siswa_id: siswa.id, deleted_at: null } })
-                const dataTerhapus = await this.prosesDeletePersiswa(siswa.id, proses.id)
-                if (dataTerhapus) {
-                    dataBerhasilDisimpan++;
+                if (proses) {
+                    const dataTerhapus = await this.prosesDeletePersiswa(siswa.id, proses.id)
+                    if (dataTerhapus) {
+                        dataBerhasilDisimpan++;
+                    }
                 }
             }
             return dataBerhasilDisimpan;
