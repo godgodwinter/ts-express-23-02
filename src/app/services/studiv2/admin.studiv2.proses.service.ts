@@ -163,6 +163,14 @@ class studiv2ProsesService {
         }
     }
 
+    prosesPeriksaIsSiswaSudahAda = async (siswa_id: number) => {
+        const periksaSiswa = await studi_v2_proses.count({ where: { siswa_id: siswa_id, deleted_at: null } })
+        if (periksaSiswa) {
+            return true
+        }
+        return false;
+    }
+
     //! PERSISWA
 
     //! PERKELAS

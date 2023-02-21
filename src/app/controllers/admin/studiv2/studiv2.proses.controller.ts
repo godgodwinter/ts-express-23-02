@@ -39,10 +39,23 @@ class Studiv2ProsesController {
     prosesStorePerSiswa = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
-            const datas = await proses_Service.prosesStorePerSiswa(parseInt(req.params.kelas_id), parseInt(req.params.paketsoal_id), req.body);
+            // periksa jika siswa_id di table proses sudah ada maka skip /return false
+            const isSiswaSudahAdaDiProses = await proses_Service.prosesPeriksaIsSiswaSudahAda(parseInt(req.params.siswa_id));
+            // console.log(isSiswaSudahAdaDiProses);
+
+            // return res.send({
+            //     data: isSiswaSudahAdaDiProses,
+            //     message: "Success"
+            // });
+            if (isSiswaSudahAdaDiProses) {
+                return res.status(400).send({
+                    status: false,
+                    data: "Data ujian Siswa sudah ada",
+                    message: "Failed"
+                });
+            }
+            const datas = await proses_Service.prosesStorePerSiswa(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
             // setTimeout(()=>{},5000)
-
-
             return res.send({
                 data: datas,
                 message: "Success"
