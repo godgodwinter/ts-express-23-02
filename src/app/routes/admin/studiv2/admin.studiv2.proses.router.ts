@@ -6,17 +6,19 @@ import studiv2ProsesController from '../../../controllers/admin/studiv2/studiv2.
 class AdminUjianstudiProsesRouter extends BaseRoutes {
 
     public routes(): void {
-        // ! PERKELAS
-        this.router.get("/proses/sekolah/:sekolah_id/kelas/:kelas_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswaPerKelas)
-        this.router.post("/proses/sekolah/:sekolah_id/kelas/:kelas_id/generate/:paketsoal_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswaPerKelas)
-        this.router.delete("/proses/sekolah/:sekolah_id/kelas/:kelas_id/delete/:proses_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswaPerKelas)
-        // ! PERKELAS-END
 
         // ! PERSISWA
         this.router.get("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswa)
         this.router.post("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/generate/:paketsoal_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesStorePerSiswa)
         this.router.delete("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/delete/:proses_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesDeletePersiswa)
         // ! PERSISWA-END
+
+
+        // ! PERKELAS
+        this.router.get("/proses/sekolah/:sekolah_id/kelas/:kelas_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswaPerKelas)
+        this.router.post("/proses/sekolah/:sekolah_id/kelas/:kelas_id/generate/:paketsoal_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesStoreSiswaPerKelas)
+        this.router.delete("/proses/sekolah/:sekolah_id/kelas/:kelas_id/delete", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesDeleteSiswaPerKelas)
+        // ! PERKELAS-END
 
 
     }

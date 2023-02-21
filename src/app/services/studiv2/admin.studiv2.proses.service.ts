@@ -163,9 +163,15 @@ class studiv2ProsesService {
         }
     }
 
-    prosesPeriksaIsSiswaSudahAda = async (siswa_id: number) => {
-        const periksaSiswa = await studi_v2_proses.count({ where: { siswa_id: siswa_id, deleted_at: null } })
+    prosesPeriksaIsSiswaSudahAda = async (siswa_id: number, tgl_ujian: any) => {
+        const periksaSiswa = await studi_v2_proses.findOne({ where: { siswa_id: siswa_id, deleted_at: null } })
         if (periksaSiswa) {
+            periksaSiswa.set({
+                tgl_ujian,
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await periksaSiswa.save();
             return true
         }
         return false;
@@ -174,11 +180,48 @@ class studiv2ProsesService {
     //! PERSISWA
 
     //! PERKELAS
+
     prosesGetSiswaPerKelas = async (kelas_id: number) => {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);
             const response = await siswa_Service.siswaGetWhereKelas(kelas_id);
             return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    prosesStoreSiswaPerKelas = async (kelas_id: number, paketsoal_id: number, dataForm: any) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const response = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            let dataBerhasilDisimpan = 0;
+            for (const [index, siswa] of response.entries()) {
+                const periksaIsSudahAda = await this.prosesPeriksaIsSiswaSudahAda(siswa.id, dataForm.tgl_ujian)
+                if (periksaIsSudahAda === false) {
+                    await this.prosesStorePerSiswa(siswa.id, paketsoal_id, dataForm)
+                    dataBerhasilDisimpan++;
+                }
+            }
+            return dataBerhasilDisimpan;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    prosesDeleteSiswaPerKelas = async (kelas_id: number) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const response = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            let dataBerhasilDisimpan = 0;
+            for (const [index, siswa] of response.entries()) {
+                const proses = await studi_v2_proses.findOne({ where: { siswa_id: siswa.id, deleted_at: null } })
+                const dataTerhapus = await this.prosesDeletePersiswa(siswa.id, proses.id)
+                if (dataTerhapus) {
+                    dataBerhasilDisimpan++;
+                }
+            }
+            return dataBerhasilDisimpan;
         } catch (error: any) {
             console.log(error.message);
         }
