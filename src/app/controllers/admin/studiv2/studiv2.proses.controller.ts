@@ -30,7 +30,7 @@ class Studiv2ProsesController {
             //     message: "Success"
             // });
             if (isSiswaSudahAdaDiProses) {
-                return res.status(400).send({
+                return res.status(200).send({
                     status: false,
                     data: "Data ujian Siswa sudah ada",
                     message: "Failed"
