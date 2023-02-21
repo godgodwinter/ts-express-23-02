@@ -1,5 +1,5 @@
-const siswa = (sequelize: any, Sequelize: any): any => {
-    const Siswa = sequelize.define("siswa", {
+const ortu = (sequelize: any, Sequelize: any): any => {
+    const ortu = sequelize.define("ortu", {
         nama: {
             type: Sequelize.STRING,
             allowNull: false
@@ -20,24 +20,6 @@ const siswa = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
-        jk: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        telp: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        kelas_id: {
-            field: 'kelas_id',
-            type: Sequelize.BIGINT,
-            allowNull: true
-        },
-        prefix: {
-            field: 'prefix',
-            type: Sequelize.STRING,
-            allowNull: true
-        },
         deleted_at: {
             field: 'deleted_at',
             type: Sequelize.DATE,
@@ -55,7 +37,7 @@ const siswa = (sequelize: any, Sequelize: any): any => {
 
         freezeTableName: true, // Model tableName will be the same as the model name
         timestamps: false,
-        // tableName: 'siswa',
+        // tableName: 'ortu',
         underscored: true,
         defaultScope: {
             attributes: { exclude: ['password'] },
@@ -63,15 +45,12 @@ const siswa = (sequelize: any, Sequelize: any): any => {
         scopes: {
             withPassword: {
                 attributes: {},
-            },
-            withoutPass: {
-                attributes: { exclude: ['password', 'passworddefault'] },
             }
         }
     });
 
 
-    return Siswa;
+    return ortu;
 };
 
-export default siswa;
+export default ortu;

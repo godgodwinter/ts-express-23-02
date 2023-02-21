@@ -30,7 +30,7 @@ class sekolahService {
             const response = await sekolah.findOne({
                 where: { id: sekolah_id, deleted_at: null }
             });
-            const getKelas = await kelas.findAll({ where: { sekolah_id } })
+            const getKelas = await kelas.findAll({ where: { sekolah_id, deleted_at: null } })
             response.setDataValue("kelas", getKelas)
 
             return response;

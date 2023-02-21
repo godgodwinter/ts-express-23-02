@@ -41,6 +41,7 @@ import studi_v2_hasil from "./studi_v2/studi_v2_hasil.model";
 import studi_v2_hasil_aspek from "./studi_v2/studi_v2_hasil_aspek.model";
 import studi_v2_hasil_aspek_detail from "./studi_v2/studi_v2_hasil_aspek_detail.model";
 import studi_v2_hasil_aspek_penilaian from "./studi_v2/studi_v2_hasil_aspek_penilaian.model";
+import ortu from "./ortu.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -66,6 +67,7 @@ export const db = {
   admin: admin(sequelize, Sequelize),
   owner: owner(sequelize, Sequelize),
   siswa: siswa(sequelize, Sequelize),
+  ortu: ortu(sequelize, Sequelize),
   kelas: kelas(sequelize, Sequelize),
   sekolah: sekolah(sequelize, Sequelize),
   paket: paket(sequelize, Sequelize),
