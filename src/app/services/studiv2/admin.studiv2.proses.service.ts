@@ -185,6 +185,26 @@ class studiv2ProsesService {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);
             const response = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            for (const [index, item] of response.entries()) {
+                const getProses = await studi_v2_proses.findOne({ where: { siswa_id: item.id, deleted_at: null } })
+                let proses_id = null;
+                let paketsoal_id = null;
+                let paketsoal_nama = null;
+                let tgl_ujian = null;
+                let status = "Belum";
+                if (getProses) {
+                    proses_id = getProses.id;
+                    paketsoal_id = getProses.studi_v2_paketsoal_id;
+                    paketsoal_nama = getProses.studi_v2_paketsoal_id;
+                    tgl_ujian = getProses.tgl_ujian;
+                    status = "Ada"
+                }
+                response[index].setDataValue("proses_id", proses_id)
+                response[index].setDataValue("paketsoal_nama", paketsoal_nama)
+                response[index].setDataValue("paketsoal_id", paketsoal_id)
+                response[index].setDataValue("tgl_ujian", tgl_ujian)
+                response[index].setDataValue("status", status)
+            }
             return response;
         } catch (error: any) {
             console.log(error.message);
