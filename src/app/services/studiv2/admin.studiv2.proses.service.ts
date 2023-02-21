@@ -10,9 +10,10 @@ const moment = require('moment');
 const localization = require('moment/locale/id')
 moment.updateLocale("id", localization);
 
-const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_detail, studi_v2_paketsoal_aspek_penilaian, studi_v2_paketsoal_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban,
+const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_detail, studi_v2_paketsoal_aspek_penilaian, studi_v2_paketsoal_soal,
     studi_v2_paketsoal_pilihanjawaban,
     studi_v2_banksoal_soal, studi_v2_banksoal_soal_pilihanjawaban,
+    studi_v2_proses, studi_v2_proses_aspek_detail, studi_v2_proses_aspek_detail_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban
 } = db_studi_v2;
 class studiv2ProsesService {
 
@@ -34,6 +35,129 @@ class studiv2ProsesService {
             const siswa_Service: siswaService = new siswaService(this.req);
             const response = await siswa_Service.siswaGetWhereId(siswa_id);
             return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    prosesStorePerSiswa = async (siswa_id: number, paketsoal_id: number, dataForm: any) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const response = await siswa_Service.siswaGetWhereId(siswa_id);
+            const getPaketsoal = await studi_v2_paketsoal.findOne({ where: { id: paketsoal_id, deleted_at: null } })
+            // ! 1. insert proses = siswa_id,paketsoal_id , tgl_ujian //batas ujian terakhir
+            // ! 2. studi_v2_proses_aspek_detail = mapel, tgl_mulai, selesai ada dsini (proses mengerjakan per mapel)
+            // ! 3. studi_v2_proses_aspek_detail_soal = insert semua soal (random_soal)
+            // ! 4. studi_v2_proses_aspek_detail_soal_pilihan_jawaban   =  insert semua pilihanjawaban (random_pilihanjawaban)
+
+            const t = await sequelize_studi_v2.transaction();
+            try {
+                const save_studi_v2_proses = await studi_v2_proses.create({
+                    status: "Aktif",
+                    tgl_ujian: dataForm.tgl_ujian,
+                    siswa_id,
+                    studi_v2_paketsoal_id: paketsoal_id,
+                    created_at: moment().format(),
+                    updated_at: moment().format(),
+                }, { transaction: t })
+
+                const getPaketosoalAspekDetail_where_paketsoal_id = await studi_v2_paketsoal_aspek_detail.findAll({ where: { studi_v2_paketsoal_id: paketsoal_id, deleted_at: null } })
+                // * tambahan_field: mapel_nama
+                for (const [index, mapel] of getPaketosoalAspekDetail_where_paketsoal_id.entries()) {
+                    const save_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.create({
+                        status: "Aktif",
+                        tgl_mulai: null,
+                        tgl_selesai: null,
+                        waktu: mapel.waktu,
+                        studi_v2_proses_id: save_studi_v2_proses.id,
+                        studi_v2_paketsoal_aspek_detail_id: mapel.id,
+                        created_at: moment().format(),
+                        updated_at: moment().format(),
+                    }, { transaction: t })
+
+                    let getSoal = [{
+                        id: null, kode_soal: null, kode_jawaban: null, status_jawaban: null, skor: 0, studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id, studi_v2_paketsoal_soal_id: mapel.id
+                    }];
+                    if (mapel.random_soal === "Aktif") {
+                        getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id }, order: [Sequelize.literal('RAND()')] })
+                    } else {
+                        getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id } })
+                    }
+                    for (const [index_soal, soal] of getSoal.entries()) {
+                        const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
+                            kode_soal: soal.kode_soal,
+                            kode_jawaban: soal.kode_jawaban,
+                            status_jawaban: soal.kode_jawaban,
+                            skor: soal.kode_jawaban,
+                            studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
+                            studi_v2_paketsoal_soal_id: soal.id,
+                            created_at: moment().format(),
+                            updated_at: moment().format(),
+                        }, { transaction: t })
+
+                        let getPilihanjawaban = [{ id: null, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
+                        if (mapel.random_pilihanjawaban === "Aktif") {
+                            getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null }, order: [Sequelize.literal('RAND()')] })
+                        } else {
+                            getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null } })
+                        }
+                        for (const [index_pj, pilihanjawaban] of getPilihanjawaban.entries()) {
+                            const save_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.create({
+                                kode_jawaban: pilihanjawaban.kode_jawaban,
+                                studi_v2_proses_aspek_detail_soal_id: save_studi_v2_proses_aspek_detail_soal.id,
+                                studi_v2_paketsoal_pilihanjawaban_id: pilihanjawaban.id,
+                                created_at: moment().format(),
+                                updated_at: moment().format(),
+                            }, { transaction: t })
+                        }
+
+                    }
+
+                }
+
+                await t.commit();
+            } catch (error) {
+
+                // If the execution reaches this line, an error was thrown.
+                // We rollback the transaction.
+                await t.rollback();
+
+            }
+            return "Data berhasil disimpan";
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    prosesDeletePersiswa = async (siswa_id: number, proses_id: number) => {
+        try {
+
+            try {
+                const t = await sequelize_studi_v2.transaction();
+                try {
+                    const getMapel = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: proses_id, deleted_at: null } })
+                    for (const [index, mapel] of getMapel.entries()) {
+
+                        const getSoal = await studi_v2_proses_aspek_detail_soal.findAll({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } })
+                        for (const [index_soal, soal] of getSoal.entries()) {
+                            const dataDeleted_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.destroy({ where: { studi_v2_proses_aspek_detail_soal_id: soal.id, deleted_at: null } }, { transaction: t });
+                        }
+                        const dataDeleted_proses_soal_id = await studi_v2_proses_aspek_detail_soal.destroy({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } }, { transaction: t });
+                    }
+                    const dataDeleted_proses_aspek_detail = await studi_v2_proses_aspek_detail.destroy({ where: { studi_v2_proses_id: proses_id, deleted_at: null } }, { transaction: t });
+                    const dataDeleted_proses = await studi_v2_proses.destroy({ where: { id: proses_id, deleted_at: null } }, { transaction: t });
+                    await t.commit();
+                } catch (error) {
+
+                    // If the execution reaches this line, an error was thrown.
+                    // We rollback the transaction.
+                    await t.rollback();
+
+                }
+                return "Data berhasil dihapus"
+                // return "Data berhasil disimpan"
+            } catch (error: any) {
+                console.log(error.message);
+            }
+            return "Data berhasil dihapus!";
         } catch (error: any) {
             console.log(error.message);
         }
