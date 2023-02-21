@@ -13,6 +13,17 @@ class siswaService {
         this.params = req.params;
     }
 
+    siswaGetWhereId = async (id: number) => {
+        try {
+            const response = await siswa.findOne({
+                where: { id, deleted_at: null }
+            });
+
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
     siswaGetWhereKelas = async (kelas_id: number) => {
         try {
             const response = await siswa.findAll({

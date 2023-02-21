@@ -8,6 +8,7 @@ class AdminMasteringSekolahRouterV2 extends BaseRoutes {
 
     public routes(): void {
         this.router.get("/sekolah", [verifyToken, menuAdminOwner], adminMasteringSekolahController.getSekolahAll)
+        this.router.get("/sekolah/:sekolah_id", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahGetWhereId)
         this.router.get("/sekolah/:sekolah_id/kelas", [verifyToken, menuAdminOwner], adminMasteringSekolahController.getKelasWhereSekolah)
         this.router.get("/sekolah/:sekolah_id/kelas/:kelas_id/siswa", [verifyToken, menuAdminOwner], adminMasteringSekolahController.getSiswaWhereKelas)
     }
