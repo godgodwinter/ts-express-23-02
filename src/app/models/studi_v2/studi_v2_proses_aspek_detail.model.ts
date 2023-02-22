@@ -21,6 +21,46 @@ const studi_v2_proses_aspek_detail = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
+        // replace 
+        instruksi: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        instruksi_status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Nonaktif"
+        },
+        lembar_prasoal: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        lembar_prasoal_status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Nonaktif"
+        },
+        instruksi_pengerjaan: {
+            type: Sequelize.TEXT,
+            allowNull: true
+        },
+        instruksi_pengerjaan_status: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Nonaktif"
+        },
+        random_soal: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Aktif"
+        },
+        random_pilihanjawaban: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Aktif"
+        },
+
+
         // relasi
         studi_v2_proses_id: {
             type: Sequelize.BIGINT,
