@@ -1,6 +1,10 @@
 const studi_v2_proses_aspek_detail_soal = (sequelize: any, Sequelize: any): any => {
     const studi_v2_proses_aspek_detail_soal = sequelize.define("studi_v2_proses_aspek_detail_soal", {
         // data
+        soal_pertanyaan: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         kode_soal: {
             type: Sequelize.STRING,
             allowNull: false
@@ -50,7 +54,12 @@ const studi_v2_proses_aspek_detail_soal = (sequelize: any, Sequelize: any): any 
         timestamps: false,
         tableName: 'studi_v2_proses_aspek_detail_soal',
         underscored: true,
-        modelName: 'studi_v2_proses_aspek_detail_soal'
+        modelName: 'studi_v2_proses_aspek_detail_soal',
+        scopes: {
+            lessData: {
+                attributes: { exclude: ['status_jawaban', 'skor'] },
+            }
+        }
 
     });
 

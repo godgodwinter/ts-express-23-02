@@ -1,5 +1,4 @@
 import { sequelize_studi_v2 } from '../../models/index';
-
 import { db_studi_v2 } from "../../models";
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
@@ -56,6 +55,7 @@ class studiv2ProsesService {
                     tgl_ujian: dataForm.tgl_ujian,
                     siswa_id,
                     studi_v2_paketsoal_id: paketsoal_id,
+                    paketsoal_nama: getPaketsoal.nama,
                     created_at: moment().format(),
                     updated_at: moment().format(),
                 }, { transaction: t })
@@ -70,12 +70,13 @@ class studiv2ProsesService {
                         waktu: mapel.waktu,
                         studi_v2_proses_id: save_studi_v2_proses.id,
                         studi_v2_paketsoal_aspek_detail_id: mapel.id,
+                        aspek_detail_nama: mapel.nama,
                         created_at: moment().format(),
                         updated_at: moment().format(),
                     }, { transaction: t })
 
                     let getSoal = [{
-                        id: null, kode_soal: null, kode_jawaban: null, status_jawaban: null, skor: 0, studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id, studi_v2_paketsoal_soal_id: mapel.id
+                        id: null, pertanyaan: "", kode_soal: null, kode_jawaban: null, status_jawaban: null, skor: 0, studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id, studi_v2_paketsoal_soal_id: mapel.id
                     }];
                     if (mapel.random_soal === "Aktif") {
                         getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id }, order: [Sequelize.literal('RAND()')] })
@@ -90,11 +91,12 @@ class studiv2ProsesService {
                             skor: soal.kode_jawaban,
                             studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
                             studi_v2_paketsoal_soal_id: soal.id,
+                            soal_pertanyaan: soal.pertanyaan,
                             created_at: moment().format(),
                             updated_at: moment().format(),
                         }, { transaction: t })
 
-                        let getPilihanjawaban = [{ id: null, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
+                        let getPilihanjawaban = [{ id: null, jawaban: "", skor: 0, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
                         if (mapel.random_pilihanjawaban === "Aktif") {
                             getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null }, order: [Sequelize.literal('RAND()')] })
                         } else {
@@ -105,6 +107,8 @@ class studiv2ProsesService {
                                 kode_jawaban: pilihanjawaban.kode_jawaban,
                                 studi_v2_proses_aspek_detail_soal_id: save_studi_v2_proses_aspek_detail_soal.id,
                                 studi_v2_paketsoal_pilihanjawaban_id: pilihanjawaban.id,
+                                pilihanjawaban_jawaban: pilihanjawaban.jawaban,
+                                pilihanjawaban_skor: pilihanjawaban.skor,
                                 created_at: moment().format(),
                                 updated_at: moment().format(),
                             }, { transaction: t })

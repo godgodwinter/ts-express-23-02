@@ -1,6 +1,14 @@
 const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = (sequelize: any, Sequelize: any): any => {
     const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = sequelize.define("studi_v2_proses_aspek_detail_soal_pilihan_jawaban", {
         // data
+        pilihanjawaban_jawaban: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        pilihanjawaban_skor: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
         kode_jawaban: {
             type: Sequelize.STRING,
             allowNull: false
@@ -38,7 +46,12 @@ const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = (sequelize: any, Seque
         timestamps: false,
         tableName: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban',
         underscored: true,
-        modelName: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban'
+        modelName: 'studi_v2_proses_aspek_detail_soal_pilihan_jawaban',
+        scopes: {
+            lessData: {
+                attributes: { exclude: ['pilihanjawaban_skor'] },
+            }
+        }
 
     });
 

@@ -1,6 +1,10 @@
 const studi_v2_proses_aspek_detail = (sequelize: any, Sequelize: any): any => {
     const studi_v2_proses_aspek_detail = sequelize.define("studi_v2_proses_aspek_detail", {
         // data
+        aspek_detail_nama: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         status: {
             type: Sequelize.STRING,
             allowNull: false

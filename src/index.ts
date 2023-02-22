@@ -22,6 +22,8 @@ import AdminUjianstudiProsesRouter from "./app/routes/admin/studiv2/admin.studiv
 import guestRouter from "./app/routes/tanpalogin/guest.router";
 import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 import { babengLimiter, babengLimiterUjian } from "./app/helpers/babengLimiter";
+import siswaProfileRouter from "./app/routes/siswa/siswa.profile.router";
+import siswaUjianstudiRouter from "./app/routes/siswa/siswa.ujianstudi.router";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
@@ -91,7 +93,14 @@ class App {
         this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiBanksoalRouter);
         this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiPaketsoalRouter);
         this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiProsesRouter);
+
         //! ROUTER-BARU-END
+        //! ROUTER-SISWA-BARU
+        this.app.use(`/api/${apiVersion}/siswa/`, babengLimiter(3000), siswaProfileRouter);
+        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, babengLimiter(3000), siswaUjianstudiRouter);
+        //! ROUTER-SISWA-BARU-END
+
+
 
         //*  OLD-ROUTER-
         this.app.use(`/api/`, babengLimiterUjian(rateLimit, 1), AuthRoutes); //* user login/authentikasi
