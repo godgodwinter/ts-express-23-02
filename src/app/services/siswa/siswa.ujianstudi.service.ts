@@ -58,6 +58,61 @@ class siswaUjianstudiService {
         }
     }
 
+    doMulai = async () => {
+        try {
+            const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: this.params.aspek_detail_id, deleted_at: null } })
+            get_aspek_detail.set({
+                tgl_mulai: this.body.tgl_mulai,
+                tgl_selesai: this.body.tgl_selesai,
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await get_aspek_detail.save();
+            return get_aspek_detail
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    doFinish = async () => {
+        try {
+            const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: this.params.aspek_detail_id, deleted_at: null } })
+            get_aspek_detail.set({
+                tgl_selesai: moment().format(),
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await get_aspek_detail.save();
+            return get_aspek_detail
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    doJawab = async () => {
+        try {
+            const get_soal = await studi_v2_proses_aspek_detail_soal.findOne({ where: { id: this.params.soal_id, deleted_at: null } })
+            let skor = 0;
+            let status_jawaban = "Salah";
+            // !periksajawaban
+            const periksaJawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.findOne({ where: { studi_v2_proses_aspek_detail_soal_id: this.params.soal_id, kode_jawaban: this.body.kode_jawaban, deleted_at: null } })
+            if (periksaJawaban?.pilihanjawaban_skor) {
+                skor = periksaJawaban.pilihanjawaban_skor;
+                status_jawaban = "Benar";
+            }
+
+            get_soal.set({
+                kode_jawaban: this.body.kode_jawaban,
+                skor,
+                status_jawaban,
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await get_soal.save();
+            return { periksaJawaban, skor, status_jawaban }
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
 }
 
 export default siswaUjianstudiService;

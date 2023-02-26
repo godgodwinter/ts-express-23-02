@@ -25,6 +25,57 @@ class SiswaProfileController {
             return res.status(500).send({ message: error.message });
         }
     }
+    doMulai = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const siswa_service: siswaUjianstudiService = new siswaUjianstudiService(req);
+
+            // const data_proses = await siswa_service.getProses();
+            const res_do_mulai = await siswa_service.doMulai();
+
+            return res.send({
+                data: res_do_mulai,
+                // proses: data_proses,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    doFinish = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const siswa_service: siswaUjianstudiService = new siswaUjianstudiService(req);
+
+            // const data_proses = await siswa_service.getProses();
+            const res_do_mulai = await siswa_service.doFinish();
+
+            return res.send({
+                data: res_do_mulai,
+                // proses: data_proses,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    doJawab = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const siswa_service: siswaUjianstudiService = new siswaUjianstudiService(req);
+
+            // const data_proses = await siswa_service.getProses();
+            const res_do_mulai = await siswa_service.doJawab();
+
+            return res.send({
+                data: res_do_mulai,
+                // proses: data_proses,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
 
 }
 
