@@ -19,6 +19,7 @@ import adminMasteringPaketRouter from "./app/routes/admin/admin.mastering.paket.
 import AdminUjianstudiBanksoalRouter from "./app/routes/admin/studiv2/admin.studiv2.banksoal.router"
 import AdminUjianstudiPaketsoalRouter from "./app/routes/admin/studiv2/admin.studiv2.paketsoal.router"
 import AdminUjianstudiProsesRouter from "./app/routes/admin/studiv2/admin.studiv2.proses.router"
+import AdminUjianstudiHasilRouter from "./app/routes/admin/studiv2/admin.studiv2.hasil.router"
 import guestRouter from "./app/routes/tanpalogin/guest.router";
 import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 import { babengLimiter, babengLimiterUjian } from "./app/helpers/babengLimiter";
@@ -93,6 +94,7 @@ class App {
         this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiBanksoalRouter);
         this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiPaketsoalRouter);
         this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiProsesRouter);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiHasilRouter);
 
         //! ROUTER-BARU-END
         //! ROUTER-SISWA-BARU

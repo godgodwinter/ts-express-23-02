@@ -7,6 +7,7 @@ class AdminUjianstudiProsesRouter extends BaseRoutes {
 
     public routes(): void {
 
+        // * PROSES
         // ! PERSISWA
         this.router.get("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswa)
         this.router.post("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/generate/:paketsoal_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesStorePerSiswa)
@@ -21,7 +22,7 @@ class AdminUjianstudiProsesRouter extends BaseRoutes {
         this.router.post("/proses/sekolah/:sekolah_id/kelas/:kelas_id/generate/:paketsoal_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesStoreSiswaPerKelas)
         this.router.delete("/proses/sekolah/:sekolah_id/kelas/:kelas_id/delete", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesDeleteSiswaPerKelas)
         // ! PERKELAS-END
-
+        // * PROSES-END
 
     }
 }

@@ -1,32 +1,36 @@
 const studi_v2_hasil_aspek_detail = (sequelize: any, Sequelize: any): any => {
     const studi_v2_hasil_aspek_detail = sequelize.define("studi_v2_hasil_aspek_detail", {
         // data
-        urutan: {
-            type: Sequelize.INTEGER,
-            allowNull: false
+        // urutan: {
+        //     type: Sequelize.INTEGER,
+        //     allowNull: true
+        // },
+        status: {
+            type: Sequelize.STRING,
+            allowNull: true
         },
         aspek_detail_nama: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        nilaiAkhir: {
+        nilai_akhir: {
             type: Sequelize.FLOAT,
             allowNull: true
         },
-        nilaiAkhir_revisi: {
+        nilai_akhir_revisi: {
             type: Sequelize.FLOAT,
             allowNull: true
         },
-        nilaiAkhir_ket_singkatan_revisi: {
-            type: Sequelize.STRING,
+        skor_total: {
+            type: Sequelize.INTEGER,
             allowNull: true
         },
-        nilaiAkhir_ket_revisi: {
-            type: Sequelize.STRING,
+        soal_jml: {
+            type: Sequelize.INTEGER,
             allowNull: true
         },
-        status: {
-            type: Sequelize.STRING,
+        soal_max_skor: {
+            type: Sequelize.INTEGER,
             allowNull: true
         },
         // relasi
@@ -34,10 +38,14 @@ const studi_v2_hasil_aspek_detail = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.BIGINT,
             allowNull: true
         },
-        studi_v2_paketsoal_aspek_id: {
+        studi_v2_paketsoal_aspek_detail_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
+        // studi_v2_paketsoal_aspek_id: {
+        //     type: Sequelize.BIGINT,
+        //     allowNull: true
+        // },
         // timestamp
         deleted_at: {
             field: 'deleted_at',
@@ -47,10 +55,12 @@ const studi_v2_hasil_aspek_detail = (sequelize: any, Sequelize: any): any => {
         created_at: {
             field: 'created_at',
             type: Sequelize.DATE,
+            allowNull: true
         },
         updated_at: {
             field: 'updated_at',
             type: Sequelize.DATE,
+            allowNull: true
         },
     }, {
 

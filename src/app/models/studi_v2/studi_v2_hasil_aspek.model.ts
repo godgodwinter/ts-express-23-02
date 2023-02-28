@@ -9,23 +9,27 @@ const studi_v2_hasil_aspek = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        tipe: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         nilaiAkhir: {
             type: Sequelize.FLOAT,
-            allowNull: false
+            allowNull: true
         },
         status: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
 
         //relasi
         studi_v2_hasil_id: {
             type: Sequelize.BIGINT,
-            allowNull: false
+            allowNull: true
         },
         studi_v2_paketsoal_aspek_id: {
             type: Sequelize.BIGINT,
-            allowNull: false
+            allowNull: true
         },
 
 

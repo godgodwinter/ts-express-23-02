@@ -1,15 +1,15 @@
 const studi_v2_hasil_aspek_penilaian = (sequelize: any, Sequelize: any): any => {
     const studi_v2_hasil_aspek_penilaian = sequelize.define("studi_v2_hasil_aspek_penilaian", {
         // data
-        studi_v2_hasil_aspek_id: {
-            type: Sequelize.BIGINT,
-            allowNull: false
-        },
-        studi_v2_hasil_aspek_detail_id: {
+        studi_v2_hasil_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
-        studi_v2_hasil_id: {
+        studi_v2_hasil_aspek_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        studi_v2_hasil_aspek_detail_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
