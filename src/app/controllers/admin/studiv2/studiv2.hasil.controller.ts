@@ -51,6 +51,53 @@ class Studiv2HasilController {
     // ! PERSISWA-END
 
 
+    // ! PERKELAS
+    hasilGetPerkelas = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilGetPerkelas(parseInt(req.params.kelas_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    hasilGeneratePerkelas = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilGeneratePerkelas(parseInt(req.params.kelas_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    hasilDeletePerkelas = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilDeletePerkelas(parseInt(req.params.kelas_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    // ! PERKELAS-END
+
+
 }
 
 export default new Studiv2HasilController();

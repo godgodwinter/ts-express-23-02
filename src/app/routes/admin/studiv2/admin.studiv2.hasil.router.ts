@@ -15,9 +15,9 @@ class AdminUjianstudiHasilRouter extends BaseRoutes {
 
 
         // ! PERKELAS
-        this.router.get("/hasil/sekolah/:sekolah_id/kelas/:kelas_id", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGetSiswa)
-        this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/generate", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGetSiswa)
-        this.router.delete("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/delete", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGetSiswa)
+        this.router.get("/hasil/sekolah/:sekolah_id/kelas/:kelas_id", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGetPerkelas)
+        this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/generate", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGeneratePerkelas)
+        this.router.delete("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/delete", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilDeletePerkelas)
         // ! PERKELAS-END
 
         // * HASIL-END

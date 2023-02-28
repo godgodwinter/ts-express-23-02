@@ -36,7 +36,19 @@ class studiv2HasilService {
         try {
             const getHasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } });
             if (getHasil) {
-                return getHasil
+                const getAspek = await studi_v2_hasil_aspek.findAll({ where: { studi_v2_hasil_id: getHasil.id, deleted_at: null } });
+                for (const [index_aspek, item_aspek] of getAspek.entries()) {
+                    const getPenilaian = await studi_v2_hasil_aspek_penilaian.findAll({ where: { studi_v2_hasil_id: getHasil.id, studi_v2_hasil_aspek_id: item_aspek.id, deleted_at: null } });
+                    // item_aspek.setDataValue("aspek_detail", getPenilaian)
+                    let aspek_detail = [];
+                    for (const [index_penilaian, item_penilaian] of getPenilaian.entries()) {
+                        const getAspekDetail = await studi_v2_hasil_aspek_detail.findOne({ where: { id: item_penilaian.studi_v2_hasil_aspek_detail_id, deleted_at: null } })
+                        getAspekDetail.setDataValue("status_tampil", item_penilaian.status)
+                        aspek_detail.push(getAspekDetail)
+                    }
+                    item_aspek.setDataValue("aspek_detail", aspek_detail)
+                }
+                return getAspek
             }
             return null
         } catch (error: any) {
@@ -123,9 +135,9 @@ class studiv2HasilService {
                     const getPaketsoal_aspek_penilaian = await studi_v2_paketsoal_aspek_penilaian.findAll({ where: { studi_v2_paketsoal_id: getPaketsoal.id, deleted_at: null } })
                     for (const [index_penilaian, item_penilaian] of getPaketsoal_aspek_penilaian.entries()) {
                         const get_aspek_id = await studi_v2_hasil_aspek.findOne({ where: { studi_v2_hasil_id: save_studi_v2_hasil.id, studi_v2_paketsoal_aspek_id: item_penilaian.studi_v2_paketsoal_aspek_id, deleted_at: null } })
-                        console.log('====================================');
-                        console.log(save_studi_v2_hasil.id, item_penilaian.studi_v2_paketsoal_aspek_id, get_aspek_id, item_penilaian)
-                        console.log('====================================');
+                        // console.log('====================================');
+                        // console.log(save_studi_v2_hasil.id, item_penilaian.studi_v2_paketsoal_aspek_id, get_aspek_id, item_penilaian)
+                        // console.log('====================================');
 
                         const get_aspek_detail_id = await studi_v2_hasil_aspek_detail.findOne({
                             where: {
@@ -134,13 +146,16 @@ class studiv2HasilService {
                                 deleted_at: null
                             }
                         })
-                        console.log('====================================');
-                        console.log("log:", save_studi_v2_hasil.id, get_aspek_id.id, get_aspek_detail_id.id);
-                        console.log('====================================');
+                        // console.log('====================================');
+                        // console.log("log:", save_studi_v2_hasil.id, get_aspek_id.id, get_aspek_detail_id.id);
+                        // console.log('====================================');
                         const save_penilaian = studi_v2_hasil_aspek_penilaian.create({
                             studi_v2_hasil_id: save_studi_v2_hasil.id,
                             studi_v2_hasil_aspek_id: get_aspek_id.id,
                             studi_v2_hasil_aspek_detail_id: get_aspek_detail_id.id,
+                            status: item_penilaian.status,
+                            created_at: moment().format(),
+                            updated_at: moment().format(),
                             // studi_v2_hasil_aspek_detail_id: get_aspek_detail_id.id
                         })
                     }
@@ -186,6 +201,8 @@ class studiv2HasilService {
                     const get_hasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } })
 
 
+                    const dataDeleted_studi_v2_hasil_aspek_penilaian = await studi_v2_hasil_aspek_penilaian.destroy({ where: { studi_v2_hasil_id: get_hasil.id, deleted_at: null } }, { transaction: t });
+                    const dataDeleted_studi_v2_hasil_aspek = await studi_v2_hasil_aspek.destroy({ where: { studi_v2_hasil_id: get_hasil.id, deleted_at: null } }, { transaction: t });
                     const dataDeleted_hasil_aspek_detail = await studi_v2_hasil_aspek_detail.destroy({ where: { studi_v2_hasil_id: get_hasil.id, deleted_at: null } }, { transaction: t });
                     const dataDeleted_hasil = await studi_v2_hasil.destroy({ where: { siswa_id, deleted_at: null } }, { transaction: t });
                     await t.commit();
@@ -202,6 +219,48 @@ class studiv2HasilService {
                 console.log(error.message);
             }
             return "Data berhasil dihapus!";
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    // !PERSISWA-END
+    // !PERKELAS
+    hasilGetPerkelas = async (kelas_id: number) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            const response: any = [];
+            for (const [index_kelas, item_kelas] of getSiswaWhereKelas.entries()) {
+                const getHasilSiswa = await this.hasilGetPersiswa(item_kelas.id);
+                if (getHasilSiswa) {
+                    let dataSiswa = {
+                        siswa: null,
+                        data: []
+                    }
+                    dataSiswa.siswa = await siswa_Service.siswaGetWhereId(item_kelas.id);
+                    dataSiswa.data = getHasilSiswa;
+                    response.push(dataSiswa)
+                }
+            }
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    hasilGeneratePerkelas = async (kelas_id: number) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const response = await siswa_Service.siswaGetWhereId(kelas_id);
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    hasilDeletePerkelas = async (kelas_id: number) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const response = await siswa_Service.siswaGetWhereId(kelas_id);
+            return response;
         } catch (error: any) {
             console.log(error.message);
         }
