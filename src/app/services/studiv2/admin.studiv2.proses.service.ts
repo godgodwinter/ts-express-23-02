@@ -14,7 +14,8 @@ moment.updateLocale("id", localization);
 const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_detail, studi_v2_paketsoal_aspek_penilaian, studi_v2_paketsoal_soal,
     studi_v2_paketsoal_pilihanjawaban,
     studi_v2_banksoal_soal, studi_v2_banksoal_soal_pilihanjawaban,
-    studi_v2_proses, studi_v2_proses_aspek_detail, studi_v2_proses_aspek_detail_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban
+    studi_v2_proses, studi_v2_proses_aspek_detail, studi_v2_proses_aspek_detail_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban,
+    studi_v2_hasil
 } = db_studi_v2;
 class studiv2ProsesService {
 
@@ -309,6 +310,9 @@ class studiv2ProsesService {
                 response[index].setDataValue("progres", periksaProgres)
                 response[index].setDataValue("progres_status", periksaProgres?.status)
                 response[index].setDataValue("progres_angka", periksaProgres?.selesai)
+
+                const periksaHasil = await studi_v2_hasil.count({ where: { siswa_id: item.id, deleted_at: null } })
+                response[index].setDataValue("hasil", periksaHasil)
             }
             return response;
         } catch (error: any) {
