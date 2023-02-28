@@ -16,8 +16,11 @@ class siswaService {
     siswaGetWhereId = async (id: number) => {
         try {
             const response = await siswa.findOne({
-                where: { id, deleted_at: null }
+                where: { id, deleted_at: null },
+                include: [{ model: sekolah }, { model: kelas }]
             });
+            response.setDataValue("sekolah_nama", response?.sekolah?.nama)
+            response.setDataValue("kelas_nama", response?.kelas?.nama)
 
             return response;
         } catch (error: any) {

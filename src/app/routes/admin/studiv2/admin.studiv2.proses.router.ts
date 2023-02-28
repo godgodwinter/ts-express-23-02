@@ -11,6 +11,8 @@ class AdminUjianstudiProsesRouter extends BaseRoutes {
         this.router.get("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesGetSiswa)
         this.router.post("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/generate/:paketsoal_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesStorePerSiswa)
         this.router.delete("/proses/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/delete/:proses_id", [verifyToken, menuAdminOwner], studiv2ProsesController.prosesDeletePersiswa)
+        this.router.post("/proses/reset/:proses_detail_id/waktu", [verifyToken, menuAdminOwner], studiv2ProsesController.do_reset_waktu)
+        this.router.post("/proses/reset/:proses_detail_id/salah", [verifyToken, menuAdminOwner], studiv2ProsesController.do_reset_salah)
         // ! PERSISWA-END
 
 

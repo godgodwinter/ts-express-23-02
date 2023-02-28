@@ -64,6 +64,7 @@ class siswaUjianstudiService {
             get_aspek_detail.set({
                 tgl_mulai: this.body.tgl_mulai,
                 tgl_selesai: this.body.tgl_selesai,
+                status: "Aktif",
                 updated_at: moment().format(),
             });
             // As above, the database still has "formUpdate" and "green"

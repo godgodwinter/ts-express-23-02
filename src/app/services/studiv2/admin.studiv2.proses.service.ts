@@ -3,7 +3,9 @@ import { db_studi_v2 } from "../../models";
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { Sequelize } from "sequelize";
+import { Op } from 'sequelize';
 import siswaService from '../mastering/siswa.v2.service';
+import { fn_get_sisa_waktu } from "../../helpers/babengUjian";
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -34,6 +36,91 @@ class studiv2ProsesService {
             const siswa_Service: siswaService = new siswaService(this.req);
             const response = await siswa_Service.siswaGetWhereId(siswa_id);
             return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    prosesGetProsesUjianPersiswa = async (siswa_id: number) => {
+        try {
+            const getProses = await studi_v2_proses.findOne({ where: { siswa_id, deleted_at: null } });
+            if (getProses) {
+                const getProsesDetail = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: getProses.id, deleted_at: null } });
+                for (const [index, item] of getProsesDetail.entries()) {
+                    const soal_jml = await studi_v2_proses_aspek_detail_soal.count({ where: { studi_v2_proses_aspek_detail_id: item.id, deleted_at: null } });
+                    item.setDataValue("soal_jml", soal_jml)
+                    const get_skor_jml = await studi_v2_proses_aspek_detail_soal.findAll({ where: { studi_v2_proses_aspek_detail_id: item.id, deleted_at: null } });
+                    const skor_jml = get_skor_jml.reduce((jml: number, object: any) => {
+                        return jml + parseInt(object.skor || 0);
+                    }, 0);
+                    item.setDataValue("skor_jml", skor_jml)
+                    const soal_terjawab = await studi_v2_proses_aspek_detail_soal.count({ where: { studi_v2_proses_aspek_detail_id: item.id, kode_jawaban: { [Op.ne]: null }, deleted_at: null } });
+                    item.setDataValue("soal_terjawab", soal_terjawab)
+                    const soal_belum_terjawab = await studi_v2_proses_aspek_detail_soal.count({ where: { studi_v2_proses_aspek_detail_id: item.id, kode_jawaban: null, deleted_at: null } });
+                    item.setDataValue("soal_belum_terjawab", soal_belum_terjawab)
+                    let status_updated = "Aktif";
+                    if (item.status === "Aktif") {
+                        if (item.tgl_selesai) {
+                            let periksa = await fn_get_sisa_waktu(item.tgl_selesai)
+                            if (periksa.detik < 0) {
+                                status_updated = "Selesai"
+                            }
+                        } else {
+                            status_updated = "Belum"
+                        }
+                        item.setDataValue("status", status_updated)
+                    }
+
+                }
+                return getProsesDetail;
+            }
+            return null
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    do_reset_waktu = async (proses_detail_id: number) => {
+        try {
+            const getProsesDetail = await studi_v2_proses_aspek_detail.findOne({ where: { id: proses_detail_id, deleted_at: null } });
+            getProsesDetail.set({
+                tgl_mulai: null,
+                tgl_selesai: null,
+                status: "RESET_WAKTU",
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await getProsesDetail.save();
+            return getProsesDetail;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    do_reset_salah = async (proses_detail_id: number) => {
+        try {
+            //! hapus jawaban salah
+            const getJawabanSalah = await studi_v2_proses_aspek_detail_soal.findAll({ where: { studi_v2_proses_aspek_detail_id: proses_detail_id, skor: 0, kode_jawaban: { [Op.ne]: null }, deleted_at: null } });
+            for (const [index, item] of getJawabanSalah.entries()) {
+                const getSoal = await studi_v2_proses_aspek_detail_soal.findOne({ where: { id: item.id, deleted_at: null } });
+                getSoal.set({
+                    status: null,
+                    skor: null,
+                    status_jawaban: null,
+                    kode_jawaban: null,
+                    updated_at: moment().format(),
+                });
+                await getSoal.save();
+            }
+
+
+            const getProsesDetail = await studi_v2_proses_aspek_detail.findOne({ where: { id: proses_detail_id, deleted_at: null } });
+            getProsesDetail.set({
+                tgl_mulai: null,
+                tgl_selesai: null,
+                status: "RESET_SALAH",
+                updated_at: moment().format(),
+            });
+            await getProsesDetail.save();
+            // return getJawabanSalah;
+            return getProsesDetail;
         } catch (error: any) {
             console.log(error.message);
         }
@@ -207,7 +294,8 @@ class studiv2ProsesService {
                 if (getProses) {
                     proses_id = getProses.id;
                     paketsoal_id = getProses.studi_v2_paketsoal_id;
-                    paketsoal_nama = getProses.studi_v2_paketsoal_id;
+                    const getPaketsoal = await studi_v2_paketsoal.findOne({ where: { id: paketsoal_id, deleted_at: null } })
+                    paketsoal_nama = getPaketsoal?.nama;
                     tgl_ujian = getProses.tgl_ujian;
                     status = "Ada"
                 }
@@ -216,8 +304,72 @@ class studiv2ProsesService {
                 response[index].setDataValue("paketsoal_id", paketsoal_id)
                 response[index].setDataValue("tgl_ujian", tgl_ujian)
                 response[index].setDataValue("status", status)
+                let progres = "Complete"
+                let periksaProgres = await this.fn_periksa_progres(item.id)
+                response[index].setDataValue("progres", periksaProgres)
             }
             return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+
+    fn_periksa_progres = async (siswa_id: number) => {
+        try {
+            let result = {
+                total: 0,
+                belum: 0,
+                selesai: 0,
+                status: "Belum"
+            };
+            const getProses = await studi_v2_proses.findOne({ where: { siswa_id, deleted_at: null } });
+            if (getProses) {
+                const getAspek = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: getProses.id, deleted_at: null } })
+                const getAspek_jml = await studi_v2_proses_aspek_detail.count({ where: { studi_v2_proses_id: getProses.id, deleted_at: null } })
+                result.total = getAspek_jml;
+                for (const [index, item] of getAspek.entries()) {
+                    const periksaMapel = await this.fn_periksa_progres_per_mapel(item.id);
+                    if (periksaMapel === "Selesai") {
+                        result.selesai++;
+                    } else {
+                        result.belum++;
+                    }
+                }
+            }
+            if (result.total) {
+                if (result.total === result.selesai) {
+                    result.status = "Complete"
+                }
+            }
+            // const soal_jml = await studi_v2_proses_aspek_detail_soal.count({ where: { studi_v2_proses_aspek_detail_id: item.id, deleted_at: null } });
+            // const soal_terjawab = await studi_v2_proses_aspek_detail_soal.count({ where: { studi_v2_proses_aspek_detail_id: item.id, kode_jawaban: { [Op.ne]: null }, deleted_at: null } });
+            // const soal_belum_terjawab = await studi_v2_proses_aspek_detail_soal.count({ where: { studi_v2_proses_aspek_detail_id: item.id, kode_jawaban: null, deleted_at: null } });
+
+
+            return result
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    fn_periksa_progres_per_mapel = async (aspek_detail_id: number) => {
+        try {
+            let result = "Belum";
+            let status_updated = "Aktif";
+            const getAspekDetail = await studi_v2_proses_aspek_detail.findOne({ where: { id: aspek_detail_id, deleted_at: null } })
+            if (getAspekDetail.status === "Aktif") {
+                if (getAspekDetail.tgl_selesai) {
+                    let periksa = await fn_get_sisa_waktu(getAspekDetail.tgl_selesai)
+                    if (periksa.detik < 0) {
+                        status_updated = "Selesai"
+                    }
+                } else {
+                    status_updated = "Belum"
+                }
+                return status_updated;
+            }
+            return result
         } catch (error: any) {
             console.log(error.message);
         }

@@ -5,9 +5,37 @@ class Studiv2ProsesController {
     prosesGetSiswa = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
-            const datas = await proses_Service.prosesGetSiswa(parseInt(req.params.kelas_id));
-            // setTimeout(()=>{},5000)
+            const siswa = await proses_Service.prosesGetSiswa(parseInt(req.params.siswa_id));
+            const datas = await proses_Service.prosesGetProsesUjianPersiswa(parseInt(req.params.siswa_id));
 
+            return res.send({
+                siswa: siswa,
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    do_reset_waktu = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
+            const datas = await proses_Service.do_reset_waktu(parseInt(req.params.proses_detail_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    do_reset_salah = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
+            const datas = await proses_Service.do_reset_salah(parseInt(req.params.proses_detail_id));
 
             return res.send({
                 data: datas,
