@@ -307,6 +307,8 @@ class studiv2ProsesService {
                 let progres = "Complete"
                 let periksaProgres = await this.fn_periksa_progres(item.id)
                 response[index].setDataValue("progres", periksaProgres)
+                response[index].setDataValue("progres_status", periksaProgres?.status)
+                response[index].setDataValue("progres_angka", periksaProgres?.selesai)
             }
             return response;
         } catch (error: any) {
