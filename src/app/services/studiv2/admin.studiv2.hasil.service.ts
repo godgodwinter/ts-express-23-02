@@ -64,7 +64,7 @@ class studiv2HasilService {
             // ! 4. insert studi_v2_hasil_aspek_penilaian diambil dari paketsoal
             const get_hasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } })
             if (get_hasil) {
-                return "Data sudah ada"
+                return null //! data sudah ada
             }
 
             const get_proses = await studi_v2_proses.findOne({ where: { siswa_id, deleted_at: null } })
@@ -194,11 +194,14 @@ class studiv2HasilService {
 
     hasilDeletePersiswa = async (siswa_id: number) => {
         try {
+            const get_hasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } })
+            if (get_hasil === null) {
+                return null; //!data tidak ditemukan
+            }
             try {
                 const t = await sequelize_studi_v2.transaction();
                 try {
                     // const getHasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } })
-                    const get_hasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } })
 
 
                     const dataDeleted_studi_v2_hasil_aspek_penilaian = await studi_v2_hasil_aspek_penilaian.destroy({ where: { studi_v2_hasil_id: get_hasil.id, deleted_at: null } }, { transaction: t });
@@ -249,18 +252,32 @@ class studiv2HasilService {
     }
     hasilGeneratePerkelas = async (kelas_id: number) => {
         try {
+            let jml: number = 0;
             const siswa_Service: siswaService = new siswaService(this.req);
-            const response = await siswa_Service.siswaGetWhereId(kelas_id);
-            return response;
+            const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            for (const [index_kelas, item_kelas] of getSiswaWhereKelas.entries()) {
+                const doGeneratePersiswa = await this.hasilGeneratePersiswa(item_kelas.id);
+                if (doGeneratePersiswa) {
+                    jml++;
+                }
+            }
+            return `${jml} Data berhasil di generate`
         } catch (error: any) {
             console.log(error.message);
         }
     }
     hasilDeletePerkelas = async (kelas_id: number) => {
         try {
+            let jml: number = 0;
             const siswa_Service: siswaService = new siswaService(this.req);
-            const response = await siswa_Service.siswaGetWhereId(kelas_id);
-            return response;
+            const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            for (const [index_kelas, item_kelas] of getSiswaWhereKelas.entries()) {
+                const doDeletePersiswa = await this.hasilDeletePersiswa(item_kelas.id);
+                if (doDeletePersiswa) {
+                    jml++;
+                }
+            }
+            return `${jml} Data di Hapus`
         } catch (error: any) {
             console.log(error.message);
         }
