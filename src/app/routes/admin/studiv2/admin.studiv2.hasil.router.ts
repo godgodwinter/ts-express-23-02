@@ -11,6 +11,8 @@ class AdminUjianstudiHasilRouter extends BaseRoutes {
         this.router.get("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGetSiswa)
         this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/generate", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGeneratePersiswa)
         this.router.delete("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/delete", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilDeletePersiswa)
+        //# revisi
+        this.router.put("/hasil/revisi/hasil_aspek_detail_id/:hasil_aspek_detail_id", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilRevisiNilaiAkhir)
         // ! PERSISWA-END
 
 

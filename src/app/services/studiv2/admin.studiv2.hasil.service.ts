@@ -41,12 +41,24 @@ class studiv2HasilService {
                     const getPenilaian = await studi_v2_hasil_aspek_penilaian.findAll({ where: { studi_v2_hasil_id: getHasil.id, studi_v2_hasil_aspek_id: item_aspek.id, deleted_at: null } });
                     // item_aspek.setDataValue("aspek_detail", getPenilaian)
                     let aspek_detail = [];
+                    let aspek_skor = 0;
+                    let aspek_jml = 0;
                     for (const [index_penilaian, item_penilaian] of getPenilaian.entries()) {
                         const getAspekDetail = await studi_v2_hasil_aspek_detail.findOne({ where: { id: item_penilaian.studi_v2_hasil_aspek_detail_id, deleted_at: null } })
                         getAspekDetail.setDataValue("status_tampil", item_penilaian.status)
+                        const nilai_akhir = getAspekDetail.nilai_akhir_revisi > 0 ? getAspekDetail.nilai_akhir_revisi : getAspekDetail.nilai_akhir;
+                        getAspekDetail.setDataValue("nilai_akhir", nilai_akhir)
+                        aspek_jml++;
+                        aspek_skor += nilai_akhir;
                         aspek_detail.push(getAspekDetail)
                     }
+
+                    aspek_detail.sort(function (a, b) {
+                        return b.nilai_akhir - a.nilai_akhir;
+                    });
                     item_aspek.setDataValue("aspek_detail", aspek_detail)
+                    let aspek_avg = aspek_skor / aspek_jml;
+                    item_aspek.setDataValue("aspek_avg", aspek_avg > 0 ? aspek_avg.toFixed(2) : 0)
                 }
                 return getAspek
             }
@@ -55,7 +67,6 @@ class studiv2HasilService {
             console.log(error.message);
         }
     }
-
     hasilGeneratePersiswa = async (siswa_id: number) => {
         try {
             // ! 1. insert studi_v2_hasil where siswa
@@ -226,6 +237,27 @@ class studiv2HasilService {
             console.log(error.message);
         }
     }
+
+
+    hasilRevisiNilaiAkhir = async (hasil_aspek_detail_id: number) => {
+        try {
+            const get_hasil_aspek_detail = await studi_v2_hasil_aspek_detail.findOne({ where: { id: hasil_aspek_detail_id, deleted_at: null } });
+            if (get_hasil_aspek_detail) {
+
+                get_hasil_aspek_detail.set({
+                    nilai_akhir_revisi: this.body.nilai_akhir_revisi,
+                    updated_at: moment().format(),
+                });
+                // As above, the database still has "formUpdate" and "green"
+                await get_hasil_aspek_detail.save();
+                return get_hasil_aspek_detail
+            }
+            return null
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
     // !PERSISWA-END
     // !PERKELAS
     hasilGetPerkelas = async (kelas_id: number) => {

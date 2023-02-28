@@ -48,6 +48,21 @@ class Studiv2HasilController {
             return res.status(500).send({ message: error.message });
         }
     }
+
+    hasilRevisiNilaiAkhir = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilRevisiNilaiAkhir(parseInt(req.params.hasil_aspek_detail_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
     // ! PERSISWA-END
 
 
