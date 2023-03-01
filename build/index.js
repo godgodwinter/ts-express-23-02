@@ -17,10 +17,17 @@ const home_router_1 = __importDefault(require("./app/routes/home.router"));
 const auth_router_1 = __importDefault(require("./app/routes/auth.router"));
 const studi_router_1 = __importDefault(require("./app/routes/studi.router"));
 const admin_mastering_sekolah_router_1 = __importDefault(require("./app/routes/admin/admin.mastering.sekolah.router"));
+const admin_mastering_sekolah_router_2 = __importDefault(require("./app/routes/admin/mastering/admin.mastering.sekolah.router"));
 const admin_mastering_paket_router_1 = __importDefault(require("./app/routes/admin/admin.mastering.paket.router"));
+const admin_studiv2_banksoal_router_1 = __importDefault(require("./app/routes/admin/studiv2/admin.studiv2.banksoal.router"));
+const admin_studiv2_paketsoal_router_1 = __importDefault(require("./app/routes/admin/studiv2/admin.studiv2.paketsoal.router"));
+const admin_studiv2_proses_router_1 = __importDefault(require("./app/routes/admin/studiv2/admin.studiv2.proses.router"));
+const admin_studiv2_hasil_router_1 = __importDefault(require("./app/routes/admin/studiv2/admin.studiv2.hasil.router"));
 const guest_router_1 = __importDefault(require("./app/routes/tanpalogin/guest.router"));
 const studi_proses_router_1 = __importDefault(require("./app/routes/admin/studi/studi.proses.router"));
 const babengLimiter_1 = require("./app/helpers/babengLimiter");
+const siswa_profile_router_1 = __importDefault(require("./app/routes/siswa/siswa.profile.router"));
+const siswa_ujianstudi_router_1 = __importDefault(require("./app/routes/siswa/siswa.ujianstudi.router"));
 (0, dotenv_1.config)();
 const port = process.env.APP_PORT || 8000;
 // const limiter = rateLimit({
@@ -59,7 +66,7 @@ class App {
     }
     routes() {
         //* ROUTER-BARU
-        const apiVersion = "v1";
+        const apiVersion = process.env.API_VERSION || "v1";
         this.app.route("/").get((0, babengLimiter_1.babengLimiter)(), (req, res) => {
             res.send({
                 success: true,
@@ -73,7 +80,19 @@ class App {
             });
         });
         this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiter)(), home_router_1.default);
-        //*  ROUTER-
+        //! ROUTER-BARU
+        this.app.use(`/api/${apiVersion}/master/`, (0, babengLimiter_1.babengLimiter)(3000), admin_mastering_sekolah_router_2.default);
+        // *ujian studi
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_banksoal_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_paketsoal_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_proses_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_hasil_router_1.default);
+        //! ROUTER-BARU-END
+        //! ROUTER-SISWA-BARU
+        this.app.use(`/api/${apiVersion}/siswa/`, (0, babengLimiter_1.babengLimiter)(3000), siswa_profile_router_1.default);
+        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, (0, babengLimiter_1.babengLimiter)(3000), siswa_ujianstudi_router_1.default);
+        //! ROUTER-SISWA-BARU-END
+        //*  OLD-ROUTER-
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(rateLimit, 1), auth_router_1.default); //* user login/authentikasi
         //ADMIN OWNER
         this.app.use(`/api/siswa/data/`, (0, babengLimiter_1.babengLimiterUjian)(rateLimit, 1), studi_router_1.default); //* untuk ujian studi
@@ -81,7 +100,7 @@ class App {
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), admin_mastering_paket_router_1.default);
         // menuujian
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), studi_proses_router_1.default);
-        //TANPALOGIN
+        //*TANPALOGIN
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiter)(), guest_router_1.default);
     }
 }

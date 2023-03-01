@@ -1,45 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const siswa = (sequelize, Sequelize) => {
-    const Siswa = sequelize.define("siswa", {
-        nama: {
+const studi_v2_proses_aspek_detail_soal = (sequelize, Sequelize) => {
+    const studi_v2_proses_aspek_detail_soal = sequelize.define("studi_v2_proses_aspek_detail_soal", {
+        // data
+        soal_pertanyaan: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        kode_soal: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        nomeridentitas: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        username: {
+        kode_jawaban: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        password: {
+        status_jawaban: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        passworddefault: {
-            type: Sequelize.STRING,
+        skor: {
+            type: Sequelize.INTEGER,
             allowNull: true
         },
-        jk: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        telp: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        kelas_id: {
-            field: 'kelas_id',
+        // relasi
+        studi_v2_proses_aspek_detail_id: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
-        prefix: {
-            field: 'prefix',
-            type: Sequelize.STRING,
+        studi_v2_paketsoal_soal_id: {
+            type: Sequelize.BIGINT,
             allowNull: true
         },
+        // timestamp
         deleted_at: {
             field: 'deleted_at',
             type: Sequelize.DATE,
@@ -54,22 +47,21 @@ const siswa = (sequelize, Sequelize) => {
             type: Sequelize.DATE,
         },
     }, {
+        name: {
+            singular: 'studi_v2_proses_aspek_detail_soal',
+            plural: 'studi_v2_proses_aspek_detail_soal',
+        },
         freezeTableName: true,
         timestamps: false,
-        // tableName: 'siswa',
+        tableName: 'studi_v2_proses_aspek_detail_soal',
         underscored: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] },
-        },
+        modelName: 'studi_v2_proses_aspek_detail_soal',
         scopes: {
-            withPassword: {
-                attributes: {},
-            },
-            withoutPass: {
-                attributes: { exclude: ['password', 'passworddefault'] },
+            lessData: {
+                attributes: { exclude: ['status_jawaban', 'skor'] },
             }
         }
     });
-    return Siswa;
+    return studi_v2_proses_aspek_detail_soal;
 };
-exports.default = siswa;
+exports.default = studi_v2_proses_aspek_detail_soal;

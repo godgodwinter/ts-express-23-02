@@ -1,45 +1,55 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const siswa = (sequelize, Sequelize) => {
-    const Siswa = sequelize.define("siswa", {
-        nama: {
-            type: Sequelize.STRING,
+const studi_v2_banksoal_soal = (sequelize, Sequelize) => {
+    const studi_v2_banksoal_soal = sequelize.define("studi_v2_banksoal_soal", {
+        // data
+        pertanyaan: {
+            type: Sequelize.TEXT,
             allowNull: false
         },
-        nomeridentitas: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        username: {
+        tipe: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        password: {
+        kode_soal: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        passworddefault: {
+        status: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        jk: {
+        tingkatkesulitan: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            defaultValue: "Sedang"
+        },
+        kode: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        telp: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        kelas_id: {
-            field: 'kelas_id',
+        nomer_urut: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
-        prefix: {
-            field: 'prefix',
+        desc: {
             type: Sequelize.STRING,
             allowNull: true
         },
+        aspek_nama: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        aspek_detail_nama: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        // relasi
+        studi_v2_banksoal_aspek_detail_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        // timestamp
         deleted_at: {
             field: 'deleted_at',
             type: Sequelize.DATE,
@@ -54,22 +64,16 @@ const siswa = (sequelize, Sequelize) => {
             type: Sequelize.DATE,
         },
     }, {
+        name: {
+            singular: 'studi_v2_banksoal_soal',
+            plural: 'studi_v2_banksoal_soal',
+        },
         freezeTableName: true,
         timestamps: false,
-        // tableName: 'siswa',
+        tableName: 'studi_v2_banksoal_soal',
         underscored: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] },
-        },
-        scopes: {
-            withPassword: {
-                attributes: {},
-            },
-            withoutPass: {
-                attributes: { exclude: ['password', 'passworddefault'] },
-            }
-        }
+        modelName: 'studi_v2_banksoal_soal'
     });
-    return Siswa;
+    return studi_v2_banksoal_soal;
 };
-exports.default = siswa;
+exports.default = studi_v2_banksoal_soal;

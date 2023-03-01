@@ -1,45 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const siswa = (sequelize, Sequelize) => {
-    const Siswa = sequelize.define("siswa", {
+const studi_v2_paketsoal_aspek = (sequelize, Sequelize) => {
+    const studi_v2_paketsoal_aspek = sequelize.define("studi_v2_paketsoal_aspek", {
+        // data
         nama: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        nomeridentitas: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        username: {
+        kode: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        password: {
+        desc: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        passworddefault: {
+        status: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        jk: {
+        tipe: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        telp: {
-            type: Sequelize.STRING,
-            allowNull: true
-        },
-        kelas_id: {
-            field: 'kelas_id',
+        urutan: {
             type: Sequelize.BIGINT,
             allowNull: true
         },
-        prefix: {
-            field: 'prefix',
-            type: Sequelize.STRING,
+        // RELASI
+        studi_v2_paketsoal_id: {
+            type: Sequelize.BIGINT,
             allowNull: true
         },
+        studi_v2_banksoal_aspek_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        // timestamp
         deleted_at: {
             field: 'deleted_at',
             type: Sequelize.DATE,
@@ -54,22 +51,16 @@ const siswa = (sequelize, Sequelize) => {
             type: Sequelize.DATE,
         },
     }, {
+        name: {
+            singular: 'studi_v2_paketsoal_aspek',
+            plural: 'studi_v2_paketsoal_aspek',
+        },
         freezeTableName: true,
         timestamps: false,
-        // tableName: 'siswa',
+        tableName: 'studi_v2_paketsoal_aspek',
         underscored: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] },
-        },
-        scopes: {
-            withPassword: {
-                attributes: {},
-            },
-            withoutPass: {
-                attributes: { exclude: ['password', 'passworddefault'] },
-            }
-        }
+        modelName: 'studi_v2_paketsoal_aspek'
     });
-    return Siswa;
+    return studi_v2_paketsoal_aspek;
 };
-exports.default = siswa;
+exports.default = studi_v2_paketsoal_aspek;

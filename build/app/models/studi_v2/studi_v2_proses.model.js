@@ -1,23 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const owner = (sequelize, Sequelize) => {
-    const owner = sequelize.define("owner", {
-        nama: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        nomeridentitas: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        username: {
+const studi_v2_proses = (sequelize, Sequelize) => {
+    const studi_v2_proses = sequelize.define("studi_v2_proses", {
+        // data
+        paketsoal_nama: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        password: {
+        status: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        tgl_ujian: {
             type: Sequelize.STRING,
             allowNull: true
         },
+        // relasi
+        siswa_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        studi_v2_paketsoal_id: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        // timestamp
         deleted_at: {
             field: 'deleted_at',
             type: Sequelize.DATE,
@@ -32,19 +39,16 @@ const owner = (sequelize, Sequelize) => {
             type: Sequelize.DATE,
         },
     }, {
+        name: {
+            singular: 'studi_v2_proses',
+            plural: 'studi_v2_proses',
+        },
         freezeTableName: true,
         timestamps: false,
-        // tableName: 'owner',
+        tableName: 'studi_v2_proses',
         underscored: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] },
-        },
-        scopes: {
-            withPassword: {
-                attributes: {},
-            }
-        }
+        modelName: 'studi_v2_proses'
     });
-    return owner;
+    return studi_v2_proses;
 };
-exports.default = owner;
+exports.default = studi_v2_proses;

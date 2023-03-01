@@ -11,6 +11,11 @@ const katabijakdetail = (sequelize, Sequelize) => {
             type: Sequelize.BIGINT,
             allowNull: true
         },
+        deleted_at: {
+            field: 'deleted_at',
+            type: Sequelize.DATE,
+            allowNull: true
+        },
         created_at: {
             field: 'created_at',
             type: Sequelize.DATE,

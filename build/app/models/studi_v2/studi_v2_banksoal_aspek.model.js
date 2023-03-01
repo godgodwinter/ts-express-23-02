@@ -1,23 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const owner = (sequelize, Sequelize) => {
-    const owner = sequelize.define("owner", {
+const studi_v2_banksoal_aspek = (sequelize, Sequelize) => {
+    const studi_v2_banksoal_aspek = sequelize.define("studi_v2_banksoal_aspek", {
+        // data
         nama: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        nomeridentitas: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        username: {
+        kode: {
             type: Sequelize.STRING,
             allowNull: true
         },
-        password: {
+        desc: {
             type: Sequelize.STRING,
             allowNull: true
         },
+        status: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        tipe: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        urutan: {
+            type: Sequelize.BIGINT,
+            allowNull: true
+        },
+        // timestamp
         deleted_at: {
             field: 'deleted_at',
             type: Sequelize.DATE,
@@ -32,19 +42,16 @@ const owner = (sequelize, Sequelize) => {
             type: Sequelize.DATE,
         },
     }, {
+        name: {
+            singular: 'studi_v2_banksoal_aspek',
+            plural: 'studi_v2_banksoal_aspek',
+        },
         freezeTableName: true,
         timestamps: false,
-        // tableName: 'owner',
+        tableName: 'studi_v2_banksoal_aspek',
         underscored: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] },
-        },
-        scopes: {
-            withPassword: {
-                attributes: {},
-            }
-        }
+        modelName: 'studi_v2_banksoal_aspek'
     });
-    return owner;
+    return studi_v2_banksoal_aspek;
 };
-exports.default = owner;
+exports.default = studi_v2_banksoal_aspek;

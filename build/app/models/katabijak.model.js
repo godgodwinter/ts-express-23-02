@@ -10,6 +10,11 @@ const katabijak = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: true
         },
+        deleted_at: {
+            field: 'deleted_at',
+            type: Sequelize.DATE,
+            allowNull: true
+        },
         created_at: {
             field: 'created_at',
             type: Sequelize.DATE,

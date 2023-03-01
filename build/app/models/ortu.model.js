@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const owner = (sequelize, Sequelize) => {
-    const owner = sequelize.define("owner", {
+const ortu = (sequelize, Sequelize) => {
+    const ortu = sequelize.define("ortu", {
         nama: {
             type: Sequelize.STRING,
             allowNull: false
@@ -15,6 +15,10 @@ const owner = (sequelize, Sequelize) => {
             allowNull: true
         },
         password: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        passworddefault: {
             type: Sequelize.STRING,
             allowNull: true
         },
@@ -34,7 +38,7 @@ const owner = (sequelize, Sequelize) => {
     }, {
         freezeTableName: true,
         timestamps: false,
-        // tableName: 'owner',
+        // tableName: 'ortu',
         underscored: true,
         defaultScope: {
             attributes: { exclude: ['password'] },
@@ -45,6 +49,6 @@ const owner = (sequelize, Sequelize) => {
             }
         }
     });
-    return owner;
+    return ortu;
 };
-exports.default = owner;
+exports.default = ortu;

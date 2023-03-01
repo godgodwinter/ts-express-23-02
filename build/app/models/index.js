@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.db_studi_v2 = exports.sequelize_studi_v2 = exports.db = void 0;
 const db_config_1 = require("../config/db.config");
 const sequelize_1 = require("sequelize");
 // import fs from "fs"
@@ -28,6 +29,25 @@ const owner_model_1 = __importDefault(require("./owner.model"));
 const katabijak_model_1 = __importDefault(require("./katabijak.model"));
 const katabijakdetail_model_1 = __importDefault(require("./katabijakdetail.model"));
 const ujian_kategori_model_1 = __importDefault(require("./studi/ujian_kategori.model"));
+const studi_v2_banksoal_aspek_model_1 = __importDefault(require("./studi_v2/studi_v2_banksoal_aspek.model"));
+const studi_v2_banksoal_aspek_detail_model_1 = __importDefault(require("./studi_v2/studi_v2_banksoal_aspek_detail.model"));
+const studi_v2_banksoal_soal_model_1 = __importDefault(require("./studi_v2/studi_v2_banksoal_soal.model"));
+const studi_v2_banksoal_soal_pilihanjawaban_model_1 = __importDefault(require("./studi_v2/studi_v2_banksoal_soal_pilihanjawaban.model"));
+const studi_v2_paketsoal_model_1 = __importDefault(require("./studi_v2/studi_v2_paketsoal.model"));
+const studi_v2_paketsoal_aspek_model_1 = __importDefault(require("./studi_v2/studi_v2_paketsoal_aspek.model"));
+const studi_v2_paketsoal_aspek_detail_model_1 = __importDefault(require("./studi_v2/studi_v2_paketsoal_aspek_detail.model"));
+const studi_v2_paketsoal_aspek_penilaian_model_1 = __importDefault(require("./studi_v2/studi_v2_paketsoal_aspek_penilaian.model"));
+const studi_v2_paketsoal_soal_model_1 = __importDefault(require("./studi_v2/studi_v2_paketsoal_soal.model"));
+const studi_v2_paketsoal_pilihanjawaban_model_1 = __importDefault(require("./studi_v2/studi_v2_paketsoal_pilihanjawaban.model"));
+const studi_v2_proses_model_1 = __importDefault(require("./studi_v2/studi_v2_proses.model"));
+const studi_v2_proses_aspek_detail_model_1 = __importDefault(require("./studi_v2/studi_v2_proses_aspek_detail.model"));
+const studi_v2_proses_aspek_detail_soal_model_1 = __importDefault(require("./studi_v2/studi_v2_proses_aspek_detail_soal.model"));
+const studi_v2_proses_aspek_detail_soal_pilihan_jawaban_model_1 = __importDefault(require("./studi_v2/studi_v2_proses_aspek_detail_soal_pilihan_jawaban.model"));
+const studi_v2_hasil_model_1 = __importDefault(require("./studi_v2/studi_v2_hasil.model"));
+const studi_v2_hasil_aspek_model_1 = __importDefault(require("./studi_v2/studi_v2_hasil_aspek.model"));
+const studi_v2_hasil_aspek_detail_model_1 = __importDefault(require("./studi_v2/studi_v2_hasil_aspek_detail.model"));
+const studi_v2_hasil_aspek_penilaian_model_1 = __importDefault(require("./studi_v2/studi_v2_hasil_aspek_penilaian.model"));
+const ortu_model_1 = __importDefault(require("./ortu.model"));
 const sequelize = new sequelize_1.Sequelize(db_config_1.dbConfig.DB, db_config_1.dbConfig.USER, db_config_1.dbConfig.PASSWORD, {
     host: db_config_1.dbConfig.HOST,
     dialect: 'mysql',
@@ -44,12 +64,13 @@ const sequelize = new sequelize_1.Sequelize(db_config_1.dbConfig.DB, db_config_1
         idle: db_config_1.dbConfig.pool.idle
     }
 });
-const db = {
+exports.db = {
     //MASTERING
     Sequelize: sequelize_1.Sequelize, sequelize,
     admin: (0, admin_model_1.default)(sequelize, sequelize_1.Sequelize),
     owner: (0, owner_model_1.default)(sequelize, sequelize_1.Sequelize),
     siswa: (0, siswa_model_1.default)(sequelize, sequelize_1.Sequelize),
+    ortu: (0, ortu_model_1.default)(sequelize, sequelize_1.Sequelize),
     kelas: (0, kelas_model_1.default)(sequelize, sequelize_1.Sequelize),
     sekolah: (0, sekolah_model_1.default)(sequelize, sequelize_1.Sequelize),
     paket: (0, paket_model_1.default)(sequelize, sequelize_1.Sequelize),
@@ -71,17 +92,17 @@ const db = {
     ujian_proses: (0, ujian_proses_model_1.default)(sequelize, sequelize_1.Sequelize),
 };
 // !MASTERING-RELASI
-db.siswa.belongsTo(db.kelas, {
+exports.db.siswa.belongsTo(exports.db.kelas, {
     foreignKey: {
         name: 'kelas_id'
     },
 });
-db.siswa.belongsTo(db.sekolah, {
+exports.db.siswa.belongsTo(exports.db.sekolah, {
     foreignKey: {
         name: 'sekolah_id'
     },
 });
-db.sekolah.belongsTo(db.paket, {
+exports.db.sekolah.belongsTo(exports.db.paket, {
     foreignKey: {
         name: 'paket_id'
     },
@@ -91,14 +112,14 @@ db.sekolah.belongsTo(db.paket, {
 //     name: 'katabijakdetail_id'
 //   },
 // });
-db.katabijakdetail.belongsTo(db.katabijak, {
+exports.db.katabijakdetail.belongsTo(exports.db.katabijak, {
     foreignKey: {
         name: 'katabijak_id'
     },
 });
 // !MASTERING-RELASI-END
 // !UJIAN-STUDI-RELASI
-db.ujian_proses_kelas.belongsTo(db.ujian_proses, {
+exports.db.ujian_proses_kelas.belongsTo(exports.db.ujian_proses, {
     foreignKey: {
         name: 'ujian_proses_id'
     },
@@ -108,50 +129,109 @@ db.ujian_proses_kelas.belongsTo(db.ujian_proses, {
 //     name: 'ujian_paketsoal_id'
 //   },
 // });
-db.ujian_proses_kelas_siswa_kategori.belongsTo(db.ujian_proses_kelas_siswa, {
+exports.db.ujian_proses_kelas_siswa_kategori.belongsTo(exports.db.ujian_proses_kelas_siswa, {
     foreignKey: {
         name: 'ujian_proses_kelas_siswa_id'
     },
 });
-db.ujian_proses.belongsTo(db.sekolah, {
+exports.db.ujian_proses.belongsTo(exports.db.sekolah, {
     foreignKey: {
         name: 'sekolah_id'
     },
 });
-db.ujian_proses_kelas.belongsTo(db.ujian_paketsoal, {
+exports.db.ujian_proses_kelas.belongsTo(exports.db.ujian_paketsoal, {
     foreignKey: {
         name: 'paketsoal_id'
     },
 });
-db.ujian_proses_kelas.belongsTo(db.kelas, {
+exports.db.ujian_proses_kelas.belongsTo(exports.db.kelas, {
     foreignKey: {
         name: 'kelas_id'
     },
 });
-db.ujian_proses_kelas_siswa.belongsTo(db.ujian_proses_kelas, {
+exports.db.ujian_proses_kelas_siswa.belongsTo(exports.db.ujian_proses_kelas, {
     foreignKey: {
         name: 'ujian_proses_kelas_id'
     },
 });
-db.ujian_proses_kelas_siswa.belongsTo(db.siswa, {
+exports.db.ujian_proses_kelas_siswa.belongsTo(exports.db.siswa, {
     foreignKey: {
         name: 'siswa_id'
     },
 });
-db.ujian_proses_kelas_siswa_kategori.belongsTo(db.ujian_paketsoal_kategori, {
+exports.db.ujian_proses_kelas_siswa_kategori.belongsTo(exports.db.ujian_paketsoal_kategori, {
     foreignKey: {
         name: 'ujian_paketsoal_kategori_id'
     },
 });
-db.ujian_paketsoal_soal_pilihanjawaban.belongsTo(db.ujian_paketsoal_soal, {
+exports.db.ujian_paketsoal_soal_pilihanjawaban.belongsTo(exports.db.ujian_paketsoal_soal, {
     foreignKey: {
         name: 'ujian_paketsoal_soal_id'
     },
 });
-db.ujian_paketsoal_kategori.belongsTo(db.ujian_kategori, {
+exports.db.ujian_paketsoal_kategori.belongsTo(exports.db.ujian_kategori, {
     foreignKey: {
         name: 'ujian_kategori_id'
     },
 });
 // !UJIAN-STUDI-RELASI-END
-exports.default = db;
+exports.sequelize_studi_v2 = new sequelize_1.Sequelize(db_config_1.dbConfig_studi_v2.DB, db_config_1.dbConfig_studi_v2.USER, db_config_1.dbConfig_studi_v2.PASSWORD, {
+    host: db_config_1.dbConfig_studi_v2.HOST,
+    dialect: 'mysql',
+    pool: {
+        max: db_config_1.dbConfig_studi_v2.pool.max,
+        min: db_config_1.dbConfig_studi_v2.pool.min,
+        acquire: db_config_1.dbConfig_studi_v2.pool.acquire,
+        idle: db_config_1.dbConfig_studi_v2.pool.idle
+    }
+});
+exports.db_studi_v2 = {
+    //MASTERING
+    Sequelize: sequelize_1.Sequelize, sequelize_studi_v2: exports.sequelize_studi_v2,
+    studi_v2_banksoal_aspek: (0, studi_v2_banksoal_aspek_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_banksoal_aspek_detail: (0, studi_v2_banksoal_aspek_detail_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_banksoal_soal: (0, studi_v2_banksoal_soal_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_banksoal_soal_pilihanjawaban: (0, studi_v2_banksoal_soal_pilihanjawaban_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_paketsoal: (0, studi_v2_paketsoal_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_paketsoal_aspek: (0, studi_v2_paketsoal_aspek_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_paketsoal_aspek_detail: (0, studi_v2_paketsoal_aspek_detail_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_paketsoal_aspek_penilaian: (0, studi_v2_paketsoal_aspek_penilaian_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_paketsoal_soal: (0, studi_v2_paketsoal_soal_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_paketsoal_pilihanjawaban: (0, studi_v2_paketsoal_pilihanjawaban_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_proses: (0, studi_v2_proses_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_proses_aspek_detail: (0, studi_v2_proses_aspek_detail_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_proses_aspek_detail_soal: (0, studi_v2_proses_aspek_detail_soal_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_proses_aspek_detail_soal_pilihan_jawaban: (0, studi_v2_proses_aspek_detail_soal_pilihan_jawaban_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_hasil: (0, studi_v2_hasil_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_hasil_aspek: (0, studi_v2_hasil_aspek_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_hasil_aspek_detail: (0, studi_v2_hasil_aspek_detail_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+    studi_v2_hasil_aspek_penilaian: (0, studi_v2_hasil_aspek_penilaian_model_1.default)(exports.sequelize_studi_v2, sequelize_1.Sequelize),
+};
+// !STUDIV2-RELASI
+exports.db_studi_v2.studi_v2_banksoal_soal_pilihanjawaban.belongsTo(exports.db_studi_v2.studi_v2_banksoal_soal, {
+    foreignKey: {
+        name: 'studi_v2_banksoal_soal_id'
+    },
+});
+exports.db_studi_v2.studi_v2_banksoal_soal.hasMany(exports.db_studi_v2.studi_v2_banksoal_soal_pilihanjawaban, {
+    foreignKey: {
+        name: 'studi_v2_banksoal_soal_id'
+    },
+});
+exports.db_studi_v2.studi_v2_banksoal_aspek_detail.hasMany(exports.db_studi_v2.studi_v2_banksoal_soal, {
+    foreignKey: {
+        name: 'studi_v2_banksoal_aspek_detail_id'
+    },
+});
+exports.db_studi_v2.studi_v2_paketsoal_aspek_penilaian.belongsTo(exports.db_studi_v2.studi_v2_paketsoal_aspek, {
+    foreignKey: {
+        name: 'studi_v2_paketsoal_aspek_id'
+    },
+});
+exports.db_studi_v2.studi_v2_paketsoal_aspek_penilaian.belongsTo(exports.db_studi_v2.studi_v2_paketsoal_aspek_detail, {
+    foreignKey: {
+        name: 'studi_v2_paketsoal_aspek_detail_id'
+    },
+});
+// !STUDIV2-RELASI-END
+exports.default = exports.db;
