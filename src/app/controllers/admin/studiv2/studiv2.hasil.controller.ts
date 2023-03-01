@@ -9,10 +9,13 @@ class Studiv2HasilController {
             const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
             const siswa = await proses_Service.prosesGetSiswa(parseInt(req.params.siswa_id));
             const datas = await hasil_Service.hasilGetPersiswa(parseInt(req.params.siswa_id));
+            // const get_dataJurusan = await hasil_Service.get_dataJurusan(datas);
 
             return res.send({
                 siswa: siswa,
                 data: datas,
+                // dataMinatbidangstudi: dataJurusanDanMinat.dataMinatbidangstudi,
+                // dataJurusan: get_dataJurusan,
                 message: "Success"
             });
 

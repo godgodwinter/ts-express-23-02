@@ -17,6 +17,14 @@ const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_d
     studi_v2_proses, studi_v2_proses_aspek_detail, studi_v2_proses_aspek_detail_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban,
     studi_v2_hasil, studi_v2_hasil_aspek, studi_v2_hasil_aspek_detail, studi_v2_hasil_aspek_penilaian,
 } = db_studi_v2;
+
+type IDataHasil = [
+    {
+        tipe: string,
+        aspek_detail: any
+
+    }
+]
 class studiv2HasilService {
 
     meId: number;
@@ -67,6 +75,38 @@ class studiv2HasilService {
             console.log(error.message);
         }
     }
+
+    get_dataJurusan = async (dataHasilPersiswa: any) => {
+        let result: [
+            {
+                aspek_avg: number,
+
+            }] = [
+                {
+                    aspek_avg: 0
+                }
+            ];
+        if (dataHasilPersiswa) {
+            for (const [index, item] of dataHasilPersiswa.entries()) {
+                if (item.tipe == "Semua") {
+                    // result.dataMinatbidangstudi = item.aspek_detail;
+                }
+                else {
+                    result.push(item)
+                }
+            }
+
+            if (result.length > 0) {
+                result.sort(function (a, b) {
+                    return b.aspek_avg - a.aspek_avg;
+                });
+            }
+        }
+        // let removeDummy = result.shift();
+        return result
+    }
+
+
     hasilGeneratePersiswa = async (siswa_id: number) => {
         try {
             // ! 1. insert studi_v2_hasil where siswa
