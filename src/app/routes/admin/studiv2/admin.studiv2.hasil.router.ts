@@ -9,6 +9,7 @@ class AdminUjianstudiHasilRouter extends BaseRoutes {
         // * HASIL
         // ! PERSISWA
         this.router.get("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGetSiswa)
+
         this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/generate", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGeneratePersiswa)
         this.router.delete("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/siswa/:siswa_id/delete", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilDeletePersiswa)
         //# revisi
@@ -21,6 +22,11 @@ class AdminUjianstudiHasilRouter extends BaseRoutes {
         this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/generate", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilGeneratePerkelas)
         this.router.delete("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/delete", [verifyToken, menuAdminOwner], Studiv2HasilController.hasilDeletePerkelas)
         // ! PERKELAS-END
+
+        // !CETAK
+        this.router.get("/cetak/siswa/:siswa_id", Studiv2HasilController.hasilGetSiswa)
+        this.router.get("/cetak/kelas/:kelas_id", Studiv2HasilController.hasilGetPerkelas)
+        // !CETAK-END
 
         // * HASIL-END
 
