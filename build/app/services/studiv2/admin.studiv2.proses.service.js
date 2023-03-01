@@ -166,25 +166,24 @@ class studiv2ProsesService {
                         getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id } });
                     }
                     for (const [index_soal, soal] of getSoal.entries()) {
-                        const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
-                            kode_soal: soal.kode_soal,
-                            kode_jawaban: soal.kode_jawaban,
-                            status_jawaban: soal.kode_jawaban,
-                            skor: soal.kode_jawaban,
-                            studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
-                            studi_v2_paketsoal_soal_id: soal.id,
-                            soal_pertanyaan: soal.pertanyaan,
-                            created_at: moment().format(),
-                            updated_at: moment().format(),
-                        });
+                        // const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
+                        //     kode_soal: soal.kode_soal,
+                        //     kode_jawaban: soal.kode_jawaban,
+                        //     status_jawaban: soal.kode_jawaban,
+                        //     skor: soal.kode_jawaban,
+                        //     studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
+                        //     studi_v2_paketsoal_soal_id: soal.id,
+                        //     soal_pertanyaan: soal.pertanyaan,
+                        //     created_at: moment().format(),
+                        //     updated_at: moment().format(),
+                        // })
                         // , { transaction: t })
-                        let getPilihanjawaban = [{ id: null, jawaban: "", skor: 0, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
-                        if (mapel.random_pilihanjawaban === "Aktif") {
-                            getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null }, order: [sequelize_1.Sequelize.literal('RAND()')] });
-                        }
-                        else {
-                            getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null } });
-                        }
+                        // let getPilihanjawaban = [{ id: null, jawaban: "", skor: 0, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
+                        // if (mapel.random_pilihanjawaban === "Aktif") {
+                        //     getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null }, order: [Sequelize.literal('RAND()')] })
+                        // } else {
+                        //     getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null } })
+                        // }
                         // const do_jalankan_timer_reset = async (counter = 0) => {
                         //     if (counter < 2) {
                         //         setTimeout(async function () {
