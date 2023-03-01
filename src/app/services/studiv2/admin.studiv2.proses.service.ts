@@ -201,29 +201,29 @@ class studiv2ProsesService {
                     } else {
                         getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null } })
                     }
-                    const do_jalankan_timer_reset = async (counter = 0) => {
-                        if (counter < 2) {
-                            setTimeout(function () {
-                                counter++;
-                                console.log(counter);
-                                do_jalankan_timer_reset(counter);
-                            }, 1000);
-                        } else {
-                            for (const [index_pj, pilihanjawaban] of getPilihanjawaban.entries()) {
-                                const save_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.create({
-                                    kode_jawaban: pilihanjawaban.kode_jawaban,
-                                    studi_v2_proses_aspek_detail_soal_id: save_studi_v2_proses_aspek_detail_soal.id,
-                                    studi_v2_paketsoal_pilihanjawaban_id: pilihanjawaban.id,
-                                    pilihanjawaban_jawaban: pilihanjawaban.jawaban,
-                                    pilihanjawaban_skor: pilihanjawaban.skor,
-                                    created_at: moment().format(),
-                                    updated_at: moment().format(),
-                                })
-                            }
-                        }
-                        // setTimeout(do_aktivkan_reset, total, false);
-                    }
-                    await do_jalankan_timer_reset()
+                    // const do_jalankan_timer_reset = async (counter = 0) => {
+                    //     if (counter < 2) {
+                    //         setTimeout(async function () {
+                    //             counter++;
+                    //             console.log(counter);
+                    //             await do_jalankan_timer_reset(counter);
+                    //         }, 1000);
+                    //     } else {
+                    //         for (const [index_pj, pilihanjawaban] of getPilihanjawaban.entries()) {
+                    //             const save_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.create({
+                    //                 kode_jawaban: pilihanjawaban.kode_jawaban,
+                    //                 studi_v2_proses_aspek_detail_soal_id: save_studi_v2_proses_aspek_detail_soal.id,
+                    //                 studi_v2_paketsoal_pilihanjawaban_id: pilihanjawaban.id,
+                    //                 pilihanjawaban_jawaban: pilihanjawaban.jawaban,
+                    //                 pilihanjawaban_skor: pilihanjawaban.skor,
+                    //                 created_at: moment().format(),
+                    //                 updated_at: moment().format(),
+                    //             })
+                    //         }
+                    //     }
+                    //     // setTimeout(do_aktivkan_reset, total, false);
+                    // }
+                    // await do_jalankan_timer_reset()
                     // setTimeout(async function () {
                     //     for (const [index_pj, pilihanjawaban] of getPilihanjawaban.entries()) {
                     //         const save_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.create({
