@@ -221,7 +221,7 @@ class studiv2ProsesService {
                         }
                     }
                 };
-                setTimeout(fn_delay_response, index * 200, 'argumen example');
+                setTimeout(fn_delay_response, index * 100, 'argumen example');
             }
         };
         this.prosesDeletePersiswa = async (siswa_id, proses_id) => {
