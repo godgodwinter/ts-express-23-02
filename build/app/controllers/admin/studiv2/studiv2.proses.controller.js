@@ -69,7 +69,15 @@ class Studiv2ProsesController {
                 }
                 const datas = await proses_Service.prosesStorePerSiswa(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
                 const addSoal = await proses_Service.prosesAddSoal(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
-                // setTimeout(()=>{},5000)
+                // const fn_delay_response = (arg: any) => {
+                //     console.log(`arg was => ${arg}`);
+                //     // return res.status(500).send({ message: "error.message" });
+                //     return res.send({
+                //         data: "datas",
+                //         message: "Success"
+                //     });
+                // }
+                // setTimeout(fn_delay_response, 3000, 'argumen example');
                 return res.send({
                     data: datas,
                     message: "Success"

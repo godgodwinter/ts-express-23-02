@@ -188,6 +188,7 @@ class studiv2ProsesService {
     }
 
     prosesAddSoal = async (siswa_id: number, paketsoal_id: number, dataForm: any) => {
+
         const get_proses = await studi_v2_proses.findOne({ where: { siswa_id, deleted_at: null } })
         const getPaketosoalAspekDetail_where_paketsoal_id = await studi_v2_paketsoal_aspek_detail.findAll({ where: { studi_v2_paketsoal_id: paketsoal_id, deleted_at: null } })
 
@@ -208,35 +209,41 @@ class studiv2ProsesService {
                 getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id } })
             }
             for (const [index_soal, soal] of getSoal.entries()) {
-                const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
-                    kode_soal: soal.kode_soal,
-                    kode_jawaban: soal.kode_jawaban,
-                    status_jawaban: soal.kode_jawaban,
-                    skor: soal.kode_jawaban,
-                    studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
-                    studi_v2_paketsoal_soal_id: soal.id,
-                    soal_pertanyaan: soal.pertanyaan,
-                    created_at: moment().format(),
-                    updated_at: moment().format(),
-                })
 
-                let getPilihanjawaban = [{ id: null, jawaban: "", skor: 0, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
-                if (mapel.random_pilihanjawaban === "Aktif") {
-                    getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null }, order: [Sequelize.literal('RAND()')] })
-                } else {
-                    getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null } })
-                }
-                for (const [index_pj, pilihanjawaban] of getPilihanjawaban.entries()) {
-                    const save_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.create({
-                        kode_jawaban: pilihanjawaban.kode_jawaban,
-                        studi_v2_proses_aspek_detail_soal_id: save_studi_v2_proses_aspek_detail_soal.id,
-                        studi_v2_paketsoal_pilihanjawaban_id: pilihanjawaban.id,
-                        pilihanjawaban_jawaban: pilihanjawaban.jawaban,
-                        pilihanjawaban_skor: pilihanjawaban.skor,
+                const fn_delay_response = async (arg: any) => {
+                    console.log(`arg was => ${arg}`);
+                    const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
+                        kode_soal: soal.kode_soal,
+                        kode_jawaban: soal.kode_jawaban,
+                        status_jawaban: soal.kode_jawaban,
+                        skor: soal.kode_jawaban,
+                        studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
+                        studi_v2_paketsoal_soal_id: soal.id,
+                        soal_pertanyaan: soal.pertanyaan,
                         created_at: moment().format(),
                         updated_at: moment().format(),
                     })
+
+                    let getPilihanjawaban = [{ id: null, jawaban: "", skor: 0, kode_jawaban: null, studi_v2_proses_aspek_detail_soal_id: null, studi_v2_paketsoal_pilihanjawaban_id: null }];
+                    if (mapel.random_pilihanjawaban === "Aktif") {
+                        getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null }, order: [Sequelize.literal('RAND()')] })
+                    } else {
+                        getPilihanjawaban = await studi_v2_paketsoal_pilihanjawaban.findAll({ where: { studi_v2_paketsoal_soal_id: soal.id, deleted_at: null } })
+                    }
+                    for (const [index_pj, pilihanjawaban] of getPilihanjawaban.entries()) {
+                        const save_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.create({
+                            kode_jawaban: pilihanjawaban.kode_jawaban,
+                            studi_v2_proses_aspek_detail_soal_id: save_studi_v2_proses_aspek_detail_soal.id,
+                            studi_v2_paketsoal_pilihanjawaban_id: pilihanjawaban.id,
+                            pilihanjawaban_jawaban: pilihanjawaban.jawaban,
+                            pilihanjawaban_skor: pilihanjawaban.skor,
+                            created_at: moment().format(),
+                            updated_at: moment().format(),
+                        })
+                    }
                 }
+
+                setTimeout(fn_delay_response, 3000, 'argumen example');
 
             }
         }
