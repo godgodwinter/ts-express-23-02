@@ -2,7 +2,7 @@ const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = (sequelize: any, Seque
     const studi_v2_proses_aspek_detail_soal_pilihan_jawaban = sequelize.define("studi_v2_proses_aspek_detail_soal_pilihan_jawaban", {
         // data
         pilihanjawaban_jawaban: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             allowNull: true
         },
         pilihanjawaban_skor: {

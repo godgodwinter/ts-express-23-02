@@ -6,7 +6,7 @@ const studi_v2_paketsoal_pilihanjawaban = (sequelize: any, Sequelize: any): any 
             allowNull: false
         },
         jawaban: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             allowNull: true
         },
         skor: {

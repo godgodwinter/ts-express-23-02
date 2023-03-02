@@ -4,7 +4,7 @@ const studi_v2_proses_aspek_detail_soal = (sequelize, Sequelize) => {
     const studi_v2_proses_aspek_detail_soal = sequelize.define("studi_v2_proses_aspek_detail_soal", {
         // data
         soal_pertanyaan: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             allowNull: true
         },
         kode_soal: {
