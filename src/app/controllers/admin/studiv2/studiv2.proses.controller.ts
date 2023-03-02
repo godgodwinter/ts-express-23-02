@@ -1,5 +1,13 @@
 import { Request, Response } from 'express';
 import studiv2ProsesService from '../../../services/studiv2/admin.studiv2.proses.service';
+import { db_studi_v2 } from "../../../models";
+
+const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_detail, studi_v2_paketsoal_aspek_penilaian, studi_v2_paketsoal_soal,
+    studi_v2_paketsoal_pilihanjawaban,
+    studi_v2_banksoal_soal, studi_v2_banksoal_soal_pilihanjawaban,
+    studi_v2_proses, studi_v2_proses_aspek_detail, studi_v2_proses_aspek_detail_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban,
+    studi_v2_hasil
+} = db_studi_v2;
 class Studiv2ProsesController {
     // ! PERSISWA
     prosesGetSiswa = async (req: Request, res: Response): Promise<Response | undefined> => {
@@ -65,6 +73,7 @@ class Studiv2ProsesController {
                 });
             }
             const datas = await proses_Service.prosesStorePerSiswa(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
+            const addSoal = await proses_Service.prosesAddSoal(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
             // setTimeout(()=>{},5000)
             return res.send({
                 data: datas,
