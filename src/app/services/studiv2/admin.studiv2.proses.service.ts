@@ -193,25 +193,25 @@ class studiv2ProsesService {
         const getPaketosoalAspekDetail_where_paketsoal_id = await studi_v2_paketsoal_aspek_detail.findAll({ where: { studi_v2_paketsoal_id: paketsoal_id, deleted_at: null } })
 
         for (const [index, mapel] of getPaketosoalAspekDetail_where_paketsoal_id.entries()) {
-            const save_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.findOne({
-                where: {
-                    studi_v2_paketsoal_aspek_detail_id: mapel.id,
-                    studi_v2_proses_id: get_proses.id
+            const fn_delay_response = async (arg: any) => {
+                console.log(`arg was => ${arg}`);
+                const save_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.findOne({
+                    where: {
+                        studi_v2_paketsoal_aspek_detail_id: mapel.id,
+                        studi_v2_proses_id: get_proses.id
+                    }
+                })
+
+                let getSoal = [{
+                    id: null, pertanyaan: "", kode_soal: null, kode_jawaban: null, status_jawaban: null, skor: 0, studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id, studi_v2_paketsoal_soal_id: mapel.id
+                }];
+                if (mapel.random_soal === "Aktif") {
+                    getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id }, order: [Sequelize.literal('RAND()')] })
+                } else {
+                    getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id } })
                 }
-            })
+                for (const [index_soal, soal] of getSoal.entries()) {
 
-            let getSoal = [{
-                id: null, pertanyaan: "", kode_soal: null, kode_jawaban: null, status_jawaban: null, skor: 0, studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id, studi_v2_paketsoal_soal_id: mapel.id
-            }];
-            if (mapel.random_soal === "Aktif") {
-                getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id }, order: [Sequelize.literal('RAND()')] })
-            } else {
-                getSoal = await studi_v2_paketsoal_soal.findAll({ where: { studi_v2_paketsoal_aspek_detail_id: mapel.id } })
-            }
-            for (const [index_soal, soal] of getSoal.entries()) {
-
-                const fn_delay_response = async (arg: any) => {
-                    console.log(`arg was => ${arg}`);
                     const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
                         kode_soal: soal.kode_soal,
                         kode_jawaban: soal.kode_jawaban,
@@ -241,13 +241,13 @@ class studiv2ProsesService {
                             updated_at: moment().format(),
                         })
                     }
+
+
                 }
-
-                setTimeout(fn_delay_response, index_soal * 500, 'argumen example');
-
             }
-        }
+            setTimeout(fn_delay_response, index * 200, 'argumen example');
 
+        }
     }
 
     prosesDeletePersiswa = async (siswa_id: number, proses_id: number) => {
