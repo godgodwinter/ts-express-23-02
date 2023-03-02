@@ -62,11 +62,11 @@ class Studiv2ProsesController {
                 // });
                 if (isSiswaSudahAdaDiProses) {
                     const addSoal = await proses_Service.prosesAddSoal(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
-                    return res.status(200).send({
-                        status: false,
-                        data: "Data ujian Siswa sudah ada",
-                        message: "Failed"
-                    });
+                    // return res.status(200).send({
+                    //     status: false,
+                    //     data: "Data ujian Siswa sudah ada",
+                    //     message: "Failed"
+                    // });
                 }
                 const datas = await proses_Service.prosesStorePerSiswa(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
                 const addSoal = await proses_Service.prosesAddSoal(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
@@ -79,10 +79,10 @@ class Studiv2ProsesController {
                 //     });
                 // }
                 // setTimeout(fn_delay_response, 3000, 'argumen example');
-                return res.send({
-                    data: datas,
-                    message: "Success"
-                });
+                // return res.send({
+                //     data: datas,
+                //     message: "Success"
+                // });
             }
             catch (error) {
                 return res.status(500).send({ message: error.message });
