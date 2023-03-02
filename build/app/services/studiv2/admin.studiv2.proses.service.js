@@ -220,7 +220,7 @@ class studiv2ProsesService {
                             });
                         }
                     };
-                    setTimeout(fn_delay_response, 3000, 'argumen example');
+                    setTimeout(fn_delay_response, index_soal * 500, 'argumen example');
                 }
             }
         };
