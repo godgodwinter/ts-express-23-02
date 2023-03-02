@@ -187,7 +187,7 @@ class studiv2ProsesService {
                             skor: soal.kode_jawaban,
                             studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
                             studi_v2_paketsoal_soal_id: soal.id,
-                            soal_pertanyaan: soal.pertanyaan,
+                            // soal_pertanyaan: soal.pertanyaan,
                             created_at: moment().format(),
                             updated_at: moment().format(),
                         }, { transaction: t })
