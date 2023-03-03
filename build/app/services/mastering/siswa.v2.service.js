@@ -41,6 +41,23 @@ class siswaService {
                 console.log(error.message);
             }
         };
+        this.siswaGetWhereKelasNoPass = async (kelas_id) => {
+            var _a;
+            try {
+                const response = await siswa.scope('withoutPass').findAll({
+                    where: { kelas_id, deleted_at: null },
+                    include: [models_1.default.kelas]
+                });
+                for (const [index, item] of response.entries()) {
+                    let getDataOrtu = await ortu.findOne({ where: { siswa_id: item.id } });
+                    response[index].setDataValue("kelas_nama", (_a = response[index].kelas) === null || _a === void 0 ? void 0 : _a.nama);
+                }
+                return response;
+            }
+            catch (error) {
+                console.log(error.message);
+            }
+        };
         this.body = req.body;
         this.params = req.params;
     }

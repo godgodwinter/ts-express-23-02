@@ -19,11 +19,13 @@ class AdminUjianstudiHasilRouter extends base_router_1.default {
         // ! PERKELAS
         this.router.get("/hasil/sekolah/:sekolah_id/kelas/:kelas_id", [auth_jwt_1.verifyToken, auth_jwt_1.menuAdminOwner], studiv2_hasil_controller_1.default.hasilGetPerkelas);
         this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/generate", [auth_jwt_1.verifyToken, auth_jwt_1.menuAdminOwner], studiv2_hasil_controller_1.default.hasilGeneratePerkelas);
+        this.router.post("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/generate/complete", [auth_jwt_1.verifyToken, auth_jwt_1.menuAdminOwner], studiv2_hasil_controller_1.default.hasilGeneratePerkelasCompleteOnly);
         this.router.delete("/hasil/sekolah/:sekolah_id/kelas/:kelas_id/delete", [auth_jwt_1.verifyToken, auth_jwt_1.menuAdminOwner], studiv2_hasil_controller_1.default.hasilDeletePerkelas);
         // ! PERKELAS-END
         // !CETAK
         this.router.get("/cetak/siswa/:siswa_id", studiv2_hasil_controller_1.default.hasilGetSiswa);
         this.router.get("/cetak/kelas/:kelas_id", studiv2_hasil_controller_1.default.hasilGetPerkelas);
+        this.router.get("/exportjawaban/kelas/:kelas_id", studiv2_hasil_controller_1.default.hasilGetPerkelas_exportjawaban);
         // !CETAK-END
         // * HASIL-END
     }
