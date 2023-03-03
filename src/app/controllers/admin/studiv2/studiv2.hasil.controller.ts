@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import studiv2ProsesService from '../../../services/studiv2/admin.studiv2.proses.service';
 import studiv2HasilService from '../../../services/studiv2/admin.studiv2.hasil.service';
+import kelasService from '../../../services/mastering/kelas.v2.service';
 class Studiv2HasilController {
     // ! PERSISWA
     hasilGetSiswa = async (req: Request, res: Response): Promise<Response | undefined> => {
@@ -87,9 +88,14 @@ class Studiv2HasilController {
     hasilGetPerkelas_exportjawaban = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const kelas_Service: kelasService = new kelasService(req);
+            const dataKelas = await kelas_Service.kelasGetWhereId(parseInt(req.params.kelas_id));
+            const datasHeader = await hasil_Service.hasilGetPerkelas_exportjawaban_header();
             const datas = await hasil_Service.hasilGetPerkelas_exportjawaban(parseInt(req.params.kelas_id));
 
             return res.send({
+                kelas: dataKelas,
+                header: datasHeader,
                 data: datas,
                 message: "Success"
             });

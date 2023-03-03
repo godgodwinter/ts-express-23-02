@@ -322,6 +322,30 @@ class studiv2HasilService {
             console.log(error.message);
         }
     }
+    hasilGetPerkelas_exportjawaban_header = async () => {
+        try {
+            const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { status: 'Aktif', deleted_at: null } })
+            if (get_paketsoal) {
+                const get_mapel = await studi_v2_paketsoal_aspek_detail.findAll({
+                    attributes: ['id', 'nama', 'kode'],
+                    where: { studi_v2_paketsoal_id: get_paketsoal.id, deleted_at: null }
+                })
+                for (const [index_mapel, item_mapel] of get_mapel.entries()) {
+                    const jmlSoal = await studi_v2_paketsoal_soal.count({
+                        attributes: ['id', 'kode_soal']
+                        , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel.id, deleted_at: null }
+                    });
+                    item_mapel.setDataValue("jmlSoal", jmlSoal)
+                }
+                if (get_mapel) {
+                    return get_mapel;
+                }
+            }
+            return "Paket tidak ditemukan!"
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
     hasilGetPerkelas_exportjawaban = async (kelas_id: number) => {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);
@@ -334,33 +358,36 @@ class studiv2HasilService {
             const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { status: 'Aktif', deleted_at: null } })
             if (get_paketsoal) {
                 let result: any = []
-                let tempHeader = {
-                    siswa: {
-                        id: get_paketsoal.id,
-                        nomeridentitas: null,
-                        kelas_id: null,
-                        kelas_nama: null,
-                        nama: get_paketsoal.nama,
-                    },
-                    dataMapel: []
-                }
-                const get_mapel = await studi_v2_paketsoal_aspek_detail.findAll({
-                    attributes: ['id', 'nama', 'kode'],
-                    where: { studi_v2_paketsoal_id: get_paketsoal.id, deleted_at: null }
-                })
-                for (const [index_mapel, item_mapel] of get_mapel.entries()) {
-                    let tempJawaban = await studi_v2_paketsoal_soal.findAll({
-                        attributes: ['id', 'kode_soal']
-                        , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel.id, deleted_at: null }
-                    });
-                    for (const [index_soal, item_soal] of tempJawaban.entries()) {
-                        item_soal.setDataValue("skor", 1);
-                        item_soal.setDataValue("kode_jawaban", null);
-                    }
-                    item_mapel.setDataValue("soal", tempJawaban)
-                }
-                tempHeader.dataMapel = get_mapel;
-                result.push(tempHeader)
+                // let tempHeader = {
+                //     siswa: {
+                //         id: get_paketsoal.id,
+                //         nomeridentitas: null,
+                //         kelas_id: null,
+                //         kelas_nama: null,
+                //         nama: get_paketsoal.nama,
+                //     },
+                //     dataMapel: []
+                // }
+                // // const get_mapel = await studi_v2_paketsoal_aspek_detail.findAll({
+                // //     attributes: ['id', 'nama', 'kode'],
+                // //     where: { studi_v2_paketsoal_id: get_paketsoal.id, deleted_at: null }
+                // // })
+                // // for (const [index_mapel, item_mapel] of get_mapel.entries()) {
+                // //     let tempJawaban = await studi_v2_paketsoal_soal.findAll({
+                // //         attributes: ['id', 'kode_soal']
+                // //         , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel.id, deleted_at: null }
+                // //     });
+                // //     let jmlSoal = 0;
+                // //     for (const [index_soal, item_soal] of tempJawaban.entries()) {
+                // //         jmlSoal++;
+                // //         item_soal.setDataValue("skor", 1);
+                // //         item_soal.setDataValue("kode_jawaban", null);
+                // //     }
+                // //     item_mapel.setDataValue("jmlSoal", jmlSoal)
+                // //     item_mapel.setDataValue("soal", tempJawaban)
+                // // }
+                // // tempHeader.dataMapel = get_mapel;
+                // result.push(tempHeader)
 
                 // ! AMBIL DATA SISWA
                 const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelasNoPass(kelas_id);
@@ -400,8 +427,9 @@ class studiv2HasilService {
                                     attributes: ['id', 'kode_soal']
                                     , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel_j.id, deleted_at: null }
                                 });
-
+                                let jmlSoal = 0;
                                 for (const [index_soal_j, item_soal_j] of tempJawaban.entries()) {
+                                    jmlSoal++;
                                     let get_jawabanku = await studi_v2_proses_aspek_detail_soal.findOne({
                                         attributes: ['id', 'kode_soal', 'skor', 'kode_jawaban']
                                         , where: { studi_v2_proses_aspek_detail_id: get_studi_v2_proses_aspek_detail.id, kode_soal: item_soal_j.kode_soal, deleted_at: null }
@@ -416,6 +444,7 @@ class studiv2HasilService {
                                     // item_soal_j.setDataValue("skor", 1);
 
                                 }
+                                item_mapel_j.setDataValue("jmlSoal", jmlSoal)
                                 item_mapel_j.setDataValue("soal", tempJawaban)
                                 // item_mapel.setDataValue("soal")
                             }
