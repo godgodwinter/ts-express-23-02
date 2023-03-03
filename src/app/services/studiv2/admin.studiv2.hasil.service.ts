@@ -322,6 +322,118 @@ class studiv2HasilService {
             console.log(error.message);
         }
     }
+    hasilGetPerkelas_exportjawaban = async (kelas_id: number) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            const response: any = [];
+            // ! 1. ambil data pertama, ambil paket soal
+            // ! 2. ambil mapel yang ada dalam paket
+            // ! 3. ambil siswa dalam kelas yang ada hasil generate
+            // ! 4. masukkan kode soal dan skor
+            const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { status: 'Aktif', deleted_at: null } })
+            if (get_paketsoal) {
+                let result: any = []
+                let tempHeader = {
+                    siswa: {
+                        id: get_paketsoal.id,
+                        nomeridentitas: null,
+                        kelas_id: null,
+                        kelas_nama: null,
+                        nama: get_paketsoal.nama,
+                    },
+                    dataMapel: []
+                }
+                const get_mapel = await studi_v2_paketsoal_aspek_detail.findAll({
+                    attributes: ['id', 'nama', 'kode'],
+                    where: { studi_v2_paketsoal_id: get_paketsoal.id, deleted_at: null }
+                })
+                for (const [index_mapel, item_mapel] of get_mapel.entries()) {
+                    let tempJawaban = await studi_v2_paketsoal_soal.findAll({
+                        attributes: ['id', 'kode_soal']
+                        , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel.id, deleted_at: null }
+                    });
+                    for (const [index_soal, item_soal] of tempJawaban.entries()) {
+                        item_soal.setDataValue("skor", 1);
+                        item_soal.setDataValue("kode_jawaban", null);
+                    }
+                    item_mapel.setDataValue("soal", tempJawaban)
+                }
+                tempHeader.dataMapel = get_mapel;
+                result.push(tempHeader)
+
+                // ! AMBIL DATA SISWA
+                const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelasNoPass(kelas_id);
+                if (getSiswaWhereKelas) {
+                    for (const [index_siswa, item_siswa] of getSiswaWhereKelas.entries()) {
+                        let tempSiswa = {
+                            siswa: {
+                                id: get_paketsoal.id,
+                                nomeridentitas: get_paketsoal.id,
+                                kelas_id: get_paketsoal.id,
+                                kelas_nama: get_paketsoal.id,
+                                nama: get_paketsoal.nama,
+                            },
+                            dataMapel: []
+                        }
+                        const periksaProses = await studi_v2_proses.findOne({
+                            where: {
+                                siswa_id: item_siswa.id,
+                                studi_v2_paketsoal_id: get_paketsoal.id
+                            }
+                        })
+                        // !periksa apakah sudah ada data generate hasil
+                        if (periksaProses) {
+                            tempSiswa.siswa = item_siswa;
+                            const get_mapel_siswa = await studi_v2_paketsoal_aspek_detail.findAll({
+                                attributes: ['id', 'nama', 'kode'],
+                                where: { studi_v2_paketsoal_id: get_paketsoal.id, deleted_at: null }
+                            })
+                            // tempSiswa.dataMapel = get_mapel
+                            for (const [index_mapel_j, item_mapel_j] of get_mapel_siswa.entries()) {
+                                const get_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.findOne({
+                                    attributes: ['id', 'aspek_detail_nama']
+                                    , where: { studi_v2_proses_id: periksaProses.id, studi_v2_paketsoal_aspek_detail_id: item_mapel_j.id, deleted_at: null }
+                                })
+                                // ambil skor ku di tabl studi_v2_proses_aspek_detail_soal wher kode_soal
+                                let tempJawaban = await studi_v2_paketsoal_soal.findAll({
+                                    attributes: ['id', 'kode_soal']
+                                    , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel_j.id, deleted_at: null }
+                                });
+
+                                for (const [index_soal_j, item_soal_j] of tempJawaban.entries()) {
+                                    let get_jawabanku = await studi_v2_proses_aspek_detail_soal.findOne({
+                                        attributes: ['id', 'kode_soal', 'skor', 'kode_jawaban']
+                                        , where: { studi_v2_proses_aspek_detail_id: get_studi_v2_proses_aspek_detail.id, kode_soal: item_soal_j.kode_soal, deleted_at: null }
+                                    })
+                                    if (get_jawabanku) {
+                                        item_soal_j.setDataValue("skor", get_jawabanku.skor)
+                                        item_soal_j.setDataValue("kode_jawaban", get_jawabanku.kode_jawaban);
+                                    } else {
+                                        item_soal_j.setDataValue("skor", 0)
+                                        item_soal_j.setDataValue("kode_jawaban", get_jawabanku.kode_jawaban);
+                                    }
+                                    // item_soal_j.setDataValue("skor", 1);
+
+                                }
+                                item_mapel_j.setDataValue("soal", tempJawaban)
+                                // item_mapel.setDataValue("soal")
+                            }
+
+                            tempSiswa.dataMapel = get_mapel_siswa;
+                            result.push(tempSiswa)
+                        }
+                    }
+                }
+
+
+                return result
+            }
+            return get_paketsoal;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
     hasilGeneratePerkelas = async (kelas_id: number) => {
         try {
             let jml: number = 0;

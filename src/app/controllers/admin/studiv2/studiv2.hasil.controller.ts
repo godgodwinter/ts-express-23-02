@@ -72,9 +72,22 @@ class Studiv2HasilController {
     // ! PERKELAS
     hasilGetPerkelas = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
-            const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
             const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
             const datas = await hasil_Service.hasilGetPerkelas(parseInt(req.params.kelas_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    hasilGetPerkelas_exportjawaban = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilGetPerkelas_exportjawaban(parseInt(req.params.kelas_id));
 
             return res.send({
                 data: datas,
