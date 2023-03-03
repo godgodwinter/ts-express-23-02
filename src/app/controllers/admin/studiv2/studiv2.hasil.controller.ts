@@ -118,6 +118,20 @@ class Studiv2HasilController {
             return res.status(500).send({ message: error.message });
         }
     }
+    hasilGeneratePerkelasCompleteOnly = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilGeneratePerkelasCompleteOnly(parseInt(req.params.kelas_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
     hasilDeletePerkelas = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
