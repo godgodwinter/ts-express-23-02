@@ -3,6 +3,7 @@ import db from "../../models";
 import { sequelize_studi_v2 } from '../../models/index';
 import { db_studi_v2 } from "../../models";
 import { Request, Response } from 'express';
+import { Op } from 'sequelize';
 const moment = require('moment');
 const localization = require('moment/locale/id')
 moment.updateLocale("id", localization);
@@ -29,7 +30,14 @@ class siswaUjianstudiService {
     getProses = async () => {
         try {
             const get_studi_v2_proses = await studi_v2_proses.findOne({
-                where: { siswa_id: this.meId, deleted_at: null },
+                where: {
+                    siswa_id: this.meId,
+                    tgl_ujian: {
+                        [Op.gt]: moment().format(),
+                        // [Op.lt]: moment().format(),
+                    }, deleted_at: null
+                },
+
             });
 
 

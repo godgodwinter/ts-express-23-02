@@ -10,7 +10,7 @@ const studi_v2_proses = (sequelize: any, Sequelize: any): any => {
             allowNull: false
         },
         tgl_ujian: {
-            type: Sequelize.STRING,
+            type: Sequelize.DATE,
             allowNull: true
         },
         // relasi
