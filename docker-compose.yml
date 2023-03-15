@@ -1,0 +1,7 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "8002:8002"
+    command: ["node", "build/index.js"]
