@@ -81,16 +81,16 @@ class App {
         });
         this.app.use(`/api/${apiVersion}/home`, (0, babengLimiter_1.babengLimiter)(), home_router_1.default);
         //! ROUTER-BARU
-        this.app.use(`/api/${apiVersion}/master/`, (0, babengLimiter_1.babengLimiter)(3000), admin_mastering_sekolah_router_2.default);
+        this.app.use(`/api/${apiVersion}/master/`, (0, babengLimiter_1.babengLimiter)(13000), admin_mastering_sekolah_router_2.default);
         // *ujian studi
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_banksoal_router_1.default);
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_paketsoal_router_1.default);
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_proses_router_1.default);
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(3000), admin_studiv2_hasil_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(13000), admin_studiv2_banksoal_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(13000), admin_studiv2_paketsoal_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(13000), admin_studiv2_proses_router_1.default);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, (0, babengLimiter_1.babengLimiter)(13000), admin_studiv2_hasil_router_1.default);
         //! ROUTER-BARU-END
         //! ROUTER-SISWA-BARU
-        this.app.use(`/api/${apiVersion}/siswa/`, (0, babengLimiter_1.babengLimiter)(3000), siswa_profile_router_1.default);
-        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, (0, babengLimiter_1.babengLimiter)(3000), siswa_ujianstudi_router_1.default);
+        this.app.use(`/api/${apiVersion}/siswa/`, (0, babengLimiter_1.babengLimiter)(13000), siswa_profile_router_1.default);
+        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, (0, babengLimiter_1.babengLimiter)(13000), siswa_ujianstudi_router_1.default);
         //! ROUTER-SISWA-BARU-END
         //*  OLD-ROUTER-
         this.app.use(`/api/`, (0, babengLimiter_1.babengLimiterUjian)(rateLimit, 1), auth_router_1.default); //* user login/authentikasi

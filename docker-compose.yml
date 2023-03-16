@@ -1,7 +1,8 @@
 version: '3'
 services:
-  app:
+  be-ts:
+    container_name: be-ts
     build: .
     ports:
-      - "8002:8002"
+      - "${APP_PORT}:${APP_PORT}"
     command: ["node", "build/index.js"]

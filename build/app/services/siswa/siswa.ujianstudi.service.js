@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = __importDefault(require("../../models"));
 const models_2 = require("../../models");
+const sequelize_1 = require("sequelize");
 const moment = require('moment');
 const localization = require('moment/locale/id');
 moment.updateLocale("id", localization);
@@ -15,7 +16,13 @@ class siswaUjianstudiService {
         this.getProses = async () => {
             try {
                 const get_studi_v2_proses = await studi_v2_proses.findOne({
-                    where: { siswa_id: this.meId, deleted_at: null },
+                    where: {
+                        siswa_id: this.meId,
+                        tgl_ujian: {
+                            [sequelize_1.Op.gt]: moment().format(),
+                            // [Op.lt]: moment().format(),
+                        }, deleted_at: null
+                    },
                 });
                 return get_studi_v2_proses;
             }

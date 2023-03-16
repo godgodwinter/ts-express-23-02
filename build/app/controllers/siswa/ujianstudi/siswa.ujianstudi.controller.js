@@ -10,10 +10,17 @@ class SiswaProfileController {
             try {
                 const siswa_service = new siswa_ujianstudi_service_1.default(req);
                 const data_proses = await siswa_service.getProses();
-                const data_aspek_detail = await siswa_service.getAspekDetail(data_proses.id);
+                if (data_proses) {
+                    const data_aspek_detail = await siswa_service.getAspekDetail(data_proses.id);
+                    return res.send({
+                        data: data_aspek_detail,
+                        proses: data_proses,
+                        message: "Success"
+                    });
+                }
                 return res.send({
-                    data: data_aspek_detail,
-                    proses: data_proses,
+                    data: null,
+                    proses: null,
                     message: "Success"
                 });
             }

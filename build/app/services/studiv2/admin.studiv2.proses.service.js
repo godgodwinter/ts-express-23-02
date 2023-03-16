@@ -28,7 +28,17 @@ class studiv2ProsesService {
         };
         this.prosesGetProsesUjianPersiswa = async (siswa_id) => {
             try {
-                const getProses = await studi_v2_proses.findOne({ where: { siswa_id, deleted_at: null } });
+                // !periksa data sebelum batas tanggal saja
+                const getProses = await studi_v2_proses.findOne({
+                    where: {
+                        siswa_id,
+                        // tgl_ujian: {
+                        //     // [Op.gt]: moment(),
+                        //     [Op.lt]: moment()
+                        // },
+                        deleted_at: null
+                    }
+                });
                 if (getProses) {
                     const getProsesDetail = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: getProses.id, deleted_at: null } });
                     for (const [index, item] of getProsesDetail.entries()) {

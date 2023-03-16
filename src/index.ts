@@ -89,17 +89,17 @@ class App {
 
         this.app.use(`/api/${apiVersion}/home`, babengLimiter(), HomeRoutes);
         //! ROUTER-BARU
-        this.app.use(`/api/${apiVersion}/master/`, babengLimiter(3000), AdminMasteringSekolahRouterV2);
+        this.app.use(`/api/${apiVersion}/master/`, babengLimiter(13000), AdminMasteringSekolahRouterV2);
         // *ujian studi
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiBanksoalRouter);
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiPaketsoalRouter);
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiProsesRouter);
-        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(3000), AdminUjianstudiHasilRouter);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(13000), AdminUjianstudiBanksoalRouter);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(13000), AdminUjianstudiPaketsoalRouter);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(13000), AdminUjianstudiProsesRouter);
+        this.app.use(`/api/${apiVersion}/ujianstudi/`, babengLimiter(13000), AdminUjianstudiHasilRouter);
 
         //! ROUTER-BARU-END
         //! ROUTER-SISWA-BARU
-        this.app.use(`/api/${apiVersion}/siswa/`, babengLimiter(3000), siswaProfileRouter);
-        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, babengLimiter(3000), siswaUjianstudiRouter);
+        this.app.use(`/api/${apiVersion}/siswa/`, babengLimiter(13000), siswaProfileRouter);
+        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, babengLimiter(13000), siswaUjianstudiRouter);
         //! ROUTER-SISWA-BARU-END
 
 
