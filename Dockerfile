@@ -1,6 +1,8 @@
 # Menggunakan image node.js terbaru
 FROM node:latest
 
+RUN npm install -g pm2
+
 # Membuat direktori kerja
 WORKDIR /app
 
@@ -9,6 +11,7 @@ COPY package*.json ./
 
 # Menginstall dependencies
 RUN npm install
+# RUN npm install --production
 
 # Menyalin semua file ke direktori kerja
 COPY . .
@@ -20,4 +23,6 @@ RUN yarn build
 EXPOSE 1001
 
 # Menjalankan aplikasi
-CMD ["node", "build/index.js"]
+# CMD ["node", "build/index.js"]
+
+CMD ["pm2-runtime", "start", "pm2.config.js"]

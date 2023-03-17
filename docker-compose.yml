@@ -5,4 +5,4 @@ services:
     build: .
     ports:
       - "${APP_PORT}:${APP_PORT}"
-    command: ["node", "build/index.js"]
+    # command: ["node", "build/index.js"]
