@@ -45,6 +45,7 @@ import ortu from "./ortu.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
+  port: parseInt(dbConfig.PORT),
   dialect: 'mysql',
   //prevent sequelize from pluralizing table names
   // define: {
@@ -192,6 +193,7 @@ db.ujian_paketsoal_kategori.belongsTo(db.ujian_kategori, {
 
 export const sequelize_studi_v2 = new Sequelize(dbConfig_studi_v2.DB, dbConfig_studi_v2.USER, dbConfig_studi_v2.PASSWORD, {
   host: dbConfig_studi_v2.HOST,
+  port: parseInt(dbConfig.PORT),
   dialect: 'mysql',
   pool: {
     max: dbConfig_studi_v2.pool.max,

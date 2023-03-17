@@ -129,7 +129,7 @@ db.sequelize.authenticate()
     });
 
 app.listen(port, () => {
-    console.log(`Aplikasi ini berjalan di port ${port}`);
+    console.log(`Aplikasi ini berjalan di port ${port} DB ${process.env.DB_PORT}`);
     console.log(process.env.APP_PORT);
     console.log(process.env.DB_PORT);
 
