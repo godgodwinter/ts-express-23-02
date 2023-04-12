@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import userController from '../controllers/user.controller';
 import BaseRoutes from './base.router';
 import { fetchToDos } from '../helpers/babengRedis';
+import redisStudiv2PaketsoalController from '../controllers/admin/studiv2/redis/redis.studiv2.paketsoal.controller';
 
 // import { babengLimiter } from '../helpers/babengLimiter';
 // import rateLimit from "express-rate-limit"
@@ -31,6 +32,7 @@ class HomeRoutes extends BaseRoutes {
         this.router.get("/redis", async (req: Request, res: Response) => {
             res.send(await fetchToDos(req.query.completed));
         })
+        this.router.get("/redis/service", redisStudiv2PaketsoalController.index)
     }
 }
 
