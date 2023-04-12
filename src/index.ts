@@ -56,7 +56,7 @@ const port: any = process.env.APP_PORT || 8000;
 const rateLimit: number = 6000;
 
 // REDIS INITIALITATION
-const redisClient = redis.createClient({ url: 'redis://localhost:6379', password: process.env.REDIS_PASSWORD });
+const redisClient = redis.createClient({ url: process.env.REDIS_URL, password: process.env.REDIS_PASSWORD });
 (async () => {
     redisClient.on("error", (error) => console.error(`Ups : ${error}`));
     await redisClient.connect();
@@ -73,13 +73,17 @@ async function fetchToDos(completed: any) {
         if (cachedResult) {
             console.log('Data from cache.');
             const result = JSON.parse(cachedResult);
+            //! REDIS-DELETE
             // const delRedis = await redisClient.del(cacheKey);
+            //! REDIS-DELETE-END
 
-            await redisClient.set(
-                cacheKey,
-                JSON.stringify({ tes: 'apiRespons' }),
-                { EX: process.env.REDIS_LIMIT_IN_SEC ? parseInt(process.env.REDIS_LIMIT_IN_SEC) : 86400 } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
-            ); // 👈 upda
+            // !REDIS-UPDATE
+            // await redisClient.set(
+            //     cacheKey,
+            //     JSON.stringify({ tes: 'apiRespons' }),
+            //     { EX: process.env.REDIS_LIMIT_IN_SEC ? parseInt(process.env.REDIS_LIMIT_IN_SEC) : 86400 } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+            // ); // 👈 upda
+            // !REDIS-UPDATE-END
             return result;
             // return cachedResult;
         }

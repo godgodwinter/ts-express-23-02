@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import userController from '../controllers/user.controller';
 import BaseRoutes from './base.router';
+import { fetchToDos } from '../helpers/babengRedis';
 
 // import { babengLimiter } from '../helpers/babengLimiter';
 // import rateLimit from "express-rate-limit"
@@ -25,6 +26,11 @@ class HomeRoutes extends BaseRoutes {
 
 
         this.router.get("/users", userController.index)
+
+
+        this.router.get("/redis", async (req: Request, res: Response) => {
+            res.send(await fetchToDos(req.query.completed));
+        })
     }
 }
 
