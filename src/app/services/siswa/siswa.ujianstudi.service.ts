@@ -111,10 +111,12 @@ class siswaUjianstudiService {
             let skor = 0;
             let status_jawaban = "Salah";
             // !periksajawaban
-            const periksaJawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.findOne({ where: { studi_v2_proses_aspek_detail_soal_id: this.params.soal_id, kode_jawaban: this.body.kode_jawaban, deleted_at: null } })
-            if (periksaJawaban?.pilihanjawaban_skor) {
-                skor = periksaJawaban.pilihanjawaban_skor;
-                status_jawaban = "Benar";
+            const periksaJawaban = await studi_v2_paketsoal_pilihanjawaban.findOne({ where: { kode_jawaban: this.body.kode_jawaban, deleted_at: null } })
+            if (periksaJawaban?.skor) {
+                skor = periksaJawaban.skor;
+                if (periksaJawaban.skor > 0) {
+                    status_jawaban = "Benar";
+                }
             }
 
             get_soal.set({

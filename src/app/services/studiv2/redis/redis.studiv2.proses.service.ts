@@ -5,6 +5,7 @@ import axios from "axios";
 import redisClient from '../../../helpers/babengRedis';
 import { db_studi_v2 } from "../../../models";
 import { Sequelize } from "sequelize";
+import siswaService from '../../mastering/siswa.v2.service';
 
 const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_detail, studi_v2_paketsoal_aspek_penilaian, studi_v2_paketsoal_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban,
     studi_v2_paketsoal_pilihanjawaban,
@@ -15,11 +16,13 @@ class redisProsesService {
     body: Request['body'];
     params: Request['params'];
     default_ex: number;
+    req: Request;
 
     constructor(req: Request) {
         this.body = req.body;
         this.params = req.params;
         this.default_ex = process.env.REDIS_LIMIT_IN_SEC ? parseInt(process.env.REDIS_LIMIT_IN_SEC) : 10;
+        this.req = req;
     }
     // ! PAKETSOAL ASPEK
 
@@ -41,6 +44,23 @@ class redisProsesService {
         }
         return null
         return `get proses ${siswa_id}`;
+    }
+    proses_siswa_delete = async (siswa_id: number) => {
+        const cacheKey = `STUDIV2_PROSES_SISWA_ID_${siswa_id}`;
+        try {
+            const cachedResult = await redisClient.get(cacheKey);
+            if (cachedResult) {
+                console.log('Data aspek_detail from cache.');
+                // //! REDIS-DELETE
+                const delRedis = await redisClient.del(cacheKey);
+                return 'data berhasil dihapus'
+                // return cachedResult;
+            }
+        } catch (error) {
+            console.error('Something happened to Redis', error);
+        }
+        return 'data tidak ditemukan'
+        // return `get proses ${siswa_id}`;
     }
     proses_siswa_store = async (siswa_id: number) => {
         const cacheKey = `STUDIV2_PROSES_SISWA_ID_${siswa_id}`;
@@ -108,6 +128,22 @@ class redisProsesService {
         return `store proses ${siswa_id}`;
     }
 
+    proses_kelas_store = async (kelas_id: number) => {
+        const siswa_Service: siswaService = new siswaService(this.req);
+        const response = await siswa_Service.siswaGetWhereKelas(kelas_id);
+        for (const [index, item] of response.entries()) {
+            const do_store_persiswa = await this.proses_siswa_store(item.id)
+        }
+        return kelas_id
+    }
+    proses_kelas_delete = async (kelas_id: number) => {
+        const siswa_Service: siswaService = new siswaService(this.req);
+        const response = await siswa_Service.siswaGetWhereKelas(kelas_id);
+        for (const [index, item] of response.entries()) {
+            const do_store_persiswa = await this.proses_siswa_delete(item.id)
+        }
+        return kelas_id
+    }
 
 }
 

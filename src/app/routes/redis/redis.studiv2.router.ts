@@ -30,6 +30,12 @@ class RedisStudiv2Routes extends BaseRoutes {
         // ! PROSES
         this.router.get("/proses/:siswa_id/get", [verifyToken, menuAdminOwner], redisStudiv2ProsesController.proses_siswa_get)
         this.router.get("/proses/:siswa_id/store", [verifyToken, menuAdminOwner], redisStudiv2ProsesController.proses_siswa_store)
+        this.router.delete("/proses/:siswa_id/delete", [verifyToken, menuAdminOwner], redisStudiv2ProsesController.proses_siswa_delete)
+
+
+        // ! PROSES
+        this.router.get("/proses_kelas/:kelas_id/store", [verifyToken, menuAdminOwner], redisStudiv2ProsesController.proses_kelas_store)
+        this.router.delete("/proses_kelas/:kelas_id/delete", [verifyToken, menuAdminOwner], redisStudiv2ProsesController.proses_kelas_delete)
     }
 }
 
