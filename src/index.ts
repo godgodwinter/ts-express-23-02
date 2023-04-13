@@ -13,6 +13,7 @@ import axios from "axios";
 import db from "./app/models"
 // router
 import HomeRoutes from "./app/routes/home.router";
+import RedisStudiv2Routes from "./app/routes/redis/redis.studiv2.router";
 import AuthRoutes from "./app/routes/auth.router";
 import { v4 as uuidv4 } from 'uuid';
 import StudiRouter from "./app/routes/studi.router";
@@ -151,6 +152,7 @@ class App {
         })
 
         this.app.use(`/api/${apiVersion}/home`, babengLimiter(), HomeRoutes);
+        this.app.use(`/api/${apiVersion}/redis/studiv2`, babengLimiter(13000), RedisStudiv2Routes);
         //! ROUTER-BARU
         this.app.use(`/api/${apiVersion}/master/`, babengLimiter(13000), AdminMasteringSekolahRouterV2);
         // *ujian studi

@@ -1,0 +1,7 @@
+CATATAN: 
+
+STUDIV2_PROSES_SISWA_USERNAME_{username}
+STUDIV2_PAKETSOAL_{paketsoal_id}
+STUDIV2_PAKETSOAL_ASPEK_{paketsoal_aspek_id}
+STUDIV2_PAKETSOAL_ASPEK_DETAIL_{paketsoal_aspek_detail_id}
+STUDIV2_SOAL{kode_soal}
