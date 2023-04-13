@@ -6,6 +6,7 @@ import { Sequelize } from "sequelize";
 import { Op } from 'sequelize';
 import siswaService from '../mastering/siswa.v2.service';
 import { fn_get_sisa_waktu } from "../../helpers/babengUjian";
+import redisPaketsoalService from './redis/redis.studiv2.paketsoal.service';
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -140,6 +141,86 @@ class studiv2ProsesService {
             console.log(error.message);
         }
     }
+    prosesStorePerSiswa_with_redis = async (siswa_id: number, paketsoal_id: number, dataForm: any) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const response = await siswa_Service.siswaGetWhereId(siswa_id);
+            const redis_PaketsoalService: redisPaketsoalService = new redisPaketsoalService(this.req);
+            const paketsoal = await redis_PaketsoalService.paketsoal_aktif_get();
+            // console.log('tes');
+            if (paketsoal) {
+                const t = await sequelize_studi_v2.transaction();
+                try {
+                    const save_studi_v2_proses = await studi_v2_proses.create({
+                        status: "Aktif",
+                        tgl_ujian: dataForm.tgl_ujian,
+                        siswa_id,
+                        studi_v2_paketsoal_id: paketsoal_id,
+                        paketsoal_nama: paketsoal.nama,
+                        created_at: moment().format(),
+                        updated_at: moment().format(),
+                    }, { transaction: t })
+                    const getPaketosoalAspekDetail_where_paketsoal_id = paketsoal.aspek_detail;
+                    for (const [index, mapel] of getPaketosoalAspekDetail_where_paketsoal_id.entries()) {
+                        const save_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.create({
+                            status: "Aktif",
+                            tgl_mulai: null,
+                            tgl_selesai: null,
+                            waktu: mapel.waktu,
+                            instruksi: mapel.instruksi,
+                            instruksi_status: mapel.instruksi_status,
+                            lembar_prasoal: mapel.lembar_prasoal,
+                            lembar_prasoal_status: mapel.lembar_prasoal_status,
+                            instruksi_pengerjaan: mapel.instruksi_pengerjaan,
+                            instruksi_pengerjaan_status: mapel.instruksi_pengerjaan_status,
+                            random_soal: mapel.random_soal,
+                            random_pilihanjawaban: mapel.random_pilihanjawaban,
+                            studi_v2_proses_id: save_studi_v2_proses.id,
+                            studi_v2_paketsoal_aspek_detail_id: mapel.id,
+                            aspek_detail_nama: mapel.nama,
+                            created_at: moment().format(),
+                            updated_at: moment().format(),
+                        }, { transaction: t })
+                        let getSoal = [{
+                            id: null, pertanyaan: "", kode_soal: null, kode_jawaban: null, status_jawaban: null, skor: 0, studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id, studi_v2_paketsoal_soal_id: mapel.id
+                        }];
+                        if (mapel.random_soal === "Aktif") {
+                            getSoal = await this.fn_random_array_soal(mapel.soal);
+                        } else {
+                            getSoal = mapel.soal;
+                        }
+                        for (const [index_soal, soal] of getSoal.entries()) {
+                            const save_studi_v2_proses_aspek_detail_soal = await studi_v2_proses_aspek_detail_soal.create({
+                                kode_soal: soal.kode_soal,
+                                kode_jawaban: soal.kode_jawaban,
+                                status_jawaban: soal.kode_jawaban,
+                                skor: soal.kode_jawaban,
+                                studi_v2_proses_aspek_detail_id: save_studi_v2_proses_aspek_detail.id,
+                                studi_v2_paketsoal_soal_id: soal.id,
+                                soal_pertanyaan: soal.pertanyaan,
+                                created_at: moment().format(),
+                                updated_at: moment().format(),
+                            }, { transaction: t })
+                        };
+                    };
+                    await t.commit();
+                } catch (error) {
+                    await t.rollback();
+                }
+                return paketsoal;
+            } else {
+                return 'Paketsoal belum di pilih! Aktifkan redis!'
+            }
+            // const getPaketsoal = await studi_v2_paketsoal.findOne({ where: { id: paketsoal_id, deleted_at: null } })
+            // ! 1. insert proses = siswa_id,paketsoal_id , tgl_ujian //batas ujian terakhir
+            // ! 2. studi_v2_proses_aspek_detail = mapel, tgl_mulai, selesai ada dsini (proses mengerjakan per mapel)
+            // ! 3. studi_v2_proses_aspek_detail_soal = insert semua soal (random_soal)
+            // ! 4. studi_v2_proses_aspek_detail_soal_pilihan_jawaban   =  insert semua pilihanjawaban (random_pilihanjawaban)
+            return "Data berhasil disimpan";
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
     prosesStorePerSiswa = async (siswa_id: number, paketsoal_id: number, dataForm: any) => {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);
@@ -250,9 +331,11 @@ class studiv2ProsesService {
                     const getMapel = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: proses_id, deleted_at: null } })
                     for (const [index, mapel] of getMapel.entries()) {
 
-                        const getSoal = await studi_v2_proses_aspek_detail_soal.findAll({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } })
+                        // const getSoal = await studi_v2_proses_aspek_detail_soal.findAll({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } })
                         // for (const [index_soal, soal] of getSoal.entries()) {
-                        //     const dataDeleted_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.destroy({ where: { studi_v2_proses_aspek_detail_soal_id: soal.id, deleted_at: null } }, { transaction: t });
+                        //     //     const dataDeleted_studi_v2_proses_aspek_detail_soal_pilihan_jawaban = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.destroy({ where: { studi_v2_proses_aspek_detail_soal_id: soal.id, deleted_at: null } }, { transaction: t });
+
+                        //     const dataDeleted_proses_soal_id = await studi_v2_proses_aspek_detail_soal.destroy({ where: { id: soal.id, deleted_at: null } }, { transaction: t });
                         // }
                         const dataDeleted_proses_soal_id = await studi_v2_proses_aspek_detail_soal.destroy({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } }, { transaction: t });
                     }
@@ -395,6 +478,14 @@ class studiv2ProsesService {
         }
     }
 
+    fn_random_array_soal = async (array: any) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     prosesStoreSiswaPerKelas = async (kelas_id: number, paketsoal_id: number, dataForm: any) => {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);
@@ -403,7 +494,7 @@ class studiv2ProsesService {
             for (const [index, siswa] of response.entries()) {
                 const periksaIsSudahAda = await this.prosesPeriksaIsSiswaSudahAda(siswa.id, dataForm.tgl_ujian)
                 if (periksaIsSudahAda === false) {
-                    await this.prosesStorePerSiswa(siswa.id, paketsoal_id, dataForm)
+                    await this.prosesStorePerSiswa_with_redis(siswa.id, paketsoal_id, dataForm)
                     dataBerhasilDisimpan++;
                 }
             }

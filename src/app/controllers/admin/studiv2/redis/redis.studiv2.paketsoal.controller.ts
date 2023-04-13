@@ -48,6 +48,21 @@ class redisStudiv2PaketsoalController {
             return res.status(500).send({ message: error.message });
         }
     }
+
+    paketsoal_aktif_get_less = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const service: redisPaketsoalService = new redisPaketsoalService(req);
+            const datas = await service.paketsoal_aktif_get_less();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
     paketsoal_aktif_delete = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const service: redisPaketsoalService = new redisPaketsoalService(req);

@@ -40,19 +40,17 @@ class redisPaketsoalService {
         }
         return null
     }
-    paketsoal_aktif_delete = async () => {
+
+    paketsoal_aktif_get_less = async () => {
         const cacheKey = `STUDIV2_PAKETSOAL_aktif`;
-        const delRedis = await redisClient.del(cacheKey);
-        return "Data paketsoal berhasil di hapus"
-    }
-    paketsoal_aktifkan = async (paketsoal_id: number) => {
-        const cacheKey = `STUDIV2_PAKETSOAL_aktif`;
-        // First attempt to retrieve data from the cache
         try {
             const cachedResult = await redisClient.get(cacheKey);
             if (cachedResult) {
                 console.log('Data aspek_detail from cache.');
                 const result = JSON.parse(cachedResult);
+                if (result?.aspek_detail) {
+                    delete result.aspek_detail;
+                }
                 // //! REDIS-DELETE
                 // const delRedis = await redisClient.del(cacheKey);
                 return result;
@@ -61,6 +59,17 @@ class redisPaketsoalService {
         } catch (error) {
             console.error('Something happened to Redis', error);
         }
+        return null
+    }
+    paketsoal_aktif_delete = async () => {
+        const cacheKey = `STUDIV2_PAKETSOAL_aktif`;
+        const delRedis = await redisClient.del(cacheKey);
+        return "Data paketsoal berhasil di hapus"
+    }
+    paketsoal_aktifkan = async (paketsoal_id: number) => {
+        const cacheKey = `STUDIV2_PAKETSOAL_aktif`;
+        // First attempt to retrieve data from the cache
+        const delRedis = await redisClient.del(cacheKey);
         // jika pada redis belum ada maka fetch data
         // !call service get Data per paket
         // get AspekDetail
@@ -92,6 +101,7 @@ class redisPaketsoalService {
             }
         }
         console.log('Data requested from mysql.', this.default_ex);
+
         return response;
         return 'do_caching';
     }
