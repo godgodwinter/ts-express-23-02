@@ -4,6 +4,8 @@ import { sequelize_studi_v2 } from '../../models/index';
 import { db_studi_v2 } from "../../models";
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
+import redisProsesService from "../studiv2/redis/redis.studiv2.proses.service";
+
 const moment = require('moment');
 const localization = require('moment/locale/id')
 moment.updateLocale("id", localization);
@@ -19,11 +21,13 @@ class siswaUjianstudiService {
     meId: number;
     body: Request['body'];
     params: Request['params'];
+    req: Request;
 
     constructor(req: Request) {
         this.meId = req.app.locals.meId;
         this.body = req.body;
         this.params = req.params;
+        this.req = req;
     }
 
 
@@ -48,19 +52,24 @@ class siswaUjianstudiService {
     }
     getAspekDetail = async (proses_id: number) => {
         try {
-            const get_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: proses_id, deleted_at: null } })
-            for (const [index_mapel, mapel] of get_studi_v2_proses_aspek_detail.entries()) {
-                const get_soal = await studi_v2_proses_aspek_detail_soal.scope('lessData').findAll({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } })
+            // const get_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.findAll({ where: { studi_v2_proses_id: proses_id, deleted_at: null } })
+            // for (const [index_mapel, mapel] of get_studi_v2_proses_aspek_detail.entries()) {
+            //     const get_soal = await studi_v2_proses_aspek_detail_soal.scope('lessData').findAll({ where: { studi_v2_proses_aspek_detail_id: mapel.id, deleted_at: null } })
 
-                for (const [index_soal, soal] of get_soal.entries()) {
-                    const get_pj = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.scope('lessData').findAll({ where: { studi_v2_proses_aspek_detail_soal_id: soal.id, deleted_at: null } })
-                    get_soal[index_soal].setDataValue("pilihanjawaban", get_pj);
-                }
+            //     for (const [index_soal, soal] of get_soal.entries()) {
+            //         const get_pj = await studi_v2_proses_aspek_detail_soal_pilihan_jawaban.scope('lessData').findAll({ where: { studi_v2_proses_aspek_detail_soal_id: soal.id, deleted_at: null } })
+            //         get_soal[index_soal].setDataValue("pilihanjawaban", get_pj);
+            //     }
 
-                get_studi_v2_proses_aspek_detail[index_mapel].setDataValue("soal", get_soal)
+            //     get_studi_v2_proses_aspek_detail[index_mapel].setDataValue("soal", get_soal)
 
-            }
-            return get_studi_v2_proses_aspek_detail;
+            // }
+            // return get_studi_v2_proses_aspek_detail;
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            // return this.params.siswa_id;
+            const datas = await service.proses_siswa_get(this.meId);
+            return datas
         } catch (error: any) {
             console.log(error.message);
         }
