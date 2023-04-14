@@ -5,6 +5,7 @@ import { db_studi_v2 } from "../../models";
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import redisProsesService from "../studiv2/redis/redis.studiv2.proses.service";
+import redisClient from '../../helpers/babengRedis';
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -22,12 +23,14 @@ class siswaUjianstudiService {
     body: Request['body'];
     params: Request['params'];
     req: Request;
+    default_ex: number;
 
     constructor(req: Request) {
         this.meId = req.app.locals.meId;
         this.body = req.body;
         this.params = req.params;
         this.req = req;
+        this.default_ex = process.env.REDIS_LIMIT_IN_SEC ? parseInt(process.env.REDIS_LIMIT_IN_SEC) : 10;
     }
 
 
@@ -86,6 +89,22 @@ class siswaUjianstudiService {
             });
             // As above, the database still has "formUpdate" and "green"
             await get_aspek_detail.save();
+            // !update jawaban pada redis
+            const aspekdetail_index = this.body.aspekdetail_index;
+            const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
+            const cachedResult = await redisClient.get(cacheKey);
+            if (cachedResult) {
+                const result = JSON.parse(cachedResult);
+                result[aspekdetail_index].tgl_mulai = this.body.tgl_mulai;
+                result[aspekdetail_index].tgl_selesai = this.body.tgl_selesai;
+                result[aspekdetail_index].status = 'Aktif';
+                const delRedis = await redisClient.del(cacheKey);
+                const saveAgain = await redisClient.set(
+                    cacheKey,
+                    JSON.stringify(result),
+                    { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                ); // 👈 updated code
+            }
             return get_aspek_detail
         } catch (error: any) {
             console.log(error.message);
@@ -100,12 +119,30 @@ class siswaUjianstudiService {
             });
             // As above, the database still has "formUpdate" and "green"
             await get_aspek_detail.save();
+
+            // !update jawaban pada redis
+            const aspekdetail_index = this.body.aspekdetail_index;
+            const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
+            const cachedResult = await redisClient.get(cacheKey);
+            if (cachedResult) {
+                const result = JSON.parse(cachedResult);
+                result[aspekdetail_index].tgl_selesai = moment().format();
+                const delRedis = await redisClient.del(cacheKey);
+                const saveAgain = await redisClient.set(
+                    cacheKey,
+                    JSON.stringify(result),
+                    { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                ); // 👈 updated code
+            }
             return get_aspek_detail
         } catch (error: any) {
             console.log(error.message);
         }
     }
     doJawab = async () => {
+        // const delRedis = await redisClient.del(cacheKey);
+        const soal_index = this.body.soal_index;
+        const aspekdetail_index = this.body.aspekdetail_index;
         try {
             const get_soal = await studi_v2_proses_aspek_detail_soal.findOne({ where: { id: this.params.soal_id, deleted_at: null } })
             let skor = 0;
@@ -127,6 +164,20 @@ class siswaUjianstudiService {
             });
             // As above, the database still has "formUpdate" and "green"
             await get_soal.save();
+            // !update jawaban pada redis
+            const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
+            const cachedResult = await redisClient.get(cacheKey);
+            if (cachedResult) {
+                const result = JSON.parse(cachedResult);
+                result[aspekdetail_index].soal[soal_index].kode_jawaban = this.body.kode_jawaban
+                const delRedis = await redisClient.del(cacheKey);
+                const saveAgain = await redisClient.set(
+                    cacheKey,
+                    JSON.stringify(result),
+                    { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                ); // 👈 updated code
+            }
+
             return { periksaJawaban, skor, status_jawaban }
         } catch (error: any) {
             console.log(error.message);
