@@ -147,7 +147,7 @@ class redisPaketsoalService {
                 await redisClient.set(
                     cacheKey,
                     JSON.stringify(response),
-                    { EX: 10 } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                    { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
                 ); // 👈 updated code
             } catch (error) {
                 console.error('Something happened to Redis', error);
@@ -195,7 +195,7 @@ class redisPaketsoalService {
                 await redisClient.set(
                     cacheKey,
                     JSON.stringify(response),
-                    { EX: 10 } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                    { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
                 ); // 👈 updated code
             } catch (error) {
                 console.error('Something happened to Redis', error);
