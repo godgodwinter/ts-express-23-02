@@ -294,6 +294,11 @@ class siswaUjianstudiService {
     v3_doMulai = async (studi_v2_proses_aspek_detail_id: number) => {
         try {
             const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: studi_v2_proses_aspek_detail_id, deleted_at: null } })
+            if (get_aspek_detail) {
+                if (get_aspek_detail.tgl_mulai) {
+                    return "paket sudah dimulai"
+                }
+            }
             // return get_aspek_detail;
             get_aspek_detail.set({
                 tgl_mulai: this.body.tgl_mulai,
@@ -335,6 +340,69 @@ class siswaUjianstudiService {
         } catch (error: any) {
             console.log(error.message);
         }
+    }
+    v3_doJawab = async (studi_v2_proses_aspek_detail_id: number, studi_v2_proses_aspek_detail_soal_id: number) => {
+        // const delRedis = await redisClient.del(cacheKey);
+        // const soal_index = this.body.soal_index;
+        // const aspekdetail_index = this.body.aspekdetail_index;
+        const service: redisProsesService = new redisProsesService(this.req);
+        const datas = await service.proses_siswa_get(this.meId);
+
+        let aspekdetail_index: null | number = null;
+        let soal_index: null | number = null;
+        for (const [index, data] of datas.entries()) {
+            if (data.id === studi_v2_proses_aspek_detail_id) {
+                aspekdetail_index = index;
+
+                for (const [index_soal, data_soal] of data.soal.entries()) {
+                    if (data_soal.id === studi_v2_proses_aspek_detail_soal_id) {
+                        soal_index = index_soal;
+                    }
+                }
+            }
+        }
+        if (aspekdetail_index && soal_index) {
+            try {
+                const get_soal = await studi_v2_proses_aspek_detail_soal.findOne({ where: { id: studi_v2_proses_aspek_detail_soal_id, deleted_at: null } })
+                let skor = 0;
+                let status_jawaban = "Salah";
+                // !periksajawaban
+                const periksaJawaban = await studi_v2_paketsoal_pilihanjawaban.findOne({ where: { kode_jawaban: this.body.kode_jawaban, deleted_at: null } })
+                if (periksaJawaban?.skor) {
+                    skor = periksaJawaban.skor;
+                    if (periksaJawaban.skor > 0) {
+                        status_jawaban = "Benar";
+                    }
+                }
+
+                get_soal.set({
+                    kode_jawaban: this.body.kode_jawaban,
+                    skor,
+                    status_jawaban,
+                    updated_at: moment().format(),
+                });
+                // As above, the database still has "formUpdate" and "green"
+                await get_soal.save();
+                // !update jawaban pada redis
+                const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
+                const cachedResult = await redisClient.get(cacheKey);
+                if (cachedResult) {
+                    const result = JSON.parse(cachedResult);
+                    result[aspekdetail_index].soal[soal_index].kode_jawaban = this.body.kode_jawaban
+                    const delRedis = await redisClient.del(cacheKey);
+                    const saveAgain = await redisClient.set(
+                        cacheKey,
+                        JSON.stringify(result),
+                        { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                    ); // 👈 updated code
+                }
+
+                return { periksaJawaban, skor, status_jawaban }
+            } catch (error: any) {
+                console.log(error.message);
+            }
+        }
+        return null
     }
 
     // !ujianstudiv3

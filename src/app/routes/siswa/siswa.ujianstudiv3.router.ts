@@ -11,8 +11,8 @@ class siswaUjianstudiv3Router extends BaseRoutes {
         this.router.post("/paketsoal/:studi_v2_proses_aspek_detail_id/do_mulai", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.v3_doMulai) //! sudah
         this.router.get("/paketsoal/:studi_v2_proses_aspek_detail_id/getsoal", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getSoal_perAspekdetail) //getsoal per aspekdetail
         this.router.get("/paketsoal/:studi_v2_proses_aspek_detail_id/getsoal/:studi_v2_proses_aspek_detail_soal_id", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getSoal_perSoal) //get soal per soal
-        this.router.post("/paketsoal/:studi_v2_proses_aspek_detail_id/getsoal/:studi_v2_proses_aspek_detail_soal_id", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.v3_doJawab) //jawab
-        this.router.post("/paketsoal/:studi_v2_proses_aspek_detail_id/do_finish", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.v3_doJawab)
+        this.router.post("/paketsoal/:studi_v2_proses_aspek_detail_id/getsoal/:studi_v2_proses_aspek_detail_soal_id", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.v3_doJawab) //jawab //!belum
+        this.router.post("/paketsoal/:studi_v2_proses_aspek_detail_id/do_finish", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.v3_doFinish) //!belum
     }
 }
 
