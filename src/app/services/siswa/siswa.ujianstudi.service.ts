@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import redisProsesService from "../studiv2/redis/redis.studiv2.proses.service";
 import redisClient from '../../helpers/babengRedis';
+import { fn_get_sisa_waktu } from "../../helpers/babengUjian";
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -199,9 +200,20 @@ class siswaUjianstudiService {
 
             for (const [index, data] of datas.entries()) {
                 delete data.soal;
-                aspek_detail.push(data);
+                // aspek_detail.push(data);
+                let sisa_waktu: number = 0;
+                let sisa_waktu_dalam_menit: number = 0;
+                let getSisaWaktu = await fn_get_sisa_waktu(data.tgl_selesai);
+                sisa_waktu = getSisaWaktu ? getSisaWaktu.detik : 0;
+                sisa_waktu_dalam_menit = getSisaWaktu ? getSisaWaktu.menit : 0;
+                if (sisa_waktu > 0) {
+                    return data
+                }
+                // !periksa 
+                // jika sisa waktu >0 return data
             }
-            return aspek_detail
+            return null
+            // return aspek_detail
         } catch (error: any) {
             console.log(error.message);
         }
