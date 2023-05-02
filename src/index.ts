@@ -29,6 +29,7 @@ import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 import { babengLimiter, babengLimiterUjian } from "./app/helpers/babengLimiter";
 import siswaProfileRouter from "./app/routes/siswa/siswa.profile.router";
 import siswaUjianstudiRouter from "./app/routes/siswa/siswa.ujianstudi.router";
+import siswaUjianstudiv3Router from "./app/routes/siswa/siswa.ujianstudiv3.router";
 
 dotenv();
 const port: any = process.env.APP_PORT || 8000;
@@ -164,7 +165,8 @@ class App {
         //! ROUTER-BARU-END
         //! ROUTER-SISWA-BARU
         this.app.use(`/api/${apiVersion}/siswa/`, babengLimiter(13000), siswaProfileRouter);
-        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, babengLimiter(13000), siswaUjianstudiRouter);
+        this.app.use(`/api/${apiVersion}/siswa/ujianstudi`, babengLimiter(13000), siswaUjianstudiRouter); //download semua soal di awal
+        this.app.use(`/api/${apiVersion}/studiv3/siswa/ujianstudi/vless`, babengLimiter(13000), siswaUjianstudiv3Router); //versi reques kecil'' (reques persoal)
         //! ROUTER-SISWA-BARU-END
 
 
