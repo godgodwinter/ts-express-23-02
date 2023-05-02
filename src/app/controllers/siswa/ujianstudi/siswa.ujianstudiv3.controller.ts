@@ -158,7 +158,7 @@ class SiswaUjianstudiv3Controller {
         try {
             const siswa_service: siswaUjianstudiService = new siswaUjianstudiService(req);
 
-            const data_aspek_detail = await siswa_service.getSoal_perSoal(parseInt(req.params.studi_v2_proses_aspek_detail_id), parseInt(req.params.studi_v2_proses_aspek_detail_soal_id));
+            const data_aspek_detail = await siswa_service.v3_doFinish(parseInt(req.params.studi_v2_proses_aspek_detail_id));
             return res.send({
                 data: data_aspek_detail,
                 message: "Success"

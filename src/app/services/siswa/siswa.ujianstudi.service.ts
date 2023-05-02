@@ -404,6 +404,47 @@ class siswaUjianstudiService {
         }
         return null
     }
+    v3_doFinish = async (studi_v2_proses_aspek_detail_id: number) => {
+        try {
+            const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: studi_v2_proses_aspek_detail_id, deleted_at: null } })
+            get_aspek_detail.set({
+                tgl_selesai: moment().format(),
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await get_aspek_detail.save();
+
+            // !update jawaban pada redis
+            // const aspekdetail_index = this.body.aspekdetail_index;
+            const service: redisProsesService = new redisProsesService(this.req);
+            const datas = await service.proses_siswa_get(this.meId);
+
+            let aspekdetail_index: null | number = null;
+            for (const [index, data] of datas.entries()) {
+                if (data.id === studi_v2_proses_aspek_detail_id) {
+                    aspekdetail_index = index;
+                }
+            }
+            if (aspekdetail_index) {
+                const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
+                const cachedResult = await redisClient.get(cacheKey);
+                if (cachedResult) {
+                    const result = JSON.parse(cachedResult);
+                    result[aspekdetail_index].tgl_selesai = moment().format();
+                    const delRedis = await redisClient.del(cacheKey);
+                    const saveAgain = await redisClient.set(
+                        cacheKey,
+                        JSON.stringify(result),
+                        { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                    ); // 👈 updated code
+                }
+                return get_aspek_detail
+            }
+        } catch (error: any) {
+            console.log(error.message);
+        }
+        return null
+    }
 
     // !ujianstudiv3
 
