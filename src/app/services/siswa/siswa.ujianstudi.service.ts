@@ -206,7 +206,7 @@ class siswaUjianstudiService {
             console.log(error.message);
         }
     }
-    getAspekDetail_detail = async (proses_aspekdetail_id: number) => {
+    get_aspekdetail_tersedia = async (proses_id: number) => {
         try {
 
             const service: redisProsesService = new redisProsesService(this.req);
@@ -218,11 +218,120 @@ class siswaUjianstudiService {
 
             for (const [index, data] of datas.entries()) {
                 delete data.soal;
-                if (data.id === proses_aspekdetail_id) {
+                aspek_detail.push(data);
+            }
+            return aspek_detail
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    getAspekDetail_detail = async (studi_v2_proses_aspek_detail_id: number) => {
+        try {
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            // return this.params.siswa_id;
+            // ambil data dari redis
+            const datas = await service.proses_siswa_get(this.meId);
+            // periksa data. jika ada masukkan kdalam array aspekdetail
+            const aspek_detail = [];
+
+            for (const [index, data] of datas.entries()) {
+                delete data.soal;
+                if (data.id === studi_v2_proses_aspek_detail_id) {
                     return data
                 }
             }
             return null
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    getSoal_perAspekdetail = async (studi_v2_proses_aspek_detail_id: number) => {
+        try {
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            // return this.params.siswa_id;
+            // ambil data dari redis
+            const datas = await service.proses_siswa_get(this.meId);
+            // periksa data. jika ada masukkan kdalam array aspekdetail
+            const aspek_detail = [];
+
+            for (const [index, data] of datas.entries()) {
+                if (data.id === studi_v2_proses_aspek_detail_id) {
+                    return data.soal
+                }
+            }
+            return null
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    getSoal_perSoal = async (studi_v2_proses_aspek_detail_id: number, studi_v2_proses_aspek_detail_soal_id: number) => {
+        try {
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            // return this.params.siswa_id;
+            // ambil data dari redis
+            const datas = await service.proses_siswa_get(this.meId);
+            // periksa data. jika ada masukkan kdalam array aspekdetail
+            const aspek_detail = [];
+
+            for (const [index, data] of datas.entries()) {
+                if (data.id === studi_v2_proses_aspek_detail_id) {
+                    // return data.soal
+                    for (const [index_soal, soal] of data.soal.entries()) {
+                        if (soal.id === studi_v2_proses_aspek_detail_soal_id) {
+                            return soal
+                        }
+                    }
+                }
+            }
+            return null
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    v3_doMulai = async (studi_v2_proses_aspek_detail_id: number) => {
+        try {
+            const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: studi_v2_proses_aspek_detail_id, deleted_at: null } })
+            // return get_aspek_detail;
+            get_aspek_detail.set({
+                tgl_mulai: this.body.tgl_mulai,
+                tgl_selesai: this.body.tgl_selesai,
+                status: "Aktif",
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await get_aspek_detail.save();
+            // !update jawaban pada redis
+            // const aspekdetail_index = this.body.aspekdetail_index;
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            const datas = await service.proses_siswa_get(this.meId);
+
+            let aspekdetail_index: null | number = null;
+            for (const [index, data] of datas.entries()) {
+                if (data.id === studi_v2_proses_aspek_detail_id) {
+                    aspekdetail_index = index;
+                }
+            }
+            if (aspekdetail_index) {
+                const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
+                const cachedResult = await redisClient.get(cacheKey);
+                if (cachedResult) {
+                    const result = JSON.parse(cachedResult);
+                    result[aspekdetail_index].tgl_mulai = this.body.tgl_mulai;
+                    result[aspekdetail_index].tgl_selesai = this.body.tgl_selesai;
+                    result[aspekdetail_index].status = 'Aktif';
+                    const delRedis = await redisClient.del(cacheKey);
+                    const saveAgain = await redisClient.set(
+                        cacheKey,
+                        JSON.stringify(result),
+                        { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
+                    ); // 👈 updated code
+                }
+            }
+            return get_aspek_detail
         } catch (error: any) {
             console.log(error.message);
         }
