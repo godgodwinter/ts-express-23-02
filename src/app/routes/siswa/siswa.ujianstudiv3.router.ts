@@ -5,7 +5,8 @@ import siswaUjianstudiv3Controller from '../../controllers/siswa/ujianstudi/sisw
 class siswaUjianstudiv3Router extends BaseRoutes {
 
     public routes(): void {
-        this.router.get("/periksaUjianAktif", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getAspekDetail)
+        this.router.get("/periksaUjianAktif", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.periksaUjianAktif)
+        this.router.get("/aspekdetail/:studi_v2_proses_aspek_detail_id/detail", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getAspekDetail_detail)
         this.router.post("/paketsoal/:studi_v2_proses_aspek_detail_id/do_mulai", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getAspekDetail)
         this.router.get("/soal_id/:studi_v2_proses_aspek_detail_soal_id", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getAspekDetail) //jawab
         this.router.post("/soal_id/:studi_v2_proses_aspek_detail_soal_id", [verifyToken, menuSiswa], siswaUjianstudiv3Controller.getAspekDetail) //jawab

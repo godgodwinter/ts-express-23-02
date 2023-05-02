@@ -184,6 +184,52 @@ class siswaUjianstudiService {
         }
     }
 
+
+    // !ujianstudiv3
+
+    periksaUjianAktif = async (proses_id: number) => {
+        try {
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            // return this.params.siswa_id;
+            // ambil data dari redis
+            const datas = await service.proses_siswa_get(this.meId);
+            // periksa data. jika ada masukkan kdalam array aspekdetail
+            const aspek_detail = [];
+
+            for (const [index, data] of datas.entries()) {
+                delete data.soal;
+                aspek_detail.push(data);
+            }
+            return aspek_detail
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    getAspekDetail_detail = async (proses_aspekdetail_id: number) => {
+        try {
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            // return this.params.siswa_id;
+            // ambil data dari redis
+            const datas = await service.proses_siswa_get(this.meId);
+            // periksa data. jika ada masukkan kdalam array aspekdetail
+            const aspek_detail = [];
+
+            for (const [index, data] of datas.entries()) {
+                delete data.soal;
+                if (data.id === proses_aspekdetail_id) {
+                    return data
+                }
+            }
+            return null
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    // !ujianstudiv3
+
 }
 
 export default siswaUjianstudiService;
