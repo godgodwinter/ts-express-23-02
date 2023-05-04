@@ -199,7 +199,7 @@ class siswaUjianstudiService {
             const aspek_detail = [];
 
             for (const [index, data] of datas.entries()) {
-                delete data.soal;
+                // delete data.soal;
                 // aspek_detail.push(data);
                 let sisa_waktu: number = 0;
                 let sisa_waktu_dalam_menit: number = 0;
@@ -207,6 +207,8 @@ class siswaUjianstudiService {
                 sisa_waktu = getSisaWaktu ? getSisaWaktu.detik : 0;
                 sisa_waktu_dalam_menit = getSisaWaktu ? getSisaWaktu.menit : 0;
                 if (sisa_waktu > 0) {
+                    data.sisa_waktu = sisa_waktu;
+                    data.sisa_waktu_dalam_menit = sisa_waktu_dalam_menit;
                     return data
                 }
                 // !periksa 
@@ -229,6 +231,7 @@ class siswaUjianstudiService {
             const aspek_detail = [];
 
             for (const [index, data] of datas.entries()) {
+                data.soal_jml = data.soal.length;
                 delete data.soal;
                 aspek_detail.push(data);
             }
@@ -248,6 +251,7 @@ class siswaUjianstudiService {
             const aspek_detail = [];
 
             for (const [index, data] of datas.entries()) {
+                data.soal_jml = data.soal.length;
                 delete data.soal;
                 if (data.id === studi_v2_proses_aspek_detail_id) {
                     return data
@@ -306,11 +310,11 @@ class siswaUjianstudiService {
     v3_doMulai = async (studi_v2_proses_aspek_detail_id: number) => {
         try {
             const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: studi_v2_proses_aspek_detail_id, deleted_at: null } })
-            if (get_aspek_detail) {
-                if (get_aspek_detail.tgl_mulai) {
-                    return "paket sudah dimulai"
-                }
-            }
+            // if (get_aspek_detail) {
+            //     if (get_aspek_detail.tgl_mulai) {
+            //         return "paket sudah dimulai"
+            //     }
+            // }
             // return get_aspek_detail;
             get_aspek_detail.set({
                 tgl_mulai: this.body.tgl_mulai,
@@ -332,7 +336,7 @@ class siswaUjianstudiService {
                     aspekdetail_index = index;
                 }
             }
-            if (aspekdetail_index) {
+            if (aspekdetail_index !== null) {
                 const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
                 const cachedResult = await redisClient.get(cacheKey);
                 if (cachedResult) {
@@ -347,8 +351,11 @@ class siswaUjianstudiService {
                         { EX: this.default_ex } // Set the specified expire time, in seconds. 86400=1HARI ,604800=7HARI
                     ); // 👈 updated code
                 }
+                // return "berhasil di update"
             }
             return get_aspek_detail
+            // return this.meId
+            // return aspekdetail_index
         } catch (error: any) {
             console.log(error.message);
         }
@@ -373,7 +380,7 @@ class siswaUjianstudiService {
                 }
             }
         }
-        if (aspekdetail_index && soal_index) {
+        if (aspekdetail_index !== null && soal_index !== null) {
             try {
                 const get_soal = await studi_v2_proses_aspek_detail_soal.findOne({ where: { id: studi_v2_proses_aspek_detail_soal_id, deleted_at: null } })
                 let skor = 0;
@@ -437,7 +444,7 @@ class siswaUjianstudiService {
                     aspekdetail_index = index;
                 }
             }
-            if (aspekdetail_index) {
+            if (aspekdetail_index !== null) {
                 const cacheKey = `STUDIV2_PROSES_SISWA_ID_${this.meId}`;
                 const cachedResult = await redisClient.get(cacheKey);
                 if (cachedResult) {

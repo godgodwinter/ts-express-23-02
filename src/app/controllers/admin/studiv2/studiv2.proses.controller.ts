@@ -29,7 +29,7 @@ class Studiv2ProsesController {
     do_reset_waktu = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
-            const datas = await proses_Service.do_reset_waktu(parseInt(req.params.proses_detail_id));
+            const datas = await proses_Service.do_reset_waktu(parseInt(req.params.proses_detail_id), parseInt(req.body.siswa_id));
 
             return res.send({
                 data: datas,
@@ -43,7 +43,7 @@ class Studiv2ProsesController {
     do_reset_salah = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const proses_Service: studiv2ProsesService = new studiv2ProsesService(req);
-            const datas = await proses_Service.do_reset_salah(parseInt(req.params.proses_detail_id));
+            const datas = await proses_Service.do_reset_salah(parseInt(req.params.proses_detail_id), parseInt(req.body.siswa_id));
 
             return res.send({
                 data: datas,

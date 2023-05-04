@@ -7,6 +7,8 @@ import { Op } from 'sequelize';
 import siswaService from '../mastering/siswa.v2.service';
 import { fn_get_sisa_waktu } from "../../helpers/babengUjian";
 import redisPaketsoalService from './redis/redis.studiv2.paketsoal.service';
+import redisProsesService
+    from '../../services/studiv2/redis/redis.studiv2.proses.service';
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -94,7 +96,7 @@ class studiv2ProsesService {
             console.log(error.message);
         }
     }
-    do_reset_waktu = async (proses_detail_id: number) => {
+    do_reset_waktu = async (proses_detail_id: number, siswa_id: number) => {
         try {
             const getProsesDetail = await studi_v2_proses_aspek_detail.findOne({ where: { id: proses_detail_id, deleted_at: null } });
             getProsesDetail.set({
@@ -105,13 +107,16 @@ class studiv2ProsesService {
             });
             // As above, the database still has "formUpdate" and "green"
             await getProsesDetail.save();
+            const service: redisProsesService = new redisProsesService(this.req);
+            const datas = await service.proses_siswa_store(siswa_id);
             return getProsesDetail;
         } catch (error: any) {
             console.log(error.message);
         }
     }
-    do_reset_salah = async (proses_detail_id: number) => {
+    do_reset_salah = async (proses_detail_id: number, siswa_id: number) => {
         try {
+            // return siswa_id
             //! hapus jawaban salah
             const getJawabanSalah = await studi_v2_proses_aspek_detail_soal.findAll({ where: { studi_v2_proses_aspek_detail_id: proses_detail_id, skor: 0, kode_jawaban: { [Op.ne]: null }, deleted_at: null } });
             for (const [index, item] of getJawabanSalah.entries()) {
@@ -135,6 +140,9 @@ class studiv2ProsesService {
                 updated_at: moment().format(),
             });
             await getProsesDetail.save();
+
+            const service: redisProsesService = new redisProsesService(this.req);
+            const datas = await service.proses_siswa_store(siswa_id);
             // return getJawabanSalah;
             return getProsesDetail;
         } catch (error: any) {
