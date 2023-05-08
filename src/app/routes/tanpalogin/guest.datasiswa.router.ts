@@ -6,6 +6,7 @@ class guestDatasiswaRouter extends BaseRoutes {
 
     public routes(): void {
         this.router.get("/guest/datasiswa/deteksimasalah/:siswa_id", DataSiswaDeteksimasalahController.getPersiswa)
+        this.router.get("/guest/datasiswa/deteksimasalah/:kelas_id/perkelas", DataSiswaDeteksimasalahController.getPerkelas)
     }
 }
 

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import katabijakService from '../../../services/katabijak.service';
+import siswaDataSiswaService from '../../../services/siswa/siswa.datasiswa.service';
 class DataSiswaDeteksimasalahController {
     getPersiswa = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const service: katabijakService = new katabijakService(req);
-            const datas = await service.getAll();
+            const service: siswaDataSiswaService = new siswaDataSiswaService(req);
+            const datas = await service.get_deteksimasalah_persiswa(parseInt(req.params.siswa_id));
 
             return res.send({
                 data: datas,
@@ -17,8 +17,8 @@ class DataSiswaDeteksimasalahController {
     }
     getPerkelas = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const service: katabijakService = new katabijakService(req);
-            const datas = await service.getAll();
+            const service: siswaDataSiswaService = new siswaDataSiswaService(req);
+            const datas = await service.get_deteksimasalah_perkelas(parseInt(req.params.kelas_id));
 
             return res.send({
                 data: datas,
