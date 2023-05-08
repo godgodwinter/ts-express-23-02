@@ -25,6 +25,7 @@ import AdminUjianstudiPaketsoalRouter from "./app/routes/admin/studiv2/admin.stu
 import AdminUjianstudiProsesRouter from "./app/routes/admin/studiv2/admin.studiv2.proses.router"
 import AdminUjianstudiHasilRouter from "./app/routes/admin/studiv2/admin.studiv2.hasil.router"
 import guestRouter from "./app/routes/tanpalogin/guest.router";
+import guestDatasiswaRouter from "./app/routes/tanpalogin/guest.datasiswa.router";
 import studiProsesRouter from "./app/routes/admin/studi/studi.proses.router";
 import { babengLimiter, babengLimiterUjian } from "./app/helpers/babengLimiter";
 import siswaProfileRouter from "./app/routes/siswa/siswa.profile.router";
@@ -182,6 +183,7 @@ class App {
 
         //*TANPALOGIN
         this.app.use(`/api/`, babengLimiter(), guestRouter);
+        this.app.use(`/api/${apiVersion}/`, babengLimiter(), guestDatasiswaRouter);
 
     }
 }
