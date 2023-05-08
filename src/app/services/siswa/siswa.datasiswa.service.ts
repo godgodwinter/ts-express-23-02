@@ -49,7 +49,22 @@ class siswaDataSiswaService {
     }
     get_deteksimasalah_perkelas = async (kelas_id: number) => {
         try {
-            return kelas_id;
+            let result: any = [];
+            const get_siswa_perkelas = await siswa.findAll({
+                where: {
+                    kelas_id, deleted_at: null
+                }
+            })
+            for (const [index_siswa, data_siswa] of get_siswa_perkelas.entries()) {
+                let get_deteksi = await this.fn_deteksimasalah_service(data_siswa.id);
+                result.push(get_deteksi);
+            }
+            // if (get_deteksi) {
+            //     return result
+            // } else {
+            //     return null
+            // }
+            return result;
         } catch (error: any) {
             console.log(error.message);
         }
