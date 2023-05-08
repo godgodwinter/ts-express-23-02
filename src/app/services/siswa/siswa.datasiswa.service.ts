@@ -12,7 +12,10 @@ const moment = require('moment');
 const localization = require('moment/locale/id')
 moment.updateLocale("id", localization);
 
-const { siswa, kelas, sekolah, paket } = db;
+const { siswa, kelas, sekolah, paket,
+    masterdeteksi,
+    siswadetail, apiprobk, apiprobk_deteksi, apiprobk_deteksi_list
+} = db;
 
 class siswaDataSiswaService {
     meId: number;
@@ -32,7 +35,10 @@ class siswaDataSiswaService {
 
     get_deteksimasalah_persiswa = async (siswa_id: number) => {
         try {
-            return siswa_id;
+            let result = [];
+            let get_deteksi = await this.fn_deteksimasalah_service(siswa_id);
+            result.push(get_deteksi);
+            return result;
         } catch (error: any) {
             console.log(error.message);
         }
@@ -40,6 +46,86 @@ class siswaDataSiswaService {
     get_deteksimasalah_perkelas = async (kelas_id: number) => {
         try {
             return kelas_id;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    fn_deteksimasalah_service = async (siswa_id: number) => {
+        try {
+            let result: {
+                siswa: any,
+                apiprobk: any,
+                deteksimasalah: any,
+            } = {
+                siswa: null,
+                apiprobk: null,
+                deteksimasalah: null,
+            }
+            result.siswa = await this.fn_siswa_profile(siswa_id);
+            result.apiprobk = await this.fn_siswa_apiprobk(siswa_id);
+            result.deteksimasalah = await this.fn_siswa_deteksimasalah(siswa_id);
+            return result;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    fn_siswa_profile = async (siswa_id: number) => {
+        try {
+            const response = await siswa.scope('withoutPass').findOne({
+                where: { id: siswa_id, deleted_at: null },
+                include: [
+                    { model: db.kelas, attributes: ['id', 'nama'], where: { deleted_at: null } },
+                    { model: db.sekolah, attributes: ['id', 'nama'], where: { deleted_at: null } },
+                ],
+            });
+            response.setDataValue("kelas_nama", response?.kelas?.nama)
+            response.setDataValue("sekolah_nama", response?.sekolah?.nama)
+
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+
+    fn_siswa_apiprobk = async (siswa_id: number) => {
+        try {
+            const response = await siswadetail.findOne({
+                where: {
+                    siswa_id: siswa_id, deleted_at: null
+                },
+                include: [
+                    { model: db.apiprobk, attributes: ['id', 'username'], where: { deleted_at: null } },
+                ],
+            });
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    fn_siswa_deteksimasalah = async (apiprobk_id: number) => {
+        try {
+            const response = await apiprobk_deteksi.findOne({
+                where: {
+                    apiprobk_id: apiprobk_id, deleted_at: null
+                },
+                include: [
+                    { model: db.apiprobk_deteksi_list, where: { deleted_at: null } },
+                ],
+            });
+            for (const [index_deteksi, data_deteksi] of response.apiprobk_deteksi_list.entries()) {
+                const data_positif = await masterdeteksi.findOne({
+                    where: {
+                        nama: data_deteksi.deteksi_nama, deleted_at: null
+                    }
+                })
+                if (data_positif) {
+                    data_deteksi.setDataValue('positif', data_positif.positif);
+                }
+            }
+            return response;
         } catch (error: any) {
             console.log(error.message);
         }

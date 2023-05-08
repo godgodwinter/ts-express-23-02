@@ -42,6 +42,13 @@ import studi_v2_hasil_aspek from "./studi_v2/studi_v2_hasil_aspek.model";
 import studi_v2_hasil_aspek_detail from "./studi_v2/studi_v2_hasil_aspek_detail.model";
 import studi_v2_hasil_aspek_penilaian from "./studi_v2/studi_v2_hasil_aspek_penilaian.model";
 import ortu from "./ortu.model";
+// ! master
+import masterdeteksi from "./master/masterdeteksi.model";
+// !apiprobk
+import siswadetail from "./datasiswa/siswadetail.model";
+import apiprobk from "./datasiswa/apiprobk.model";
+import apiprobk_deteksi from "./datasiswa/apiprobk_deteksi.model";
+import apiprobk_deteksi_list from "./datasiswa/apiprobk_deteksi_list.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -88,6 +95,14 @@ export const db = {
   ujian_proses_kelas_siswa: ujian_proses_kelas_siswa(sequelize, Sequelize),
   ujian_proses_kelas: ujian_proses_kelas(sequelize, Sequelize),
   ujian_proses: ujian_proses(sequelize, Sequelize),
+  // !master
+  masterdeteksi: masterdeteksi(sequelize, Sequelize),
+  // !apiprobk
+  siswadetail: siswadetail(sequelize, Sequelize),
+  apiprobk: apiprobk(sequelize, Sequelize),
+  apiprobk_deteksi: apiprobk_deteksi(sequelize, Sequelize),
+  apiprobk_deteksi_list: apiprobk_deteksi_list(sequelize, Sequelize),
+
 
 };
 
@@ -126,8 +141,34 @@ db.katabijakdetail.belongsTo(db.katabijak, {
 });
 
 
+
+
 // !MASTERING-RELASI-END
 
+
+// !apiprobk-relasi
+db.siswadetail.belongsTo(db.siswa, {
+  foreignKey: {
+    name: 'siswa_id'
+  },
+});
+db.siswadetail.belongsTo(db.apiprobk, {
+  foreignKey: {
+    name: 'apiprobk_id'
+  },
+});
+db.apiprobk_deteksi.belongsTo(db.apiprobk, {
+  foreignKey: {
+    name: 'apiprobk_id'
+  },
+});
+db.apiprobk_deteksi.hasMany(db.apiprobk_deteksi_list, {
+  foreignKey: {
+    name: 'apiprobk_deteksi_id'
+  },
+});
+
+// !apiprobk-relasi-end
 
 
 // !UJIAN-STUDI-RELASI
