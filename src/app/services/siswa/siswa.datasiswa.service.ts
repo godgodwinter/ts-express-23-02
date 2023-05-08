@@ -38,7 +38,11 @@ class siswaDataSiswaService {
             let result = [];
             let get_deteksi = await this.fn_deteksimasalah_service(siswa_id);
             result.push(get_deteksi);
-            return result;
+            if (get_deteksi) {
+                return result
+            } else {
+                return null
+            }
         } catch (error: any) {
             console.log(error.message);
         }
@@ -62,10 +66,15 @@ class siswaDataSiswaService {
                 apiprobk: null,
                 deteksimasalah: null,
             }
-            result.siswa = await this.fn_siswa_profile(siswa_id);
+            const siswa = await this.fn_siswa_profile(siswa_id);
+            result.siswa = siswa;
             result.apiprobk = await this.fn_siswa_apiprobk(siswa_id);
             result.deteksimasalah = await this.fn_siswa_deteksimasalah(siswa_id);
-            return result;
+            if (siswa) {
+                return result
+            } else {
+                return null
+            }
         } catch (error: any) {
             console.log(error.message);
         }
@@ -115,16 +124,21 @@ class siswaDataSiswaService {
                     { model: db.apiprobk_deteksi_list, where: { deleted_at: null } },
                 ],
             });
+            // let index_remove = [];
+            const data_result = [];
             for (const [index_deteksi, data_deteksi] of response.apiprobk_deteksi_list.entries()) {
                 const data_positif = await masterdeteksi.findOne({
                     where: {
                         nama: data_deteksi.deteksi_nama, deleted_at: null
                     }
                 })
-                if (data_positif) {
+                if (data_positif?.positif) {
+                    data_deteksi.setDataValue('positif_score', (99 - data_deteksi.deteksi_score));
                     data_deteksi.setDataValue('positif', data_positif.positif);
+                    data_result.push(data_deteksi);
                 }
             }
+            response.setDataValue("apiprobk_deteksi_list", data_result)
             return response;
         } catch (error: any) {
             console.log(error.message);
