@@ -85,7 +85,7 @@ class siswaDataSiswaService {
             const siswa = await this.fn_siswa_profile(siswa_id);
             result.siswa = siswa;
             result.apiprobk = await this.fn_siswa_apiprobk(siswa_id);
-            result.deteksimasalah = await this.fn_siswa_deteksimasalah(siswa_id);
+            result.deteksimasalah = await this.fn_siswa_deteksimasalah(result.apiprobk.apiprobk_id);
             if (siswa) {
                 return result
             } else {
@@ -140,6 +140,7 @@ class siswaDataSiswaService {
                     { model: db.apiprobk_deteksi_list, where: { deleted_at: null } },
                 ],
             });
+
             // let index_remove = [];
             const data_result = [];
             for (const [index_deteksi, data_deteksi] of response.apiprobk_deteksi_list.entries()) {
