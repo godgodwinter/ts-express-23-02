@@ -7,6 +7,7 @@ import { Op } from 'sequelize';
 import redisProsesService from "../studiv2/redis/redis.studiv2.proses.service";
 import redisClient from '../../helpers/babengRedis';
 import { fn_get_sisa_waktu } from "../../helpers/babengUjian";
+import { fn_deteksimasalah_singkatan } from "../../helpers/babengPsikotes";
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -148,8 +149,10 @@ class siswaDataSiswaService {
                     }
                 })
                 if (data_positif?.positif) {
-                    data_deteksi.setDataValue('positif_score', (99 - data_deteksi.deteksi_score));
+                    let positif_score: number = (99 - data_deteksi.deteksi_score);
+                    data_deteksi.setDataValue('positif_score', positif_score);
                     data_deteksi.setDataValue('positif', data_positif.positif);
+                    data_deteksi.setDataValue('positif_keterangan', fn_deteksimasalah_singkatan(positif_score));
                     data_result.push(data_deteksi);
                 }
             }
