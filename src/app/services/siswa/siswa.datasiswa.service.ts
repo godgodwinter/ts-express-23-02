@@ -7,7 +7,7 @@ import { Op } from 'sequelize';
 import redisProsesService from "../studiv2/redis/redis.studiv2.proses.service";
 import redisClient from '../../helpers/babengRedis';
 import { fn_get_sisa_waktu } from "../../helpers/babengUjian";
-import { fn_deteksimasalah_singkatan } from "../../helpers/babengPsikotes";
+import { fn_deteksimasalah, fn_deteksimasalah_singkatan } from "../../helpers/babengPsikotes";
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -143,6 +143,11 @@ class siswaDataSiswaService {
 
             // let index_remove = [];
             const data_result = [];
+            let jml_negatif: number = 0;
+            let jml_positif: number = 0;
+            let avg_negatif: number = 0;
+            let avg_positif: number = 0;
+            let jml_data: number = 0;
             for (const [index_deteksi, data_deteksi] of response.apiprobk_deteksi_list.entries()) {
                 const data_positif = await masterdeteksi.findOne({
                     where: {
@@ -154,9 +159,21 @@ class siswaDataSiswaService {
                     data_deteksi.setDataValue('positif_score', positif_score);
                     data_deteksi.setDataValue('positif', data_positif.positif);
                     data_deteksi.setDataValue('positif_keterangan', fn_deteksimasalah_singkatan(positif_score));
+
+                    jml_negatif += parseInt(data_deteksi.deteksi_score);
+                    jml_positif += positif_score;
+                    jml_data++;
                     data_result.push(data_deteksi);
                 }
             }
+            avg_negatif = jml_negatif / jml_data;
+            avg_positif = jml_positif / jml_data;
+            response.setDataValue("avg_negatif", avg_negatif.toFixed(2))
+            response.setDataValue("avg_negatif_keterangan", fn_deteksimasalah_singkatan(parseInt(avg_negatif.toFixed(2))))
+            response.setDataValue("avg_negatif_keterangan_panjang", fn_deteksimasalah(parseInt(avg_negatif.toFixed(2))))
+            response.setDataValue("avg_positif", avg_positif.toFixed(2))
+            response.setDataValue("avg_positif_keterangan", fn_deteksimasalah_singkatan(parseInt(avg_positif.toFixed(2))))
+            response.setDataValue("avg_positif_keterangan_panjang", fn_deteksimasalah(parseInt(avg_positif.toFixed(2))))
             response.setDataValue("apiprobk_deteksi_list", data_result)
             return response;
         } catch (error: any) {

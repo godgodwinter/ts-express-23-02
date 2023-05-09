@@ -13,26 +13,49 @@ interface IFn_Sisa_Waktu {
 export const fn_deteksimasalah = (item: number): string => {
     let hasil = "Angka tidak valid!";
     if (item > 90) {
-        hasil = "Sangat Tinggi Sekali / Sangat Mengganggu Sekali";
+        hasil = "Sangat Tinggi Sekali";
     } else if (91 > item && item >= 81) {
-        hasil = "Tinggi Sekali / Mengganggu Sekali";
+        hasil = "Tinggi Sekali";
     } else if (81 > item && item >= 71) {
-        hasil = "Tinggi / Mengganggu";
+        hasil = "Tinggi ";
     } else if (71 > item && item >= 61) {
-        hasil = "Cukup Tinggi / Cukup Mengganggu";
+        hasil = "Cukup Tinggi ";
     } else if (61 > item && item >= 41) {
-        hasil = "Cukup / Terkendali";
+        hasil = "Cukup";
     } else if (41 > item && item >= 31) {
-        hasil = "Agak Rendah / Cukup Terkendali";
+        hasil = "Agak Rendah";
     } else if (31 > item && item >= 21) {
-        hasil = "Rendah / Terkendali Baik";
+        hasil = "Rendah ";
     } else if (21 > item && item >= 11) {
-        hasil = "Rendah Sekali / Terkendali Baik Sekali";
+        hasil = "Rendah Sekali";
     } else {
-        hasil = "Sangat Rendah Sekali / Sangat Terkendali Baik Sekali";
+        hasil = "Sangat Rendah Sekali";
     }
     return hasil;
 };
+// export const fn_deteksimasalah = (item: number): string => {
+//     let hasil = "Angka tidak valid!";
+//     if (item > 90) {
+//         hasil = "Sangat Tinggi Sekali / Sangat Mengganggu Sekali";
+//     } else if (91 > item && item >= 81) {
+//         hasil = "Tinggi Sekali / Mengganggu Sekali";
+//     } else if (81 > item && item >= 71) {
+//         hasil = "Tinggi / Mengganggu";
+//     } else if (71 > item && item >= 61) {
+//         hasil = "Cukup Tinggi / Cukup Mengganggu";
+//     } else if (61 > item && item >= 41) {
+//         hasil = "Cukup / Terkendali";
+//     } else if (41 > item && item >= 31) {
+//         hasil = "Agak Rendah / Cukup Terkendali";
+//     } else if (31 > item && item >= 21) {
+//         hasil = "Rendah / Terkendali Baik";
+//     } else if (21 > item && item >= 11) {
+//         hasil = "Rendah Sekali / Terkendali Baik Sekali";
+//     } else {
+//         hasil = "Sangat Rendah Sekali / Sangat Terkendali Baik Sekali";
+//     }
+//     return hasil;
+// };
 
 export const fn_deteksimasalah_singkatan = (item: number): string => {
     let hasil = "Angka tidak valid!";
