@@ -48,8 +48,16 @@ const studi_v2_hasil_aspek_model_1 = __importDefault(require("./studi_v2/studi_v
 const studi_v2_hasil_aspek_detail_model_1 = __importDefault(require("./studi_v2/studi_v2_hasil_aspek_detail.model"));
 const studi_v2_hasil_aspek_penilaian_model_1 = __importDefault(require("./studi_v2/studi_v2_hasil_aspek_penilaian.model"));
 const ortu_model_1 = __importDefault(require("./ortu.model"));
+// ! master
+const masterdeteksi_model_1 = __importDefault(require("./master/masterdeteksi.model"));
+// !apiprobk
+const siswadetail_model_1 = __importDefault(require("./datasiswa/siswadetail.model"));
+const apiprobk_model_1 = __importDefault(require("./datasiswa/apiprobk.model"));
+const apiprobk_deteksi_model_1 = __importDefault(require("./datasiswa/apiprobk_deteksi.model"));
+const apiprobk_deteksi_list_model_1 = __importDefault(require("./datasiswa/apiprobk_deteksi_list.model"));
 const sequelize = new sequelize_1.Sequelize(db_config_1.dbConfig.DB, db_config_1.dbConfig.USER, db_config_1.dbConfig.PASSWORD, {
     host: db_config_1.dbConfig.HOST,
+    port: parseInt(db_config_1.dbConfig.PORT),
     dialect: 'mysql',
     //prevent sequelize from pluralizing table names
     // define: {
@@ -90,6 +98,13 @@ exports.db = {
     ujian_proses_kelas_siswa: (0, ujian_proses_kelas_siswa_model_1.default)(sequelize, sequelize_1.Sequelize),
     ujian_proses_kelas: (0, ujian_proses_kelas_model_1.default)(sequelize, sequelize_1.Sequelize),
     ujian_proses: (0, ujian_proses_model_1.default)(sequelize, sequelize_1.Sequelize),
+    // !master
+    masterdeteksi: (0, masterdeteksi_model_1.default)(sequelize, sequelize_1.Sequelize),
+    // !apiprobk
+    siswadetail: (0, siswadetail_model_1.default)(sequelize, sequelize_1.Sequelize),
+    apiprobk: (0, apiprobk_model_1.default)(sequelize, sequelize_1.Sequelize),
+    apiprobk_deteksi: (0, apiprobk_deteksi_model_1.default)(sequelize, sequelize_1.Sequelize),
+    apiprobk_deteksi_list: (0, apiprobk_deteksi_list_model_1.default)(sequelize, sequelize_1.Sequelize),
 };
 // !MASTERING-RELASI
 exports.db.siswa.belongsTo(exports.db.kelas, {
@@ -118,6 +133,28 @@ exports.db.katabijakdetail.belongsTo(exports.db.katabijak, {
     },
 });
 // !MASTERING-RELASI-END
+// !apiprobk-relasi
+exports.db.siswadetail.belongsTo(exports.db.siswa, {
+    foreignKey: {
+        name: 'siswa_id'
+    },
+});
+exports.db.siswadetail.belongsTo(exports.db.apiprobk, {
+    foreignKey: {
+        name: 'apiprobk_id'
+    },
+});
+exports.db.apiprobk_deteksi.belongsTo(exports.db.apiprobk, {
+    foreignKey: {
+        name: 'apiprobk_id'
+    },
+});
+exports.db.apiprobk_deteksi.hasMany(exports.db.apiprobk_deteksi_list, {
+    foreignKey: {
+        name: 'apiprobk_deteksi_id'
+    },
+});
+// !apiprobk-relasi-end
 // !UJIAN-STUDI-RELASI
 exports.db.ujian_proses_kelas.belongsTo(exports.db.ujian_proses, {
     foreignKey: {
@@ -177,6 +214,7 @@ exports.db.ujian_paketsoal_kategori.belongsTo(exports.db.ujian_kategori, {
 // !UJIAN-STUDI-RELASI-END
 exports.sequelize_studi_v2 = new sequelize_1.Sequelize(db_config_1.dbConfig_studi_v2.DB, db_config_1.dbConfig_studi_v2.USER, db_config_1.dbConfig_studi_v2.PASSWORD, {
     host: db_config_1.dbConfig_studi_v2.HOST,
+    port: parseInt(db_config_1.dbConfig.PORT),
     dialect: 'mysql',
     pool: {
         max: db_config_1.dbConfig_studi_v2.pool.max,

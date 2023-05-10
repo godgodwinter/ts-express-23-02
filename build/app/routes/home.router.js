@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_controller_1 = __importDefault(require("../controllers/user.controller"));
 const base_router_1 = __importDefault(require("./base.router"));
+const babengRedis_1 = require("../helpers/babengRedis");
+const redis_studiv2_paketsoal_controller_1 = __importDefault(require("../controllers/admin/studiv2/redis/redis.studiv2.paketsoal.controller"));
 // import { babengLimiter } from '../helpers/babengLimiter';
 // import rateLimit from "express-rate-limit"
 // const limiter = rateLimit({
@@ -24,6 +26,10 @@ class HomeRoutes extends base_router_1.default {
             });
         });
         this.router.get("/users", user_controller_1.default.index);
+        this.router.get("/redis", async (req, res) => {
+            res.send(await (0, babengRedis_1.fetchToDos)(req.query.completed));
+        });
+        this.router.get("/redis/service", redis_studiv2_paketsoal_controller_1.default.index);
     }
 }
 exports.default = new HomeRoutes().router;

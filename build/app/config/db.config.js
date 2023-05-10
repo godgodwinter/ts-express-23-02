@@ -8,6 +8,7 @@ exports.dbConfig = {
     USER: process.env.DB_USERNAME || "root",
     PASSWORD: process.env.DB_PASSWORD || "",
     DB: process.env.DB_DATABASE || "psikotest-23-02a",
+    PORT: process.env.DB_PORT || "3306",
     dialect: "mysql",
     pool: {
         max: 5,
@@ -21,6 +22,7 @@ exports.dbConfig_studi_v2 = {
     USER: process.env.STUDI_V2_DB_USERNAME || "root",
     PASSWORD: process.env.STUDI_V2_DB_PASSWORD || "",
     DB: process.env.STUDI_V2_DB_DATABASE || "psikotest-studi",
+    PORT: process.env.STUDI_V2_DB_PORT || "3306",
     dialect: "mysql",
     pool: {
         max: 5,

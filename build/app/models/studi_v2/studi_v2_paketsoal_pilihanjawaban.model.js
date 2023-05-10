@@ -51,7 +51,12 @@ const studi_v2_paketsoal_pilihanjawaban = (sequelize, Sequelize) => {
         timestamps: false,
         tableName: 'studi_v2_paketsoal_pilihanjawaban',
         underscored: true,
-        modelName: 'studi_v2_paketsoal_pilihanjawaban'
+        modelName: 'studi_v2_paketsoal_pilihanjawaban',
+        scopes: {
+            lessData: {
+                attributes: { exclude: ['skor'] },
+            }
+        }
     });
     return studi_v2_paketsoal_pilihanjawaban;
 };

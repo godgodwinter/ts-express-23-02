@@ -27,7 +27,7 @@ class Studiv2ProsesController {
         this.do_reset_waktu = async (req, res) => {
             try {
                 const proses_Service = new admin_studiv2_proses_service_1.default(req);
-                const datas = await proses_Service.do_reset_waktu(parseInt(req.params.proses_detail_id));
+                const datas = await proses_Service.do_reset_waktu(parseInt(req.params.proses_detail_id), parseInt(req.body.siswa_id));
                 return res.send({
                     data: datas,
                     message: "Success"
@@ -40,7 +40,7 @@ class Studiv2ProsesController {
         this.do_reset_salah = async (req, res) => {
             try {
                 const proses_Service = new admin_studiv2_proses_service_1.default(req);
-                const datas = await proses_Service.do_reset_salah(parseInt(req.params.proses_detail_id));
+                const datas = await proses_Service.do_reset_salah(parseInt(req.params.proses_detail_id), parseInt(req.body.siswa_id));
                 return res.send({
                     data: datas,
                     message: "Success"
@@ -68,7 +68,7 @@ class Studiv2ProsesController {
                         message: "Failed"
                     });
                 }
-                const datas = await proses_Service.prosesStorePerSiswa(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
+                const datas = await proses_Service.prosesStorePerSiswa_with_redis(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
                 // const addSoal = await proses_Service.prosesAddSoal(parseInt(req.params.siswa_id), parseInt(req.params.paketsoal_id), req.body);
                 // const fn_delay_response = (arg: any) => {
                 //     console.log(`arg was => ${arg}`);
