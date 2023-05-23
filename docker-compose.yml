@@ -1,6 +1,7 @@
 version: '3'
 services:
   be-ts:
+    restart: always
     container_name: be-ts
     build: .
     ports:
