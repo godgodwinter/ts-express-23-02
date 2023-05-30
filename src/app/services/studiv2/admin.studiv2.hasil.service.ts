@@ -44,7 +44,10 @@ class studiv2HasilService {
         try {
             const getHasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } });
             if (getHasil) {
-                const getAspek = await studi_v2_hasil_aspek.findAll({ where: { studi_v2_hasil_id: getHasil.id, deleted_at: null } });
+                const getAspek = await studi_v2_hasil_aspek.findAll({
+                    where: { studi_v2_hasil_id: getHasil.id, deleted_at: null },
+                    order: [['studi_v2_paketsoal_aspek_id', 'ASC']]
+                });
                 for (const [index_aspek, item_aspek] of getAspek.entries()) {
                     const getPenilaian = await studi_v2_hasil_aspek_penilaian.findAll({ where: { studi_v2_hasil_id: getHasil.id, studi_v2_hasil_aspek_id: item_aspek.id, deleted_at: null } });
                     // item_aspek.setDataValue("aspek_detail", getPenilaian)
@@ -134,7 +137,10 @@ class studiv2HasilService {
 
                     const getPaketsoal = await studi_v2_paketsoal.findOne({ where: { id: get_proses.studi_v2_paketsoal_id, deleted_at: null } })
                     // !dari paketsoal
-                    const getPaketsoal_aspek = await studi_v2_paketsoal_aspek.findAll({ where: { studi_v2_paketsoal_id: getPaketsoal.id, deleted_at: null } })
+                    const getPaketsoal_aspek = await studi_v2_paketsoal_aspek.findAll({
+                        where: { studi_v2_paketsoal_id: getPaketsoal.id, deleted_at: null },
+                        order: [['urutan', 'ASC']]
+                    })
                     for (const [index_aspek, item_aspek] of getPaketsoal_aspek.entries()) {
                         const save_studi_v2_hasil_aspek = studi_v2_hasil_aspek.create({
                             status: "Aktif",
