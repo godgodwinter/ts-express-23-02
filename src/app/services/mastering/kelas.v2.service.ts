@@ -18,7 +18,10 @@ class kelasService {
             const response = await kelas.findAll({
                 where: { sekolah_id, deleted_at: null }
             });
-
+            for (const [index, item] of response.entries()) {
+                const getJmlSiswa = await siswa.count({ where: { kelas_id: item.id, deleted_at: null } })
+                item.setDataValue("siswa_jml", getJmlSiswa);
+            }
             return response;
         } catch (error: any) {
             console.log(error.message);
