@@ -69,6 +69,27 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   }
 });
 
+
+const sequelize_ujian = new Sequelize(dbConfig_studi_v2.DB, dbConfig_studi_v2.USER, dbConfig_studi_v2.PASSWORD, {
+  host: dbConfig_studi_v2.HOST,
+  port: parseInt(dbConfig_studi_v2.PORT),
+  dialect: 'mysql',
+  //prevent sequelize from pluralizing table names
+  // define: {
+  //     //prevent sequelize from pluralizing table names
+  //     freezeTableName: true
+  // },
+  // operatorsAliases: false,
+
+  pool: {
+    max: dbConfig_studi_v2.pool.max,
+    min: dbConfig_studi_v2.pool.min,
+    acquire: dbConfig_studi_v2.pool.acquire,
+    idle: dbConfig_studi_v2.pool.idle
+  }
+});
+
+
 export const db = {
   //MASTERING
   Sequelize, sequelize,
@@ -105,7 +126,6 @@ export const db = {
 
 
 };
-
 
 
 
