@@ -45,23 +45,20 @@ class studiv2HasilService {
             const getHasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } });
             if (getHasil) {
                 const getAspekDetail = await studi_v2_hasil_aspek_detail.findAll({ where: { studi_v2_hasil_id: getHasil.id, deleted_at: null } })
-                // return getAspekDetail;
-                interface AspekDetail {
-                    nilai_akhir_revisi: number | null;
-                    nilai_akhir: number;
-                    // ... properti lainnya
-                }
+                return getAspekDetail;
+                // interface AspekDetail {
+                //     nilai_akhir_revisi: number | null;
+                //     nilai_akhir: number;
+                //     // ... properti lainnya
+                // }
+                // const sortedAspekDetail = getAspekDetail.sort((a: AspekDetail, b: AspekDetail) => {
+                //     const nilaiA = a.nilai_akhir_revisi !== null ? a.nilai_akhir_revisi : a.nilai_akhir;
+                //     const nilaiB = b.nilai_akhir_revisi !== null ? b.nilai_akhir_revisi : b.nilai_akhir;
 
+                //     return nilaiB - nilaiA;
+                // });
 
-
-                const sortedAspekDetail = getAspekDetail.sort((a: AspekDetail, b: AspekDetail) => {
-                    const nilaiA = a.nilai_akhir_revisi !== null ? a.nilai_akhir_revisi : a.nilai_akhir;
-                    const nilaiB = b.nilai_akhir_revisi !== null ? b.nilai_akhir_revisi : b.nilai_akhir;
-
-                    return nilaiB - nilaiA;
-                });
-
-                return sortedAspekDetail;
+                // return sortedAspekDetail;
             }
             return []
         } catch (error: any) {
@@ -370,7 +367,21 @@ class studiv2HasilService {
                     //     }
                     // }
                     const getSemuaMapel: any[] | never[] | any = [];
-                    dataSiswa.semuaMapel = await this.fn_getSemuaMapelPersiswa(item_kelas.id);
+
+
+                    const getSemuaMapelData = await this.fn_getSemuaMapelPersiswa(item_kelas.id);
+                    interface AspekDetail {
+                        nilai_akhir_revisi: number | null;
+                        nilai_akhir: number;
+                        // ... properti lainnya
+                    }
+                    const sortedAspekDetail = getSemuaMapelData.sort((a: AspekDetail, b: AspekDetail): any => {
+                        const nilaiA: any = a.nilai_akhir_revisi != 0 ? a.nilai_akhir_revisi : a.nilai_akhir;
+                        const nilaiB: any = b.nilai_akhir_revisi != 0 ? b.nilai_akhir_revisi : b.nilai_akhir;
+
+                        return nilaiB - nilaiA;
+                    });
+                    dataSiswa.semuaMapel = sortedAspekDetail;
 
                     response.push(dataSiswa)
                 }
