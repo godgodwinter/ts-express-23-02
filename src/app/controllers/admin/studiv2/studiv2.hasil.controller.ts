@@ -70,7 +70,22 @@ class Studiv2HasilController {
     // ! PERSISWA-END
 
 
-    // ! PERKELAS
+    // ! PERKELAS V2
+    hasilGetPerkelas_v2 = async (req: Request, res: Response): Promise<Response | undefined> => {
+        try {
+            const hasil_Service: studiv2HasilService = new studiv2HasilService(req);
+            const datas = await hasil_Service.hasilGetPerkelas_v2(parseInt(req.params.kelas_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+    // ! PERKELAS V2
     hasilGetPerkelas = async (req: Request, res: Response): Promise<Response | undefined> => {
         try {
             const hasil_Service: studiv2HasilService = new studiv2HasilService(req);

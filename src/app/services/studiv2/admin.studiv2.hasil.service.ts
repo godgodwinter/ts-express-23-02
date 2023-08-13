@@ -40,6 +40,34 @@ class studiv2HasilService {
     }
 
     //! PERSISWA
+    fn_getSemuaMapelPersiswa = async (siswa_id: number) => {
+        try {
+            const getHasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } });
+            if (getHasil) {
+                const getAspekDetail = await studi_v2_hasil_aspek_detail.findAll({ where: { studi_v2_hasil_id: getHasil.id, deleted_at: null } })
+                // return getAspekDetail;
+                interface AspekDetail {
+                    nilai_akhir_revisi: number | null;
+                    nilai_akhir: number;
+                    // ... properti lainnya
+                }
+
+
+
+                const sortedAspekDetail = getAspekDetail.sort((a: AspekDetail, b: AspekDetail) => {
+                    const nilaiA = a.nilai_akhir_revisi !== null ? a.nilai_akhir_revisi : a.nilai_akhir;
+                    const nilaiB = b.nilai_akhir_revisi !== null ? b.nilai_akhir_revisi : b.nilai_akhir;
+
+                    return nilaiB - nilaiA;
+                });
+
+                return sortedAspekDetail;
+            }
+            return []
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
     hasilGetPersiswa = async (siswa_id: number) => {
         try {
             const getHasil = await studi_v2_hasil.findOne({ where: { siswa_id, deleted_at: null } });
@@ -305,7 +333,54 @@ class studiv2HasilService {
     }
 
     // !PERSISWA-END
-    // !PERKELAS
+    // !PERKELAS V2
+    hasilGetPerkelas_v2 = async (kelas_id: number) => {
+        try {
+            const siswa_Service: siswaService = new siswaService(this.req);
+            const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            const response: any = [];
+            for (const [index_kelas, item_kelas] of getSiswaWhereKelas.entries()) {
+                const getHasilSiswa = await this.hasilGetPersiswa(item_kelas.id);
+                if (getHasilSiswa) {
+                    let dataSiswa = {
+                        siswa: null,
+                        data: [],
+                        semuaMapel: []
+                    }
+                    dataSiswa.siswa = await siswa_Service.siswaGetWhereId(item_kelas.id);
+                    dataSiswa.data = getHasilSiswa;
+                    // get hasil semua mapel
+                    // interface MapelCache {
+                    //     [key: string]: boolean;
+                    // }
+
+                    // const newData = [];
+                    // const mapelCache: MapelCache = {};
+
+                    // for (const item of getHasilSiswa) {
+                    //     for (const detail of item.aspek_detail) {
+                    //         const { id, status, aspek_detail_nama, nilai_akhir, nilai_akhir_revisi, skor_total, soal_jml, soal_max_skor, studi_v2_hasil_id, studi_v2_paketsoal_aspek_detail_id, deleted_at, created_at, updated_at, status_tampil } = detail;
+
+                    //         const cacheKey = `${aspek_detail_nama}_${nilai_akhir}_${nilai_akhir_revisi}_${soal_jml}_${soal_max_skor}`;
+
+                    //         if (!mapelCache[cacheKey]) {
+                    //             mapelCache[cacheKey] = true;
+                    //             newData.push(detail);
+                    //         }
+                    //     }
+                    // }
+                    const getSemuaMapel: any[] | never[] | any = [];
+                    dataSiswa.semuaMapel = await this.fn_getSemuaMapelPersiswa(item_kelas.id);
+
+                    response.push(dataSiswa)
+                }
+            }
+            return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    // !PERKELAS V2
     hasilGetPerkelas = async (kelas_id: number) => {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);

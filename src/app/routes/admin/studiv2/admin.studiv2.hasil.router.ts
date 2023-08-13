@@ -30,6 +30,11 @@ class AdminUjianstudiHasilRouter extends BaseRoutes {
         this.router.get("/exportjawaban/kelas/:kelas_id", Studiv2HasilController.hasilGetPerkelas_exportjawaban)
         // !CETAK-END
 
+        // !cetak baru
+        this.router.get("/cetak/v2/kelas/:kelas_id", Studiv2HasilController.hasilGetPerkelas_v2)  //cetak format v2 u/ react
+        // !cetak baru end
+
+
         // * HASIL-END
 
     }
