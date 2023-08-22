@@ -88,10 +88,10 @@ class studiv2HasilService {
                         aspek_skor += nilai_akhir;
                         aspek_detail.push(getAspekDetail)
                     }
-
-                    aspek_detail.sort(function (a, b) {
-                        return b.nilai_akhir - a.nilai_akhir;
-                    });
+                    // !urutkan berdasarkan nilai
+                    // aspek_detail.sort(function (a, b) {
+                    //     return b.nilai_akhir - a.nilai_akhir;
+                    // });
                     item_aspek.setDataValue("aspek_detail", aspek_detail)
                     let aspek_avg = aspek_skor / aspek_jml;
                     item_aspek.setDataValue("aspek_avg", aspek_avg > 0 ? aspek_avg.toFixed(2) : 0)
