@@ -447,9 +447,11 @@ class studiv2HasilService {
             // ! 2. ambil mapel yang ada dalam paket
             // ! 3. ambil siswa dalam kelas yang ada hasil generate
             // ! 4. masukkan kode soal dan skor
-            const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { status: 'Aktif', deleted_at: null } })
+            const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { id: 6, status: 'Aktif', deleted_at: null } }) //! bug 1 kurang id (karenapaket lebih dari 1)
             if (get_paketsoal) {
                 let result: any = []
+                // return 'tes';
+                // return get_paketsoal;
                 // let tempHeader = {
                 //     siswa: {
                 //         id: get_paketsoal.id,
@@ -508,6 +510,10 @@ class studiv2HasilService {
                                 attributes: ['id', 'nama', 'kode'],
                                 where: { studi_v2_paketsoal_id: get_paketsoal.id, deleted_at: null }
                             })
+                            // console.log('====================================');
+                            // console.log(get_mapel_siswa);
+                            // console.log('====================================');
+                            // return get_mapel_siswa
                             // tempSiswa.dataMapel = get_mapel
                             for (const [index_mapel_j, item_mapel_j] of get_mapel_siswa.entries()) {
                                 const get_studi_v2_proses_aspek_detail = await studi_v2_proses_aspek_detail.findOne({
@@ -519,22 +525,25 @@ class studiv2HasilService {
                                     attributes: ['id', 'kode_soal']
                                     , where: { studi_v2_paketsoal_aspek_detail_id: item_mapel_j.id, deleted_at: null }
                                 });
+                                // return tempJawaban
                                 let jmlSoal = 0;
-                                for (const [index_soal_j, item_soal_j] of tempJawaban.entries()) {
-                                    jmlSoal++;
-                                    let get_jawabanku = await studi_v2_proses_aspek_detail_soal.findOne({
-                                        attributes: ['id', 'kode_soal', 'skor', 'kode_jawaban']
-                                        , where: { studi_v2_proses_aspek_detail_id: get_studi_v2_proses_aspek_detail.id, kode_soal: item_soal_j.kode_soal, deleted_at: null }
-                                    })
-                                    if (get_jawabanku) {
-                                        item_soal_j.setDataValue("skor", get_jawabanku.skor)
-                                        item_soal_j.setDataValue("kode_jawaban", get_jawabanku.kode_jawaban);
-                                    } else {
-                                        item_soal_j.setDataValue("skor", 0)
-                                        item_soal_j.setDataValue("kode_jawaban", get_jawabanku.kode_jawaban);
-                                    }
-                                    // item_soal_j.setDataValue("skor", 1);
+                                if (tempJawaban != null) {
+                                    for (const [index_soal_j, item_soal_j] of tempJawaban.entries()) {
+                                        jmlSoal++;
+                                        let get_jawabanku = await studi_v2_proses_aspek_detail_soal.findOne({
+                                            attributes: ['id', 'kode_soal', 'skor', 'kode_jawaban']
+                                            , where: { studi_v2_proses_aspek_detail_id: get_studi_v2_proses_aspek_detail.id, kode_soal: item_soal_j.kode_soal, deleted_at: null }
+                                        })
+                                        if (get_jawabanku) {
+                                            item_soal_j.setDataValue("skor", get_jawabanku.skor)
+                                            item_soal_j.setDataValue("kode_jawaban", get_jawabanku.kode_jawaban);
+                                        } else {
+                                            item_soal_j.setDataValue("skor", 0)
+                                            item_soal_j.setDataValue("kode_jawaban", get_jawabanku.kode_jawaban);
+                                        }
+                                        // item_soal_j.setDataValue("skor", 1);
 
+                                    }
                                 }
                                 item_mapel_j.setDataValue("jmlSoal", jmlSoal)
                                 item_mapel_j.setDataValue("soal", tempJawaban)
