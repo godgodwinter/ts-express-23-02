@@ -3,7 +3,7 @@ import { sequelize_studi_v2 } from '../../models/index';
 import { db_studi_v2 } from "../../models";
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 const moment = require('moment');
 const localization = require('moment/locale/id')
@@ -12,6 +12,7 @@ moment.updateLocale("id", localization);
 const { studi_v2_paketsoal, studi_v2_paketsoal_aspek, studi_v2_paketsoal_aspek_detail, studi_v2_paketsoal_aspek_penilaian, studi_v2_paketsoal_soal, studi_v2_proses_aspek_detail_soal_pilihan_jawaban,
     studi_v2_paketsoal_pilihanjawaban,
     studi_v2_banksoal_soal, studi_v2_banksoal_soal_pilihanjawaban,
+    studi_v2_proses_aspek_detail
 } = db_studi_v2;
 class studiv2PaketsoalService {
 
@@ -161,6 +162,40 @@ class studiv2PaketsoalService {
             );
 
             return response;
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+    paketsoal_mapel_edit = async () => {
+        try {
+            // !update data mapel pada paketsoal
+            const dataUpdateMapelPadaPaket = await studi_v2_paketsoal_aspek_detail.findOne({
+                where: {
+                    id: this.body.id, deleted_at: null,
+                }
+            });
+            dataUpdateMapelPadaPaket.set({
+                nama: this.body.mapel,
+                updated_at: moment().format(),
+            });
+            await dataUpdateMapelPadaPaket.save();
+            // !update data siswa yang terelasi
+            const dataUpdate = await studi_v2_proses_aspek_detail.findOne({
+                where: {
+                    studi_v2_paketsoal_aspek_detail_id: this.body.id, deleted_at: null,
+                    created_at: {
+                        [Op.between]: [this.body.tgl_awal, this.body.tgl_akhir]
+                    }
+                }
+            });
+            dataUpdate.set({
+                aspek_detail_nama: this.body.mapel,
+                updated_at: moment().format(),
+            });
+            // As above, the database still has "formUpdate" and "green"
+            await dataUpdate.save();
+            return dataUpdate
+            // return "Data berhasil disimpan"
         } catch (error: any) {
             console.log(error.message);
         }

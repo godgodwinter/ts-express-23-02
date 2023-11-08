@@ -136,6 +136,20 @@ class Studiv2PaketsoalController {
             return res.status(500).send({ message: error.message });
         }
     }
+    paketsoal_mapel_edit = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);
+            const datas = await service.paketsoal_mapel_edit();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
     aspekStore = async (req: Request, res: Response): Promise<Response> => {
         try {
             const service: studiv2PaketsoalService = new studiv2PaketsoalService(req);

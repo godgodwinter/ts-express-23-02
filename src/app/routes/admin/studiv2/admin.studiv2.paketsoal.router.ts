@@ -20,6 +20,8 @@ class AdminUjianstudiPaketsoalRouter extends BaseRoutes {
         this.router.post("/paketsoal/:paketsoal_id/aspek", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspekStore)
         this.router.put("/paketsoal/:paketsoal_id/aspek/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspekUpdate)
         this.router.delete("/paketsoal/:paketsoal_id/aspek/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.aspekDelete)
+
+        this.router.post("/paketsoal_edit/mapel_edit", [verifyToken, menuAdminOwner], studiv2PaketsoalController.paketsoal_mapel_edit)
         // ! PAKETSOAL-ASPEK-END
 
 
@@ -28,6 +30,7 @@ class AdminUjianstudiPaketsoalRouter extends BaseRoutes {
         this.router.post("/paketsoal/:paketsoal_id/aspek/penilaian/get", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianStore)
         this.router.get("/paketsoal/:paketsoal_id/aspek/penilaian/get/:aspek_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianGetPerAspek)
         this.router.delete("/paketsoal/:paketsoal_id/aspek/penilaian/get/:penilaian_id", [verifyToken, menuAdminOwner], studiv2PaketsoalController.penilaianDelete)
+
         // ! PAKETSOAL-ASPEK-PENILAIAN-END
 
 
