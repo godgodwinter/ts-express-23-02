@@ -432,7 +432,8 @@ class studiv2ProsesService {
                 total: 0,
                 belum: 0,
                 selesai: 0,
-                status: "Belum"
+                status: "Belum",
+                created_at: null
             };
             const getProses = await studi_v2_proses.findOne({ where: { siswa_id, deleted_at: null } });
             if (getProses) {
@@ -443,8 +444,10 @@ class studiv2ProsesService {
                     const periksaMapel = await this.fn_periksa_progres_per_mapel(item.id);
                     if (periksaMapel === "Selesai") {
                         result.selesai++;
+                        result.created_at = getAspek[0].created_at;
                     } else {
                         result.belum++;
+                        result.created_at = getAspek[0].created_at;
                     }
                 }
             }
