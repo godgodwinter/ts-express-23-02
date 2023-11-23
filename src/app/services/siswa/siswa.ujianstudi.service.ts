@@ -316,9 +316,22 @@ class siswaUjianstudiService {
             //     }
             // }
             // return get_aspek_detail;
+            let tgl_mulai = new Date();
+            console.log(tgl_mulai, get_aspek_detail);
+
+            let waktuTambahan = get_aspek_detail?.waktu;
+            // let waktuTambahan = 15;
+            let tgl_selesai = new Date(tgl_mulai.getTime() + waktuTambahan * 60000);
+            let tgl_mulai_str = tgl_mulai.toISOString();
+            let waktuTambahan_str = new Date(tgl_mulai.getTime() + waktuTambahan * 60000).toString();
+            // console.log('====================================');
+            // console.log(tgl_mulai, tgl_selesai);
+            // console.log('====================================');
             get_aspek_detail.set({
-                tgl_mulai: this.body.tgl_mulai,
-                tgl_selesai: this.body.tgl_selesai,
+                // tgl_mulai: this.body.tgl_mulai,
+                // tgl_selesai: this.body.tgl_selesai,
+                tgl_mulai: tgl_mulai_str,
+                tgl_selesai: waktuTambahan_str,
                 status: "Aktif",
                 updated_at: moment().format(),
             });
@@ -341,8 +354,10 @@ class siswaUjianstudiService {
                 const cachedResult = await redisClient.get(cacheKey);
                 if (cachedResult) {
                     const result = JSON.parse(cachedResult);
-                    result[aspekdetail_index].tgl_mulai = this.body.tgl_mulai;
-                    result[aspekdetail_index].tgl_selesai = this.body.tgl_selesai;
+                    // result[aspekdetail_index].tgl_mulai = this.body.tgl_mulai;
+                    // result[aspekdetail_index].tgl_selesai = this.body.tgl_selesai;
+                    result[aspekdetail_index].tgl_mulai = tgl_mulai_str;
+                    result[aspekdetail_index].tgl_selesai = waktuTambahan_str;
                     result[aspekdetail_index].status = 'Aktif';
                     const delRedis = await redisClient.del(cacheKey);
                     const saveAgain = await redisClient.set(
