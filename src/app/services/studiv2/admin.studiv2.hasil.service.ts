@@ -442,12 +442,15 @@ class studiv2HasilService {
         try {
             const siswa_Service: siswaService = new siswaService(this.req);
             const getSiswaWhereKelas = await siswa_Service.siswaGetWhereKelas(kelas_id);
+            const get_Siswa_Id_temp = getSiswaWhereKelas[0].id;
+            const fn_get_Paket_id = await studi_v2_proses.findOne({ where: { siswa_id: get_Siswa_Id_temp, deleted_at: null } })
+            const paket_id = fn_get_Paket_id.studi_v2_paketsoal_id  //studi_v2_proses.studi_v2_paketsoal_id
             const response: any = [];
             // ! 1. ambil data pertama, ambil paket soal
             // ! 2. ambil mapel yang ada dalam paket
             // ! 3. ambil siswa dalam kelas yang ada hasil generate
             // ! 4. masukkan kode soal dan skor
-            const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { id: 6, status: 'Aktif', deleted_at: null } }) //! bug 1 kurang id (karenapaket lebih dari 1)
+            const get_paketsoal = await studi_v2_paketsoal.findOne({ where: { id: paket_id, status: 'Aktif', deleted_at: null } }) //! bug 1 kurang id (karenapaket lebih dari 1)
             if (get_paketsoal) {
                 let result: any = []
                 // return 'tes';
