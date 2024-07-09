@@ -91,6 +91,21 @@ class AdminMasteringSekolahController {
             return res.status(500).send({ message: error.message });
         }
     }
+    sekolahStore = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const sekolah_Service: sekolahService = new sekolahService(req);
+            const datas = await sekolah_Service.sekolahStore();
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
+
 
 }
 

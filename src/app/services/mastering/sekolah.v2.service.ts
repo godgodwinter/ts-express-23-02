@@ -39,6 +39,26 @@ class sekolahService {
         }
     }
 
+    sekolahStore = async () => {
+        try {
+            const dataSave = await sekolah.create({
+                nama: this.body.nama,
+                alamat: this.body.alamat,
+                status: this.body.status,
+                kepsek_nama: this.body.kepsek_nama,
+                tahunajaran_nama: this.body.tahunajaran_nama,
+                semester_nama: this.body.semester_nama,
+                kecamatan: this.body.kecamatan,
+                kabupaten: this.body.kabupaten,
+                provinsi: this.body.provinsi,
+                paket_id: this.body.paket_id,
+            });
+
+            return dataSave
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
 
 }
 
