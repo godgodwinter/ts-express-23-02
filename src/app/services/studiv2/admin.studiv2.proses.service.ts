@@ -442,7 +442,7 @@ class studiv2ProsesService {
                 result.total = getAspek_jml;
                 for (const [index, item] of getAspek.entries()) {
                     const periksaMapel = await this.fn_periksa_progres_per_mapel(item.id);
-                    if (periksaMapel === "Selesai") {
+                    if (periksaMapel == "Selesai") {
                         result.selesai++;
                         result.created_at = getAspek[0].created_at;
                     } else {
@@ -472,10 +472,10 @@ class studiv2ProsesService {
             let result = "Belum";
             let status_updated = "Aktif";
             const getAspekDetail = await studi_v2_proses_aspek_detail.findOne({ where: { id: aspek_detail_id, deleted_at: null } })
-            if (getAspekDetail.status === "Aktif") {
+            if (getAspekDetail.status == "Aktif") {
                 if (getAspekDetail.tgl_selesai) {
                     let periksa = await fn_get_sisa_waktu(getAspekDetail.tgl_selesai)
-                    if (periksa.detik < 0) {
+                    if (periksa.detik < 1) {
                         status_updated = "Selesai"
                     }
                 } else {
