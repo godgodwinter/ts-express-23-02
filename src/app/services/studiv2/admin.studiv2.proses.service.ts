@@ -482,6 +482,8 @@ class studiv2ProsesService {
                     status_updated = "Belum"
                 }
                 return status_updated;
+            } else {
+                status_updated = "Selesai"
             }
             return result
         } catch (error: any) {
