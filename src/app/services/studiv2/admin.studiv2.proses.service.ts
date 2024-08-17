@@ -455,7 +455,7 @@ class studiv2ProsesService {
                 }
             }
             if (result.total) {
-                if (result.total === result.selesai) {
+                if (result.total == result.selesai) {
                     result.status = "Complete"
                 }
             }
@@ -476,7 +476,9 @@ class studiv2ProsesService {
             let status_updated = "Aktif";
             const getAspekDetail = await studi_v2_proses_aspek_detail.findOne({ where: { id: aspek_detail_id, deleted_at: null } })
             console.log(`getAspekDetail.status`, getAspekDetail.status);
-
+            if (getAspekDetail.status == "Selesai") {
+                return status_updated = "Selesai"
+            }
             if (getAspekDetail.status == "Aktif") {
                 if (getAspekDetail.tgl_selesai) {
                     let periksa = await fn_get_sisa_waktu(getAspekDetail.tgl_selesai)
