@@ -465,6 +465,7 @@ class siswaUjianstudiService {
                 const cachedResult = await redisClient.get(cacheKey);
                 if (cachedResult) {
                     const result = JSON.parse(cachedResult);
+                    result[aspekdetail_index].status = 'Selesai';
                     result[aspekdetail_index].tgl_selesai = moment().format();
                     const delRedis = await redisClient.del(cacheKey);
                     const saveAgain = await redisClient.set(
