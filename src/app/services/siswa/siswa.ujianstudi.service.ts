@@ -442,6 +442,7 @@ class siswaUjianstudiService {
         try {
             const get_aspek_detail = await studi_v2_proses_aspek_detail.findOne({ where: { id: studi_v2_proses_aspek_detail_id, deleted_at: null } })
             get_aspek_detail.set({
+                status: 'Selesai',
                 tgl_selesai: moment().format(),
                 updated_at: moment().format(),
             });
