@@ -11,7 +11,7 @@ class AdminMasteringSekolahRouterV2 extends BaseRoutes {
         this.router.post("/sekolah", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahStore)
         this.router.get("/sekolah/:sekolah_id", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahGetWhereId)
         this.router.put("/sekolah/:sekolah_id", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahGetWhereId)
-        this.router.delete("/sekolah/:sekolah_id", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahGetWhereId)
+        this.router.delete("/sekolah/:sekolah_id", [verifyToken, menuAdminOwner], adminMasteringSekolahController.delete_sekolahGetWhereId)
         this.router.get("/sekolah/:sekolah_id/kelas", [verifyToken, menuAdminOwner], adminMasteringSekolahController.getKelasWhereSekolah)
         this.router.get("/sekolah/:sekolah_id/kelas/:kelas_id/siswa", [verifyToken, menuAdminOwner], adminMasteringSekolahController.getSiswaWhereKelas)
 

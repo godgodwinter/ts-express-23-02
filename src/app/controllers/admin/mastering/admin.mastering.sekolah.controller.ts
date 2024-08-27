@@ -37,6 +37,20 @@ class AdminMasteringSekolahController {
             return res.status(500).send({ message: error.message });
         }
     }
+    delete_sekolahGetWhereId = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const sekolah_Service: sekolahService = new sekolahService(req);
+            const datas = await sekolah_Service.delete_sekolahGetWhereId(parseInt(req.params.sekolah_id));
+
+            return res.send({
+                data: datas,
+                message: "Success"
+            });
+
+        } catch (error: any) {
+            return res.status(500).send({ message: error.message });
+        }
+    }
     Edit = async (req: Request, res: Response): Promise<Response> => {
         try {
             const sekolah_Service: sekolahService = new sekolahService(req);

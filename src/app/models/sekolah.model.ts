@@ -8,6 +8,33 @@ const sekolah = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
+        kepsek_nama: {
+            field: 'kepsek_nama',
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        tahunajaran_nama: {
+            field: 'tahunajaran_nama',
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        semester_nama: {
+            field: 'semester_nama',
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        kecamatan: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        kabupaten: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        provinsi: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         // relasi
         paket_id: {
             type: Sequelize.BIGINT,
@@ -33,7 +60,7 @@ const sekolah = (sequelize: any, Sequelize: any): any => {
             plural: 'sekolah',
         },
         freezeTableName: true, // Model tableName will be the same as the model name
-        timestamps: false,
+        timestamps: true,
         tableName: 'sekolah',
         underscored: true,
         modelName: 'sekolah'

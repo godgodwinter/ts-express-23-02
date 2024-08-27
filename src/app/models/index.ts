@@ -131,6 +131,11 @@ export const db = {
 
 
 // !MASTERING-RELASI
+db.sekolah.belongsTo(db.paket, {
+  foreignKey: {
+    name: 'paket_id'
+  },
+});
 db.siswa.belongsTo(db.kelas, {
   foreignKey: {
     name: 'kelas_id'
@@ -141,9 +146,30 @@ db.siswa.belongsTo(db.sekolah, {
     name: 'sekolah_id'
   },
 });
-db.sekolah.belongsTo(db.paket, {
+
+db.sekolah.hasMany(db.siswa, {
   foreignKey: {
-    name: 'paket_id'
+    name: 'sekolah_id'
+  },
+});
+
+db.kelas.hasMany(db.siswa, {
+  foreignKey: {
+    name: 'kelas_id'
+  },
+});
+
+
+
+db.kelas.belongsTo(db.sekolah, {
+  foreignKey: {
+    name: 'sekolah_id'
+  },
+});
+
+db.sekolah.hasMany(db.kelas, {
+  foreignKey: {
+    name: 'sekolah_id'
   },
 });
 
