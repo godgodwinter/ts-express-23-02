@@ -7,6 +7,7 @@ import adminMasteringSekolahController from '../../../controllers/admin/masterin
 class AdminMasteringSekolahRouterV2 extends BaseRoutes {
 
     public routes(): void {
+        // this.router.get("/sekolah", [], adminMasteringSekolahController.getSekolahAll)
         this.router.get("/sekolah", [verifyToken, menuAdminOwner], adminMasteringSekolahController.getSekolahAll)
         this.router.post("/sekolah", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahStore)
         this.router.get("/sekolah/:sekolah_id", [verifyToken, menuAdminOwner], adminMasteringSekolahController.sekolahGetWhereId)

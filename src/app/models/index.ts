@@ -159,19 +159,24 @@ db.kelas.hasMany(db.siswa, {
   },
 });
 
+// Sekolah model
+db.sekolah.hasMany(db.kelas, { foreignKey: 'sekolah_id' });
+
+// Kelas model
+db.kelas.belongsTo(db.sekolah, { foreignKey: 'sekolah_id' });
 
 
-db.kelas.belongsTo(db.sekolah, {
-  foreignKey: {
-    name: 'sekolah_id'
-  },
-});
+// db.kelas.belongsTo(db.sekolah, {
+//   foreignKey: {
+//     name: 'sekolah_id'
+//   },
+// });
 
-db.sekolah.hasMany(db.kelas, {
-  foreignKey: {
-    name: 'sekolah_id'
-  },
-});
+// db.sekolah.hasMany(db.kelas, {
+//   foreignKey: {
+//     name: 'sekolah_id'
+//   },
+// });
 
 // db.katabijak.belongsTo(db.katabijakdetail, {
 //   foreignKey: {

@@ -15,34 +15,85 @@ class sekolahService {
 
     sekolahGetAll = async () => {
         try {
-            const response = await sekolah.findAll({
+            // Mengambil data sekolah
+            const sekolahData = await sekolah.findAll({
                 where: { deleted_at: null },
-                attributes: {
-                    include: [
-                        [db.Sequelize.fn('COUNT', db.Sequelize.fn('DISTINCT', db.Sequelize.col('kelas.id'))), 'kelas_jml'],
-                        [db.Sequelize.literal('(SELECT COUNT(DISTINCT `siswa`.`id`) FROM `siswa` WHERE `siswa`.`sekolah_id` = `sekolah`.`id`)'), 'siswa_jml']
-                    ]
-                },
+                attributes: ['id', 'nama', 'status', 'kepsek_nama', 'tahunajaran_nama', 'semester_nama', 'kecamatan', 'kabupaten', 'provinsi', 'paket_id'],
                 include: [
                     {
                         model: db.paket,
                         attributes: ['id', 'nama']
-                    },
-                    {
-                        model: db.kelas,
-                        attributes: ['id', 'nama']
                     }
-                ],
-                group: ['sekolah.id'],
+                ]
             });
 
-            console.log(`jml sekolah : ${response.length}`);
+            // Menghitung jumlah kelas untuk setiap sekolah
+            const sekolahWithKelas = await Promise.all(sekolahData.map(async (sekolahItem: any) => {
+                const kelasCount = await db.kelas.count({
+                    where: { sekolah_id: sekolahItem.id, deleted_at: null }
+                });
 
-            return response;
+                const kelasData = await db.kelas.findAll({
+                    where: { sekolah_id: sekolahItem.id, deleted_at: null }
+                });
+
+                return {
+                    ...sekolahItem.toJSON(),
+                    kelas_jml: kelasCount,
+                    kelas: kelasData
+                };
+            }));
+
+            // Menghitung jumlah siswa untuk setiap sekolah
+            const sekolahWithCounts = await Promise.all(sekolahWithKelas.map(async (sekolahItem) => {
+                const siswaCount = await db.siswa.count({
+                    where: { sekolah_id: sekolahItem.id, deleted_at: null }
+                });
+
+                return {
+                    ...sekolahItem,
+                    siswa_jml: siswaCount
+                };
+            }));
+
+            console.log(`Jumlah sekolah: ${sekolahWithCounts.length}`);
+
+            return sekolahWithCounts;
         } catch (error: any) {
             console.log(error.message);
         }
     };
+
+    // sekolahGetAll = async () => {
+    //     try {
+    //         const response = await sekolah.findAll({
+    //             where: { deleted_at: null },
+    //             attributes: {
+    //                 include: [
+    //                     [db.Sequelize.fn('COUNT', db.Sequelize.fn('DISTINCT', db.Sequelize.col('kelas.id'))), 'kelas_jml'],
+    //                     [db.Sequelize.literal('(SELECT COUNT(DISTINCT `siswa`.`id`) FROM `siswa` WHERE `siswa`.`sekolah_id` = `sekolah`.`id`)'), 'siswa_jml']
+    //                 ]
+    //             },
+    //             include: [
+    //                 {
+    //                     model: db.kelas,
+    //                     attributes: ['id', 'nama']
+    //                 },
+    //                 {
+    //                     model: db.paket,
+    //                     attributes: ['id', 'nama']
+    //                 },
+    //             ],
+    //             group: ['sekolah.id'],
+    //         });
+
+    //         console.log(`jml sekolah : ${response.length}`);
+
+    //         return response;
+    //     } catch (error: any) {
+    //         console.log(error.message);
+    //     }
+    // };
 
 
     // sekolahGetAll = async () => {
