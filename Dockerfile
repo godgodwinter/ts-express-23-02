@@ -1,5 +1,7 @@
+# Menggunakan image node.js versi 20.9.0
+FROM node:20.9.0
 # Menggunakan image node.js terbaru
-FROM node:latest
+# FROM node:latest
 
 RUN npm install -g pm2
 
