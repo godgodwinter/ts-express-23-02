@@ -3,6 +3,7 @@ import AuthController from '../controllers/auth/auth.controller';
 import BaseRoutes from './base.router';
 import authSiswaController from '../controllers/auth/auth.siswa.controller';
 import authOwnerController from '../controllers/auth/auth.owner.controller';
+import authSekolahController from '../controllers/auth/auth.sekolah.controller';
 
 class AuthRoutes extends BaseRoutes {
 
@@ -20,6 +21,10 @@ class AuthRoutes extends BaseRoutes {
         // AUTH OWNER
         this.router.post("/owner/auth/login", authOwnerController.ownerLogin)
         this.router.post("/owner/auth/me", [verifyToken, menuAdminOwner], authOwnerController.Me)
+
+        this.router.post("/sekolah/auth/login", authSekolahController.sekolahLogin)
+        this.router.post("/yayasan/auth/login", authSiswaController.siswaLogin)
+        this.router.post("/ortu/auth/login", authSiswaController.siswaLogin)
 
     }
 }

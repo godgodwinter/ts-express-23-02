@@ -49,6 +49,7 @@ import siswadetail from "./datasiswa/siswadetail.model";
 import apiprobk from "./datasiswa/apiprobk.model";
 import apiprobk_deteksi from "./datasiswa/apiprobk_deteksi.model";
 import apiprobk_deteksi_list from "./datasiswa/apiprobk_deteksi_list.model";
+import gurubk from "./gurubk.model";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -96,6 +97,7 @@ export const db = {
   admin: admin(sequelize, Sequelize),
   owner: owner(sequelize, Sequelize),
   siswa: siswa(sequelize, Sequelize),
+  gurubk: gurubk(sequelize, Sequelize),
   ortu: ortu(sequelize, Sequelize),
   kelas: kelas(sequelize, Sequelize),
   sekolah: sekolah(sequelize, Sequelize),
@@ -131,6 +133,11 @@ export const db = {
 
 
 // !MASTERING-RELASI
+db.gurubk.belongsTo(db.sekolah, {
+  foreignKey: {
+    name: 'sekolah_id'
+  },
+});
 db.sekolah.belongsTo(db.paket, {
   foreignKey: {
     name: 'paket_id'
