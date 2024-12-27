@@ -4,6 +4,10 @@ const sekolah = (sequelize: any, Sequelize: any): any => {
             type: Sequelize.STRING,
             allowNull: true
         },
+        alamat: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         status: {
             type: Sequelize.STRING,
             allowNull: true

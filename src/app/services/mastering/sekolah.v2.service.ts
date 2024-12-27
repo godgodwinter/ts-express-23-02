@@ -18,7 +18,7 @@ class sekolahService {
             // Mengambil data sekolah
             const sekolahData = await sekolah.findAll({
                 where: { deleted_at: null },
-                attributes: ['id', 'nama', 'status', 'kepsek_nama', 'tahunajaran_nama', 'semester_nama', 'kecamatan', 'kabupaten', 'provinsi', 'paket_id'],
+                // attributes: ['id', 'nama', 'status', 'kepsek_nama', 'tahunajaran_nama', 'semester_nama', 'kecamatan', 'kabupaten', 'provinsi', 'paket_id'],
                 include: [
                     {
                         model: db.paket,
@@ -170,6 +170,58 @@ class sekolahService {
             console.log(error.message);
         }
     }
+
+    sekolahUpdateWhereId = async (sekolah_id: number, dataBody: any) => {
+        try {
+            const id = sekolah_id;
+            const {
+                nama,
+                alamat,
+                status,
+                kepsek_nama,
+                tahunajaran_nama,
+                semester_nama,
+                kecamatan,
+                kabupaten,
+                provinsi,
+                paket_id,
+            } = dataBody; // Mengambil data dari body request
+
+            // Mencari data sekolah berdasarkan ID
+            const sekolahData = await sekolah.findByPk(id);
+
+
+            const updateFields: any = {
+                nama,
+                alamat,
+                status,
+                kepsek_nama,
+                tahunajaran_nama,
+                semester_nama,
+                paket_id,
+            };
+
+            if (kecamatan !== null) {
+                updateFields.kecamatan = kecamatan;
+            }
+            if (kabupaten !== null) {
+                updateFields.kabupaten = kabupaten;
+            }
+            if (provinsi !== null) {
+                updateFields.provinsi = provinsi;
+            }
+
+            // Update data sekolah dengan fields yang ada
+            const updatedSekolah = await sekolahData.update(updateFields);
+
+            return updatedSekolah;
+        } catch (error: any) {
+            console.error(error.message);
+            // return res.status(500).json({ message: "Terjadi kesalahan server" });
+        }
+    };
+
+
 
 }
 
